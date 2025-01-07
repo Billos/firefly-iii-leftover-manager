@@ -1,0 +1,13 @@
+services:
+  manager:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["dev"]
+    volumes:
+      - .:/app
+    environment:
+      NODE_ENV: development
+      LOG_LEVEL: 2
+    restart: unless-stopped
+
