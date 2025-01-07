@@ -1,6 +1,8 @@
 services:
   manager:
     image: docker.io/billos/firefly-iii-leftover-manager:0.0.1
+    env_file:
+      - .env
     environment:
       NODE_ENV: development
       LOG_LEVEL: 2
