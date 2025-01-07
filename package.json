@@ -20,6 +20,7 @@
     "@typescript-eslint/eslint-plugin": "^8.16.0",
     "@typescript-eslint/parser": "^8.16.0",
     "eslint": "^9.15.0",
+    "openapi-typescript-codegen": "^0.29.0",
     "prettier": "^3.4.1",
     "prettier-plugin-multiline-arrays": "^3.0.6",
     "prettier-plugin-organize-imports": "^4.1.0",
@@ -37,7 +38,9 @@
     "lint": "eslint src",
     "release": "semantic-release",
     "start": "tsx src/index.ts",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "types:api:generate": "openapi --input https://api-docs.firefly-iii.org/firefly-iii-6.1.24-v1.yaml --output ./src/types; yarn run types:api:format",
+    "types:api:format": "prettier --write ./src/types/*"
   },
   "license": "GPL-3.0-only"
 }
