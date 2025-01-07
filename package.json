@@ -1,7 +1,10 @@
 {
   "name": "firefly-iii-leftover-manager",
   "version": "0.0.1",
-  "repository": "https://github.com/Billos/firefly-iii-leftover-manager.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Billos/firefly-iii-leftover-manager.git"
+  },
   "author": "billos",
   "dependencies": {
     "express": "^4.18.2",
