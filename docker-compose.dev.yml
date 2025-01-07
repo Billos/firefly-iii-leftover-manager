@@ -6,6 +6,8 @@ services:
     command: ["dev"]
     volumes:
       - .:/app
+    env_file:
+      - .env
     environment:
       NODE_ENV: development
       LOG_LEVEL: 2
