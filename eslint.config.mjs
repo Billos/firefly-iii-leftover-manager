@@ -13,6 +13,7 @@ export default [
       },
     },
     files: ["**/*.ts"],
+    ignores: ["./src/types/**/*.ts"],
     plugins: {
       "@typescript-eslint": typescriptPlugin,
       "@stylistic/js": stylisticJs,
