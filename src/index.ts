@@ -111,3 +111,4 @@ async function trigger(_req: express.Request, res: express.Response) {
 
 // At start trigger the endpoint
 app.get("/", trigger)
+app.post("/", trigger)
