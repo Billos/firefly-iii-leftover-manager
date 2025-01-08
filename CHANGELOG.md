@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.0.0...1.0.1) (2025-01-08)
+
+
+### Bug Fixes
+
+* **api:** Add POST method to trigger endpoint ([8e02ced](https://github.com/Billos/firefly-iii-leftover-manager/commit/8e02ceda5a3f8304f8ef9e88ec74d48b47901bb9))
+
 # 1.0.0 (2025-01-07)
 
 
