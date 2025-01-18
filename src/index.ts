@@ -5,7 +5,7 @@ import { env } from "./config"
 import { checkUnbudgetedTransactions } from "./controllers/checkUnbudgetedTransactions"
 import { updateBillsBudgetLimit } from "./controllers/updateBillsBudgetLimit"
 import { updateLeftoversBudget } from "./controllers/updateLeftoversBudget"
-import { BudgetArray, BudgetsService } from "./types"
+import { BudgetArray, BudgetsService, TransactionsService } from "./types"
 
 const app = express()
 
@@ -51,5 +51,24 @@ async function trigger(_req: express.Request, res: express.Response) {
 // At start trigger the endpoint
 app.get("/", trigger)
 app.post("/", trigger)
+app.get("/transaction/:transactionId/budget/:budgetId", async (_req, res) => {
+  console.log(
+    "=========================================== Setting budget for transaction ===========================================",
+  )
+
+  console.log("Transaction ID", _req.params.transactionId)
+  console.log("Budget ID", _req.params.budgetId)
+
+  await TransactionsService.updateTransaction(_req.params.transactionId, {
+    apply_rules: true,
+    fire_webhooks: true,
+    transactions: [
+      {
+        budget_id: _req.params.budgetId,
+      },
+    ],
+  })
+  res.send(200)
+})
 
 trigger(null, null)

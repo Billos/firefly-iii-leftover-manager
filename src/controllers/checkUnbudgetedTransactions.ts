@@ -1,7 +1,14 @@
 import axios from "axios"
 
 import { env } from "../config"
-import { TransactionArray, TransactionSplit, TransactionsService, TransactionTypeFilter } from "../types"
+import {
+  BudgetArray,
+  BudgetsService,
+  TransactionArray,
+  TransactionSplit,
+  TransactionsService,
+  TransactionTypeFilter,
+} from "../types"
 
 async function sendDiscordMessage(content: string): Promise<void> {
   const botInstance = axios.create({})
@@ -49,15 +56,33 @@ export async function checkUnbudgetedTransactions(startDate: string, endDate: st
   }
   console.log(`Found ${unbudgetedTransactions.length} unbudgeted transactions`)
 
-  const pad = Math.max(
+  const padAmount = Math.max(
     ...unbudgetedTransactions.map(
-      ({ amount, currency_decimal_places }) => parseFloat(amount).toFixed(currency_decimal_places).length,
+      (transaction) => parseFloat(transaction.amount).toFixed(transaction.currency_decimal_places).length,
     ),
   )
+  const padDescription = Math.max(...unbudgetedTransactions.map(({ description }) => description.length))
+
+  const raw = await BudgetsService.listBudget(null, 50, 1, startDate, endDate)
+  const { data: budgets } = JSON.parse(raw as any) as BudgetArray
 
   let msg = `You have ${unbudgetedTransactions.length} unbudgeted transactions:`
-  for (const { amount, currency_decimal_places, currency_symbol, description } of unbudgetedTransactions) {
-    const str = `\n - \`${parseFloat(amount).toFixed(currency_decimal_places).padStart(pad)} ${currency_symbol}\`  ${description}`
+  for (const {
+    amount,
+    currency_decimal_places,
+    currency_symbol,
+    description,
+    transaction_journal_id,
+  } of unbudgetedTransactions) {
+    const apis = []
+    for (const {
+      id,
+      attributes: { name },
+    } of budgets) {
+      apis.push(`[\`${name}\`](<${env.serviceUrl}transaction/${transaction_journal_id}/budget/${id}>)`)
+    }
+    let str = `\n - \`${parseFloat(amount).toFixed(currency_decimal_places).padStart(padAmount)} ${currency_symbol} - ${description.padEnd(padDescription)}\` ${apis.join(" ")}`
+
     msg += str
   }
 

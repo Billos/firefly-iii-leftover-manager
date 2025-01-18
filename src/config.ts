@@ -5,6 +5,7 @@ const env = {
   billsBudget: process.env.BILLS_BUDGET,
   leftoversBudget: process.env.LEFTOVERS_BUDGET,
   discordWebhook: process.env.DISCORD_WEBHOOK,
+  serviceUrl: process.env.SERVICE_URL,
 }
 
 export { env }
