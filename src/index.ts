@@ -42,7 +42,7 @@ async function trigger(_req: express.Request, res: express.Response) {
   }
 
   if (res) {
-    res.send(200)
+    res.send("<script>window.close()</script>")
   }
 
   console.log("=========================================== Finished ===========================================")
@@ -51,24 +51,21 @@ async function trigger(_req: express.Request, res: express.Response) {
 // At start trigger the endpoint
 app.get("/", trigger)
 app.post("/", trigger)
-app.get("/transaction/:transactionId/budget/:budgetId", async (_req, res) => {
+app.get("/transaction/:transactionId/budget/:budgetId", async (req, res) => {
   console.log(
     "=========================================== Setting budget for transaction ===========================================",
   )
-
-  console.log("Transaction ID", _req.params.transactionId)
-  console.log("Budget ID", _req.params.budgetId)
-
-  await TransactionsService.updateTransaction(_req.params.transactionId, {
+  res.send("<script>window.close()</script>")
+  await TransactionsService.updateTransaction(req.params.transactionId, {
     apply_rules: true,
     fire_webhooks: true,
     transactions: [
       {
-        budget_id: _req.params.budgetId,
+        budget_id: req.params.budgetId,
       },
     ],
   })
-  res.send(200)
+  await trigger(null, null)
 })
 
 trigger(null, null)
