@@ -2,7 +2,7 @@ import express from "express"
 import { DateTime } from "luxon"
 
 import { env } from "./config"
-import { checkUnbudgetedTransactions } from "./controllers/checkUnbudgetedTransactions"
+import { checkUnbudgetedTransactions, deleteDiscordMessage } from "./controllers/checkUnbudgetedTransactions"
 import { updateBillsBudgetLimit } from "./controllers/updateBillsBudgetLimit"
 import { updateLeftoversBudget } from "./controllers/updateLeftoversBudget"
 import { BudgetsService, TransactionsService } from "./types"
@@ -50,21 +50,17 @@ async function trigger(_req: express.Request, res: express.Response) {
 // At start trigger the endpoint
 app.get("/", trigger)
 app.post("/", trigger)
-app.get("/transaction/:transactionId/budget/:budgetId", async (req, res) => {
+app.get("/transaction/:transactionId/budget/:budgetId/:message", async (req, res) => {
   console.log(
     "=========================================== Setting budget for transaction ===========================================",
   )
-  res.send("<script>window.close()</script>")
+  await deleteDiscordMessage(req.params.message)
   await TransactionsService.updateTransaction(req.params.transactionId, {
     apply_rules: true,
     fire_webhooks: true,
-    transactions: [
-      {
-        budget_id: req.params.budgetId,
-      },
-    ],
+    transactions: [{ budget_id: req.params.budgetId }],
   })
-  await trigger(null, null)
+  await trigger(req, res)
 })
 
 trigger(null, null)

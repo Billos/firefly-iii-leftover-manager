@@ -3,9 +3,21 @@ import axios from "axios"
 import { env } from "../config"
 import { BudgetsService, TransactionSplit, TransactionsService, TransactionTypeFilter } from "../types"
 
-async function sendDiscordMessage(content: string): Promise<void> {
+async function sendDiscordMessage(content: string): Promise<number> {
   const botInstance = axios.create({})
-  await botInstance.post(`${env.discordWebhook}?wait=true`, { content })
+  const result = await botInstance.post<{ id: number }>(`${env.discordWebhook}?wait=true`, { content })
+  return result.data.id
+}
+
+async function updateDiscordMessage(id: number, content: string) {
+  const botInstance = axios.create({})
+  await botInstance.patch(`${env.discordWebhook}/messages/${id}`, { content })
+}
+
+export async function deleteDiscordMessage(id: string) {
+  const botInstance = axios.create({})
+  console.log("Deleting message url is", `${env.discordWebhook}/messages/${id}`)
+  await botInstance.delete(`${env.discordWebhook}/messages/${id}`)
 }
 
 async function countPagesToFetch(amount: number, startDate: string, endDate: string): Promise<number> {
@@ -55,8 +67,17 @@ export async function checkUnbudgetedTransactions(startDate: string, endDate: st
   const padDescription = Math.max(...unbudgetedTransactions.map(({ description }) => description.length))
 
   const { data: budgets } = await BudgetsService.listBudget(null, 50, 1, startDate, endDate)
+  // Create the message
 
-  let msg = `You have ${unbudgetedTransactions.length} unbudgeted transactions:`
+  if (unbudgetedTransactions.length === 0) {
+    console.log("No unbudgeted transactions")
+    return
+  }
+
+  const messageId = await sendDiscordMessage("Checking unbudgeted transactions")
+
+  let msg = `You have ${unbudgetedTransactions.length} unbudgeted transaction${unbudgetedTransactions.length > 1 ? "s" : ""}:`
+
   for (const {
     amount,
     currency_decimal_places,
@@ -69,13 +90,12 @@ export async function checkUnbudgetedTransactions(startDate: string, endDate: st
       id,
       attributes: { name },
     } of budgets) {
-      apis.push(`[\`${name}\`](<${env.serviceUrl}transaction/${transaction_journal_id}/budget/${id}>)`)
+      apis.push(`[\`${name}\`](<${env.serviceUrl}transaction/${transaction_journal_id}/budget/${id}/${messageId}/>)`)
     }
     let str = `\n - \`${parseFloat(amount).toFixed(currency_decimal_places).padStart(padAmount)} ${currency_symbol} - ${description.padEnd(padDescription)}\` ${apis.join(" ")}`
-
     msg += str
   }
+  await updateDiscordMessage(messageId, msg)
 
-  await sendDiscordMessage(msg)
   console.log("Discord message sent")
 }
