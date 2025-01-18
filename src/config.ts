@@ -4,6 +4,7 @@ const env = {
   fireflyToken: process.env.FIREFLY_III_TOKEN,
   billsBudget: process.env.BILLS_BUDGET,
   leftoversBudget: process.env.LEFTOVERS_BUDGET,
+  discordWebhook: process.env.DISCORD_WEBHOOK,
 }
 
 export { env }

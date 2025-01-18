@@ -2,6 +2,7 @@ import express from "express"
 import { DateTime } from "luxon"
 
 import { env } from "./config"
+import { checkUnbudgetedTransactions } from "./controllers/checkUnbudgetedTransactions"
 import { updateBillsBudgetLimit } from "./controllers/updateBillsBudgetLimit"
 import { updateLeftoversBudget } from "./controllers/updateLeftoversBudget"
 import { BudgetArray, BudgetsService } from "./types"
@@ -33,6 +34,11 @@ async function trigger(_req: express.Request, res: express.Response) {
   // If leftovers budget is found
   if (leftoversBudget) {
     await updateLeftoversBudget(leftoversBudget, startDate, endDate)
+  }
+
+  // Check unbudgeted transactions
+  if (env.discordWebhook) {
+    await checkUnbudgetedTransactions(startDate, endDate)
   }
 
   if (res) {
