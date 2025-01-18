@@ -23,6 +23,10 @@ FIREFLY_III_TOKEN=
 BILLS_BUDGET=
 # The name of the leftovers budget
 LEFTOVERS_BUDGET=
+# The Discord webhook to send the results
+DISCORD_WEBHOOK=
+# The URL of the service, used to generate the links in the discord message
+SERVICE_URL=
 ```
 
 The budgets should already exist in the firefly iii, with a basic limit set.
@@ -33,9 +37,11 @@ I might work late on something that will create the budgets / update the limits,
 
 The results I have right now, match what I am expecting, but I'm quite new with Fireflyy-iii, and I might have missed some edge cases.
 
-I'm only updating the amount field of the budgets, so I'm quite confident that I'm not breaking anything.
+I'm only updating the amount field of the budgets, or changing the budget of a transaction, so I'm quite confident that I'm not breaking anything.
 However, keep in mind that this project is a draft, and that I'm not responsible for any loss of data or money.
 
 ## Roadmap
 
-Link a paypal transaction to a transaction in another account, update the transaction in main account, and run the rules to link the transaction to the budgets and bills
+Link a paypal transaction to a transaction in another account, update the transaction in main account, and run the rules to link the transaction to the budgets and bills.
+
+Using the transaction update API should remove the related message in the discord webhook.
