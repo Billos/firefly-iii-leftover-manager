@@ -1,14 +1,7 @@
 import axios from "axios"
 
 import { env } from "../config"
-import {
-  BudgetArray,
-  BudgetsService,
-  TransactionArray,
-  TransactionSplit,
-  TransactionsService,
-  TransactionTypeFilter,
-} from "../types"
+import { BudgetsService, TransactionSplit, TransactionsService, TransactionTypeFilter } from "../types"
 
 async function sendDiscordMessage(content: string): Promise<void> {
   const botInstance = axios.create({})
@@ -16,7 +9,7 @@ async function sendDiscordMessage(content: string): Promise<void> {
 }
 
 async function countPagesToFetch(amount: number, startDate: string, endDate: string): Promise<number> {
-  const response = await TransactionsService.listTransaction(
+  const { meta } = await TransactionsService.listTransaction(
     null,
     amount,
     1,
@@ -24,7 +17,6 @@ async function countPagesToFetch(amount: number, startDate: string, endDate: str
     endDate,
     TransactionTypeFilter.WITHDRAWAL,
   )
-  const { meta } = JSON.parse(response as any) as TransactionArray
   return meta.pagination.total_pages
 }
 
@@ -35,7 +27,7 @@ export async function checkUnbudgetedTransactions(startDate: string, endDate: st
   const unbudgetedTransactions: TransactionSplit[] = []
 
   for (let page = 1; page <= totalPages; page++) {
-    const response = await TransactionsService.listTransaction(
+    const { data: transactions } = await TransactionsService.listTransaction(
       null,
       amountPerPage,
       page,
@@ -43,7 +35,6 @@ export async function checkUnbudgetedTransactions(startDate: string, endDate: st
       endDate,
       TransactionTypeFilter.WITHDRAWAL,
     )
-    const { data: transactions } = JSON.parse(response as any) as TransactionArray
     for (const {
       attributes: {
         transactions: [transaction],
@@ -63,8 +54,7 @@ export async function checkUnbudgetedTransactions(startDate: string, endDate: st
   )
   const padDescription = Math.max(...unbudgetedTransactions.map(({ description }) => description.length))
 
-  const raw = await BudgetsService.listBudget(null, 50, 1, startDate, endDate)
-  const { data: budgets } = JSON.parse(raw as any) as BudgetArray
+  const { data: budgets } = await BudgetsService.listBudget(null, 50, 1, startDate, endDate)
 
   let msg = `You have ${unbudgetedTransactions.length} unbudgeted transactions:`
   for (const {

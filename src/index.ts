@@ -5,7 +5,7 @@ import { env } from "./config"
 import { checkUnbudgetedTransactions } from "./controllers/checkUnbudgetedTransactions"
 import { updateBillsBudgetLimit } from "./controllers/updateBillsBudgetLimit"
 import { updateLeftoversBudget } from "./controllers/updateLeftoversBudget"
-import { BudgetArray, BudgetsService, TransactionsService } from "./types"
+import { BudgetsService, TransactionsService } from "./types"
 
 const app = express()
 
@@ -19,8 +19,7 @@ async function trigger(_req: express.Request, res: express.Response) {
   const startDate = DateTime.now().startOf("month").toISODate()
   const endDate = DateTime.now().endOf("month").toISODate()
 
-  const raw = await BudgetsService.listBudget(null, 50, 1, startDate, endDate)
-  const { data: budgets } = JSON.parse(raw as any) as BudgetArray
+  const { data: budgets } = await BudgetsService.listBudget(null, 50, 1, startDate, endDate)
   // Get Bills Budget
   const billsBudget = budgets.find(({ attributes: { name } }) => name === env.billsBudget)
   // Get Leftovers Budget

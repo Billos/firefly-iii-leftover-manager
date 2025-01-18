@@ -322,8 +322,15 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): C
         }
 
         catchErrorCodes(options, result)
-
-        resolve(result.body)
+        const str = result.body
+        if (typeof str === "string") {
+          const obj: T = JSON.parse(str) as T
+          resolve(obj)
+        }
+        if (typeof str === "object") {
+          resolve(str as T)
+        }
+        reject("Invalid response")
       }
     } catch (error) {
       reject(error)

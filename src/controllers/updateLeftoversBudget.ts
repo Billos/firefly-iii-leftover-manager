@@ -1,4 +1,4 @@
-import { BudgetLimit, BudgetLimitArray, BudgetRead, BudgetsService, InsightService } from "../types"
+import { BudgetLimit, BudgetRead, BudgetsService, InsightService } from "../types"
 
 export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDate: string, endDate: string) {
   console.log("================ Updating Leftovers Budget Limit =================")
@@ -7,7 +7,7 @@ export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDa
   const totalRevenue = revenues.reduce((acc, { difference_float }) => acc + difference_float, 0)
   let leftoverAmount = totalRevenue
 
-  const allLimits = JSON.parse((await BudgetsService.listBudgetLimit(startDate, endDate)) as any) as BudgetLimitArray
+  const allLimits = await BudgetsService.listBudgetLimit(startDate, endDate)
   const limitsWithoutLeftovers = allLimits.data.filter(
     ({ attributes: { budget_id } }) => budget_id !== leftoversBudget.id,
   )
