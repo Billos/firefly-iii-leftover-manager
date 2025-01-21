@@ -58,18 +58,13 @@ app.get("/transaction/:transactionId/budget/:budgetId/:message", async (req, res
   console.log("Delete message")
   await deleteDiscordMessage(req.params.message)
   console.log("Update transaction")
-  try {
-    TransactionsService.updateTransaction(req.params.transactionId, {
-      apply_rules: true,
-      fire_webhooks: true,
-      transactions: [{ budget_id: req.params.budgetId }],
-    })
-  } catch (error) {
-    console.log("Error updating transaction", error)
-  }
-  await sleep(500)
+  await TransactionsService.updateTransaction(req.params.transactionId, {
+    apply_rules: true,
+    fire_webhooks: true,
+    transactions: [{ budget_id: req.params.budgetId }],
+  })
   console.log("Transaction updated")
-  return trigger(req, res)
+  res.send("<script>window.close()</script>")
 })
 
 trigger(null, null)
