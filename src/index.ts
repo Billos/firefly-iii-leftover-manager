@@ -6,7 +6,6 @@ import { checkUnbudgetedTransactions, deleteDiscordMessage } from "./controllers
 import { updateBillsBudgetLimit } from "./controllers/updateBillsBudgetLimit"
 import { updateLeftoversBudget } from "./controllers/updateLeftoversBudget"
 import { BudgetsService, TransactionsService } from "./types"
-import { sleep } from "./utils/sleep"
 
 const app = express()
 
