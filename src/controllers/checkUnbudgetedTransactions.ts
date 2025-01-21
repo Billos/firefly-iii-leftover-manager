@@ -2,6 +2,7 @@ import axios from "axios"
 
 import { env } from "../config"
 import { BudgetsService, TransactionSplit, TransactionsService, TransactionTypeFilter } from "../types"
+import { sleep } from "../utils/sleep"
 
 async function sendDiscordMessage(content: string): Promise<number> {
   const botInstance = axios.create({})
@@ -64,7 +65,6 @@ export async function checkUnbudgetedTransactions(startDate: string, endDate: st
       (transaction) => parseFloat(transaction.amount).toFixed(transaction.currency_decimal_places).length,
     ),
   )
-  const padDescription = Math.max(...unbudgetedTransactions.map(({ description }) => description.length))
 
   const { data: budgets } = await BudgetsService.listBudget(null, 50, 1, startDate, endDate)
   // Create the message
@@ -74,10 +74,6 @@ export async function checkUnbudgetedTransactions(startDate: string, endDate: st
     return
   }
 
-  const messageId = await sendDiscordMessage("Checking unbudgeted transactions")
-
-  let msg = `You have ${unbudgetedTransactions.length} unbudgeted transaction${unbudgetedTransactions.length > 1 ? "s" : ""}:`
-
   for (const {
     amount,
     currency_decimal_places,
@@ -85,6 +81,7 @@ export async function checkUnbudgetedTransactions(startDate: string, endDate: st
     description,
     transaction_journal_id,
   } of unbudgetedTransactions) {
+    const messageId = await sendDiscordMessage("Checking unbudgeted transactions")
     const apis = []
     for (const {
       id,
@@ -92,10 +89,11 @@ export async function checkUnbudgetedTransactions(startDate: string, endDate: st
     } of budgets) {
       apis.push(`[\`${name}\`](<${env.serviceUrl}transaction/${transaction_journal_id}/budget/${id}/${messageId}/>)`)
     }
-    let str = `\n - \`${parseFloat(amount).toFixed(currency_decimal_places).padStart(padAmount)} ${currency_symbol} - ${description.padEnd(padDescription)}\` ${apis.join(" ")}`
-    msg += str
+    const msg = `\`${parseFloat(amount).toFixed(currency_decimal_places).padStart(padAmount)} ${currency_symbol}\` ${description} \n${apis.join(" ")}`
+    await updateDiscordMessage(messageId, msg)
+    // Limit to 5 messages every 2 seconds
+    await sleep(500)
   }
-  await updateDiscordMessage(messageId, msg)
 
   console.log("Discord message sent")
 }

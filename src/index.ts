@@ -6,6 +6,7 @@ import { checkUnbudgetedTransactions, deleteDiscordMessage } from "./controllers
 import { updateBillsBudgetLimit } from "./controllers/updateBillsBudgetLimit"
 import { updateLeftoversBudget } from "./controllers/updateLeftoversBudget"
 import { BudgetsService, TransactionsService } from "./types"
+import { sleep } from "./utils/sleep"
 
 const app = express()
 
@@ -54,13 +55,21 @@ app.get("/transaction/:transactionId/budget/:budgetId/:message", async (req, res
   console.log(
     "=========================================== Setting budget for transaction ===========================================",
   )
+  console.log("Delete message")
   await deleteDiscordMessage(req.params.message)
-  await TransactionsService.updateTransaction(req.params.transactionId, {
-    apply_rules: true,
-    fire_webhooks: true,
-    transactions: [{ budget_id: req.params.budgetId }],
-  })
-  await trigger(req, res)
+  console.log("Update transaction")
+  try {
+    TransactionsService.updateTransaction(req.params.transactionId, {
+      apply_rules: true,
+      fire_webhooks: true,
+      transactions: [{ budget_id: req.params.budgetId }],
+    })
+  } catch (error) {
+    console.log("Error updating transaction", error)
+  }
+  await sleep(500)
+  console.log("Transaction updated")
+  return trigger(req, res)
 })
 
 trigger(null, null)
