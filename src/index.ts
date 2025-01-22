@@ -51,9 +51,7 @@ async function trigger(_req: express.Request, res: express.Response) {
 app.get("/", trigger)
 app.post("/", trigger)
 app.get("/transaction/:transactionId/budget/:budgetId/:message", async (req, res) => {
-  console.log(
-    "=========================================== Setting budget for transaction ===========================================",
-  )
+  console.log("=================================== Setting budget for transaction ===================================")
   console.log("Delete message")
   await deleteDiscordMessage(req.params.message)
   console.log("Update transaction")
