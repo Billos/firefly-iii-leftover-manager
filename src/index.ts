@@ -3,6 +3,7 @@ import { DateTime } from "luxon"
 
 import { env } from "./config"
 import { checkUnbudgetedTransactions, deleteDiscordMessage } from "./controllers/checkUnbudgetedTransactions"
+import { linkPaypalTransactions } from "./controllers/linkPaypalTransactions"
 import { updateBillsBudgetLimit } from "./controllers/updateBillsBudgetLimit"
 import { updateLeftoversBudget } from "./controllers/updateLeftoversBudget"
 import { BudgetsService, TransactionsService } from "./types"
@@ -38,6 +39,10 @@ async function trigger(_req: express.Request, res: express.Response) {
   // Check unbudgeted transactions
   if (env.discordWebhook) {
     await checkUnbudgetedTransactions(startDate, endDate)
+  }
+
+  if (env.fireflyPaypalAccountToken && env.paypalBudget) {
+    await linkPaypalTransactions()
   }
 
   if (res) {
