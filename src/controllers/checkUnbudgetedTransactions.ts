@@ -15,11 +15,11 @@ async function updateDiscordMessage(id: string, content: string) {
   await botInstance.patch(`${env.discordWebhook}/messages/${id}`, { content })
 }
 
-export async function deleteDiscordMessage(id: string) {
+export async function deleteDiscordMessage(id: string, transactionId: string) {
   const botInstance = axios.create({})
   console.log("Deleting message url is", `${env.discordWebhook}/messages/${id}`)
   await botInstance.delete(`${env.discordWebhook}/messages/${id}`)
-  await unsetMessageId(id)
+  await unsetMessageId(transactionId)
 }
 
 async function countPagesToFetch(amount: number, startDate: string, endDate: string): Promise<number> {

@@ -55,15 +55,16 @@ async function trigger(_req: express.Request, res: express.Response) {
 // At start trigger the endpoint
 app.get("/", trigger)
 app.post("/", trigger)
-app.get("/transaction/:transactionId/budget/:budgetId/:message", async (req, res) => {
+app.get("/transaction/:transactionId/budget/:budget_id/:messageId", async (req, res) => {
   console.log("=================================== Setting budget for transaction ===================================")
   console.log("Delete message")
-  await deleteDiscordMessage(req.params.message)
+  const { transactionId, budget_id, messageId } = req.params
+  await deleteDiscordMessage(messageId, transactionId)
   console.log("Update transaction")
-  await TransactionsService.updateTransaction(req.params.transactionId, {
+  await TransactionsService.updateTransaction(transactionId, {
     apply_rules: true,
     fire_webhooks: true,
-    transactions: [{ budget_id: req.params.budgetId }],
+    transactions: [{ budget_id }],
   })
   console.log("Transaction updated")
   res.send("<script>window.close()</script>")
