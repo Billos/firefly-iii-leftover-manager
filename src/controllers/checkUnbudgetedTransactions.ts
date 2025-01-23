@@ -66,8 +66,8 @@ export async function checkUnbudgetedTransactions(startDate: string, endDate: st
     ),
   )
 
-  const { data: budgets } = await BudgetsService.listBudget(null, 50, 1, startDate, endDate)
-  // Create the message
+  const { data: allBbudgets } = await BudgetsService.listBudget(null, 50, 1, startDate, endDate)
+  const budgets = allBbudgets.filter(({ attributes: { name } }) => !(env.billsBudget && name === env.billsBudget))
 
   if (unbudgetedTransactions.length === 0) {
     console.log("No unbudgeted transactions")
