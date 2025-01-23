@@ -144,9 +144,9 @@ export async function checkUnbudgetedTransactions(startDate: string, endDate: st
     }
     const msg = `\`${parseFloat(amount).toFixed(currency_decimal_places).padStart(padAmount)} ${currency_symbol}\` ${description} \n${apis.join(" ")}`
     try {
-    await updateDiscordMessage(messageId, msg)
-    // Limit to 5 messages every 2 seconds
-    await sleep(500)
+      await updateDiscordMessage(messageId, msg)
+      // Limit to 5 messages every 2 seconds
+      await sleep(500)
     } catch (error) {
       console.error("Error updating message", error)
     }
