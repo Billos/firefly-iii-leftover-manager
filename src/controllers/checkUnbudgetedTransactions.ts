@@ -19,6 +19,7 @@ export async function deleteDiscordMessage(id: string) {
   const botInstance = axios.create({})
   console.log("Deleting message url is", `${env.discordWebhook}/messages/${id}`)
   await botInstance.delete(`${env.discordWebhook}/messages/${id}`)
+  await unsetMessageId(id)
 }
 
 async function countPagesToFetch(amount: number, startDate: string, endDate: string): Promise<number> {
@@ -31,6 +32,54 @@ async function countPagesToFetch(amount: number, startDate: string, endDate: str
     TransactionTypeFilter.WITHDRAWAL,
   )
   return meta.pagination.total_pages
+}
+
+async function getTransaction(transactionId: string): Promise<TransactionSplit> {
+  const {
+    data: {
+      attributes: {
+        transactions: [transaction],
+      },
+    },
+  } = await TransactionsService.getTransaction(transactionId)
+  return transaction
+}
+
+async function getMessageId(transactionId: string): Promise<string> {
+  const { notes } = await getTransaction(transactionId)
+  // The notes should include (discordMessageId: <messageId>)
+  const regex = /discordMessageId: (\d+)/
+  const match = (notes || "").match(regex)
+  if (match) {
+    return match[1]
+  }
+  return null
+}
+
+async function setNotes(transactionId: string, notes: string): Promise<void> {
+  await TransactionsService.updateTransaction(transactionId, {
+    apply_rules: false,
+    fire_webhooks: false,
+    transactions: [{ notes }],
+  })
+}
+
+async function setMessageId(transactionId: string, messageId: string): Promise<void> {
+  const transaction = await getTransaction(transactionId)
+  // Notes might not include the discordMessageId yet
+  let notes = transaction.notes || ""
+  if (!notes.includes("discordMessageId")) {
+    notes += `\ndiscordMessageId: ${messageId}\n`
+  } else {
+    notes = (transaction.notes || "").replace(/discordMessageId: (\d+)/, `discordMessageId: ${messageId}`)
+  }
+  await setNotes(transactionId, notes)
+}
+
+export async function unsetMessageId(transactionId: string): Promise<void> {
+  const transaction = await getTransaction(transactionId)
+  const notes = transaction.notes.replace(/discordMessageId: (\d+)/, "")
+  await setNotes(transactionId, notes)
 }
 
 export async function checkUnbudgetedTransactions(startDate: string, endDate: string) {
@@ -81,7 +130,11 @@ export async function checkUnbudgetedTransactions(startDate: string, endDate: st
     description,
     transaction_journal_id,
   } of unbudgetedTransactions) {
-    const messageId = await sendDiscordMessage("Checking unbudgeted transactions")
+    let messageId = await getMessageId(transaction_journal_id)
+    if (!messageId) {
+      messageId = await sendDiscordMessage("Checking unbudgeted transactions")
+      await setMessageId(transaction_journal_id, messageId)
+    }
     const apis = []
     for (const {
       id,
