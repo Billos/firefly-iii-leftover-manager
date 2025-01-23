@@ -90,9 +90,13 @@ export async function checkUnbudgetedTransactions(startDate: string, endDate: st
       apis.push(`[\`${name}\`](<${env.serviceUrl}transaction/${transaction_journal_id}/budget/${id}/${messageId}/>)`)
     }
     const msg = `\`${parseFloat(amount).toFixed(currency_decimal_places).padStart(padAmount)} ${currency_symbol}\` ${description} \n${apis.join(" ")}`
+    try {
     await updateDiscordMessage(messageId, msg)
     // Limit to 5 messages every 2 seconds
     await sleep(500)
+    } catch (error) {
+      console.error("Error updating message", error)
+    }
   }
 
   console.log("Discord message sent")
