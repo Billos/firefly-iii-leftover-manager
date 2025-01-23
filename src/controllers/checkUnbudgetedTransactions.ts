@@ -4,13 +4,13 @@ import { env } from "../config"
 import { BudgetsService, TransactionSplit, TransactionsService, TransactionTypeFilter } from "../types"
 import { sleep } from "../utils/sleep"
 
-async function sendDiscordMessage(content: string): Promise<number> {
+async function sendDiscordMessage(content: string): Promise<string> {
   const botInstance = axios.create({})
   const result = await botInstance.post<{ id: number }>(`${env.discordWebhook}?wait=true`, { content })
-  return result.data.id
+  return `${result.data.id}`
 }
 
-async function updateDiscordMessage(id: number, content: string) {
+async function updateDiscordMessage(id: string, content: string) {
   const botInstance = axios.create({})
   await botInstance.patch(`${env.discordWebhook}/messages/${id}`, { content })
 }
