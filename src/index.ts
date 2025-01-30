@@ -2,10 +2,11 @@ import express from "express"
 import { DateTime } from "luxon"
 
 import { env } from "./config"
-import { checkUnbudgetedTransactions, deleteDiscordMessage } from "./controllers/checkUnbudgetedTransactions"
+import { checkUnbudgetedTransactions } from "./controllers/checkUnbudgetedTransactions"
 import { linkPaypalTransactions } from "./controllers/linkPaypalTransactions"
 import { updateBillsBudgetLimit } from "./controllers/updateBillsBudgetLimit"
 import { updateLeftoversBudget } from "./controllers/updateLeftoversBudget"
+import { deleteDiscordMessage } from "./modules/discord"
 import { BudgetsService, TransactionsService } from "./types"
 
 const app = express()

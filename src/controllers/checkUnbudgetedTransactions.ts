@@ -1,48 +1,15 @@
-import axios from "axios"
-
 import { env } from "../config"
-import { BudgetsService, TransactionSplit, TransactionsService, TransactionTypeFilter } from "../types"
+import { getTransaction, sendDiscordMessage, setMessageId, updateDiscordMessage } from "../modules/discord"
+import { BudgetsService, TransactionArray, TransactionSplit, TransactionsService, TransactionTypeFilter } from "../types"
 import { sleep } from "../utils/sleep"
 
-async function sendDiscordMessage(content: string): Promise<string> {
-  const botInstance = axios.create({})
-  const result = await botInstance.post<{ id: number }>(`${env.discordWebhook}?wait=true`, { content })
-  return `${result.data.id}`
-}
-
-async function updateDiscordMessage(id: string, content: string) {
-  const botInstance = axios.create({})
-  await botInstance.patch(`${env.discordWebhook}/messages/${id}`, { content })
-}
-
-export async function deleteDiscordMessage(id: string, transactionId: string) {
-  const botInstance = axios.create({})
-  console.log("Deleting message url is", `${env.discordWebhook}/messages/${id}`)
-  await botInstance.delete(`${env.discordWebhook}/messages/${id}`)
-  await unsetMessageId(transactionId)
+async function getTransactions(amout: number, page: number, startDate: string, endDate: string): Promise<TransactionArray> {
+  return TransactionsService.listTransaction(null, amout, page, startDate, endDate, TransactionTypeFilter.WITHDRAWAL)
 }
 
 async function countPagesToFetch(amount: number, startDate: string, endDate: string): Promise<number> {
-  const { meta } = await TransactionsService.listTransaction(
-    null,
-    amount,
-    1,
-    startDate,
-    endDate,
-    TransactionTypeFilter.WITHDRAWAL,
-  )
+  const { meta } = await getTransactions(amount, 1, startDate, endDate)
   return meta.pagination.total_pages
-}
-
-async function getTransaction(transactionId: string): Promise<TransactionSplit> {
-  const {
-    data: {
-      attributes: {
-        transactions: [transaction],
-      },
-    },
-  } = await TransactionsService.getTransaction(transactionId)
-  return transaction
 }
 
 async function getMessageId(transactionId: string): Promise<string> {
@@ -54,32 +21,6 @@ async function getMessageId(transactionId: string): Promise<string> {
     return match[1]
   }
   return null
-}
-
-async function setNotes(transactionId: string, notes: string): Promise<void> {
-  await TransactionsService.updateTransaction(transactionId, {
-    apply_rules: false,
-    fire_webhooks: false,
-    transactions: [{ notes }],
-  })
-}
-
-async function setMessageId(transactionId: string, messageId: string): Promise<void> {
-  const transaction = await getTransaction(transactionId)
-  // Notes might not include the discordMessageId yet
-  let notes = transaction.notes || ""
-  if (!notes.includes("discordMessageId")) {
-    notes += `\ndiscordMessageId: ${messageId}\n`
-  } else {
-    notes = (transaction.notes || "").replace(/discordMessageId: (\d+)/, `discordMessageId: ${messageId}`)
-  }
-  await setNotes(transactionId, notes)
-}
-
-export async function unsetMessageId(transactionId: string): Promise<void> {
-  const transaction = await getTransaction(transactionId)
-  const notes = transaction.notes.replace(/discordMessageId: (\d+)/, "")
-  await setNotes(transactionId, notes)
 }
 
 export async function checkUnbudgetedTransactions(startDate: string, endDate: string) {
@@ -110,9 +51,7 @@ export async function checkUnbudgetedTransactions(startDate: string, endDate: st
   console.log(`Found ${unbudgetedTransactions.length} unbudgeted transactions`)
 
   const padAmount = Math.max(
-    ...unbudgetedTransactions.map(
-      (transaction) => parseFloat(transaction.amount).toFixed(transaction.currency_decimal_places).length,
-    ),
+    ...unbudgetedTransactions.map((transaction) => parseFloat(transaction.amount).toFixed(transaction.currency_decimal_places).length),
   )
 
   const { data: allBbudgets } = await BudgetsService.listBudget(null, 50, 1, startDate, endDate)
@@ -123,13 +62,7 @@ export async function checkUnbudgetedTransactions(startDate: string, endDate: st
     return
   }
 
-  for (const {
-    amount,
-    currency_decimal_places,
-    currency_symbol,
-    description,
-    transaction_journal_id,
-  } of unbudgetedTransactions) {
+  for (const { amount, currency_decimal_places, currency_symbol, description, transaction_journal_id } of unbudgetedTransactions) {
     let messageId = await getMessageId(transaction_journal_id)
     if (!messageId) {
       messageId = await sendDiscordMessage("Checking unbudgeted transactions")
