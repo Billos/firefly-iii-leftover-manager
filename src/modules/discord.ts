@@ -3,7 +3,7 @@ import axios from "axios"
 import { env } from "../config"
 import { TransactionSplit, TransactionsService } from "../types"
 
-export async function getTransaction(transactionId: string): Promise<TransactionSplit> {
+async function getTransaction(transactionId: string): Promise<TransactionSplit> {
   const {
     data: {
       attributes: {
@@ -12,6 +12,17 @@ export async function getTransaction(transactionId: string): Promise<Transaction
     },
   } = await TransactionsService.getTransaction(transactionId)
   return transaction
+}
+
+export async function getMessageId(transactionId: string): Promise<string> {
+  const { notes } = await getTransaction(transactionId)
+  // The notes should include (discordMessageId: <messageId>)
+  const regex = /discordMessageId: (\d+)/
+  const match = (notes || "").match(regex)
+  if (match) {
+    return match[1]
+  }
+  return null
 }
 
 async function setNotes(transactionId: string, notes: string): Promise<void> {
