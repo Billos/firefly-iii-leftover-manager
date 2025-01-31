@@ -64,15 +64,15 @@ export async function checkUnbudgetedTransactions(startDate: string, endDate: st
 
   // Send a message to discord for each unbudgeted transaction
   for (const transaction of unbudgetedTransactions) {
-    const { amount, currency_decimal_places, currency_symbol, description, transaction_journal_id } = transaction
-    const apis = generateMarkdownApiCalls(budgets, transaction_journal_id)
+    const { amount, currency_decimal_places, currency_symbol, description, transaction_journal_id: transactionId } = transaction
+    const apis = generateMarkdownApiCalls(budgets, transactionId)
     const msg = `\`${parseFloat(amount).toFixed(currency_decimal_places).padStart(padAmount)} ${currency_symbol}\` ${description} \n${apis.join(" ")}`
     try {
-      const messageId = await transactionHandler.getMessageId(transaction_journal_id)
+      const messageId = await transactionHandler.getMessageId(transactionId)
       if (messageId) {
-        await transactionHandler.updateMessage(messageId, msg, transaction_journal_id)
+        await transactionHandler.updateMessage(messageId, msg, transactionId)
       } else {
-        await transactionHandler.sendMessage(msg, transaction_journal_id)
+        await transactionHandler.sendMessage(msg, transactionId)
       }
       // Limit to 5 messages every 2 seconds
       await sleep(500)
