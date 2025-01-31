@@ -8,9 +8,7 @@ export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDa
   let leftoverAmount = totalRevenue
 
   const allLimits = await BudgetsService.listBudgetLimit(startDate, endDate)
-  const limitsWithoutLeftovers = allLimits.data.filter(
-    ({ attributes: { budget_id } }) => budget_id !== leftoversBudget.id,
-  )
+  const limitsWithoutLeftovers = allLimits.data.filter(({ attributes: { budget_id } }) => budget_id !== leftoversBudget.id)
   const leftOverLimit = allLimits.data.find(({ attributes: { budget_id } }) => budget_id === leftoversBudget.id)
 
   for (const limit of limitsWithoutLeftovers) {
