@@ -47,39 +47,55 @@ function generateMarkdownApiCalls(budgets: BudgetRead[], transactionId: string):
   return ret
 }
 
-export async function checkUnbudgetedTransactions(startDate: string, endDate: string) {
-  console.log("================ Checking the no-budget transactions =================")
-  const unbudgetedTransactions = await getUnbudgetedTransactions(startDate, endDate)
-  const padAmount = Math.max(
-    ...unbudgetedTransactions.map((transaction) => parseFloat(transaction.amount).toFixed(transaction.currency_decimal_places).length),
-  )
-
+async function getBudgetsByTransactionId(startDate?: string, endDate?: string): Promise<BudgetRead[]> {
   const { data: allBbudgets } = await BudgetsService.listBudget(null, 50, 1, startDate, endDate)
   const budgets = allBbudgets.filter(({ attributes: { name } }) => !(env.billsBudget && name === env.billsBudget))
+  return budgets
+}
 
-  if (unbudgetedTransactions.length === 0) {
-    console.log("No unbudgeted transactions")
+export async function checkUnbudgetedTransaction(transactionId: string): Promise<void> {
+  const {
+    data: {
+      attributes: {
+        transactions: [transaction],
+      },
+    },
+  } = await TransactionsService.getTransaction(transactionId)
+  const { amount, currency_decimal_places, currency_symbol, description } = transaction
+  if (!transaction) {
+    console.log(`Transaction ${transactionId} not found`)
     return
   }
 
-  // Send a message to discord for each unbudgeted transaction
-  for (const transaction of unbudgetedTransactions) {
-    const { amount, currency_decimal_places, currency_symbol, description, transaction_journal_id: transactionId } = transaction
-    const apis = generateMarkdownApiCalls(budgets, transactionId)
-    const msg = `\`${parseFloat(amount).toFixed(currency_decimal_places).padStart(padAmount)} ${currency_symbol}\` ${description} \n${apis.join(" ")}`
-    try {
-      const messageId = await transactionHandler.getMessageId(transactionId)
-      if (messageId) {
-        await transactionHandler.updateMessage(messageId, msg, transactionId)
-      } else {
-        await transactionHandler.sendMessage(msg, transactionId)
-      }
-      // Limit to 5 messages every 2 seconds
-      await sleep(500)
-    } catch (error) {
-      console.error("Error updating message", error)
-    }
+  if (transaction.budget_id) {
+    console.log(`Transaction ${transactionId} already budgeted`)
+    return
   }
 
-  console.log("Discord message sent")
+  const budgets = await getBudgetsByTransactionId()
+
+  const apis = generateMarkdownApiCalls(budgets, transactionId)
+  const msg = `\`${parseFloat(amount).toFixed(currency_decimal_places)} ${currency_symbol}\` ${description} \n${apis.join(" ")}`
+  try {
+    const messageId = await transactionHandler.getMessageId(transactionId)
+    if (messageId) {
+      await transactionHandler.updateMessage(messageId, msg, transactionId)
+    } else {
+      await transactionHandler.sendMessage(msg, transactionId)
+    }
+    // Limit to 5 messages every 2 seconds
+    await sleep(500)
+  } catch (error) {
+    console.error("Error updating message", error)
+  }
+}
+
+export async function checkUnbudgetedTransactions(startDate: string, endDate: string) {
+  console.log("================ Checking the no-budget transactions =================")
+  const unbudgetedTransactions = await getUnbudgetedTransactions(startDate, endDate)
+
+  // Send a message to discord for each unbudgeted transaction
+  for (const transaction of unbudgetedTransactions) {
+    await checkUnbudgetedTransaction(transaction.transaction_journal_id)
+  }
 }
