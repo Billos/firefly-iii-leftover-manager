@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.6.0...1.7.0) (2025-01-31)
+
+
+### Features
+
+* **webhooks:** add transaction webhook endpoint and check unbudgeted transaction ([ff83a1c](https://github.com/Billos/firefly-iii-leftover-manager/commit/ff83a1c3d20a8067f6ccdeeab114c555d028f0b8))
+
 # [1.6.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.5.1...1.6.0) (2025-01-31)
 
 
