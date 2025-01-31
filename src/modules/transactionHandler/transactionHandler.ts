@@ -3,15 +3,14 @@ import { TransactionSplit, TransactionsService } from "../../types"
 export interface TransactionHandler {
   // Function about transactions
   getMessageId(transactionId: string): Promise<string>
-  setMessageId(transactionId: string, messageId: string): Promise<void>
   // Generic function about messages
-  sendMessage: (content: string) => Promise<string>
-  updateMessage(id: string, content: string): Promise<void>
+  sendMessage: (content: string, transactionId: string) => Promise<string>
+  updateMessage(id: string, content: string, transactionId: string): Promise<void>
   deleteMessage(id: string, transactionId: string): Promise<void>
   // Functions about messages, implemented by the child class
-  sendMessageImpl: (message: string) => Promise<string>
-  updateMessageImpl: (id: string, content: string) => Promise<void>
-  deleteMessageImpl: (id: string) => Promise<void>
+  sendMessageImpl: (message: string, transactionId: string) => Promise<string>
+  updateMessageImpl: (id: string, content: string, transactionId: string) => Promise<void>
+  deleteMessageImpl: (id: string, transactionId: string) => Promise<void>
 }
 
 export abstract class AbstractTransactionHandler implements TransactionHandler {
@@ -45,7 +44,7 @@ export abstract class AbstractTransactionHandler implements TransactionHandler {
     })
   }
 
-  public async setMessageId(transactionId: string, messageId: string): Promise<void> {
+  private async setMessageId(transactionId: string, messageId: string): Promise<void> {
     const transaction = await this.getTransaction(transactionId)
     // Notes might not include the HandlerMessageId yet
     let notes = transaction.notes || ""
@@ -63,22 +62,24 @@ export abstract class AbstractTransactionHandler implements TransactionHandler {
     await this.setNotes(transactionId, notes)
   }
 
-  public async sendMessage(content: string): Promise<string> {
-    return this.sendMessageImpl(content)
+  public async sendMessage(content: string, transactionId: string): Promise<string> {
+    const messageId = await this.sendMessageImpl(content, transactionId)
+    await this.setMessageId(transactionId, messageId)
+    return messageId
   }
 
-  abstract sendMessageImpl(content: string): Promise<string>
-
-  public async updateMessage(id: string, content: string): Promise<void> {
-    return this.updateMessageImpl(id, content)
+  public async updateMessage(id: string, content: string, transactionId: string): Promise<void> {
+    return this.updateMessageImpl(id, content, transactionId)
   }
-
-  abstract updateMessageImpl(id: string, content: string): Promise<void>
 
   public async deleteMessage(id: string, transactionId: string): Promise<void> {
     await this.unsetMessageId(transactionId)
-    return this.deleteMessageImpl(id)
+    return this.deleteMessageImpl(id, transactionId)
   }
 
-  abstract deleteMessageImpl(id: string): Promise<void>
+  abstract sendMessageImpl(content: string, transactionId: string): Promise<string>
+
+  abstract updateMessageImpl(id: string, content: string, transactionId: string): Promise<void>
+
+  abstract deleteMessageImpl(id: string, transactionId: string): Promise<void>
 }
