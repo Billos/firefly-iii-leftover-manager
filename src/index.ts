@@ -38,7 +38,7 @@ async function trigger(_req: express.Request, res: express.Response) {
   }
 
   // Check unbudgeted transactions
-  if (env.discordWebhook) {
+  if (transactionHandler) {
     await checkUnbudgetedTransactions(startDate, endDate)
   }
 
