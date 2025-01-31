@@ -58,7 +58,7 @@ export abstract class AbstractTransactionHandler implements TransactionHandler {
 
   private async unsetMessageId(transactionId: string): Promise<void> {
     const transaction = await this.getTransaction(transactionId)
-    const notes = transaction.notes.replace(/discordMessageId: (\d+)/, "")
+    const notes = transaction.notes.replace(/HandlerMessageId: (\d+)/, "")
     await this.setNotes(transactionId, notes)
   }
 
