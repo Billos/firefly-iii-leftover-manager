@@ -36,14 +36,14 @@ async function getUnbudgetedTransactions(startDate: string, endDate: string): Pr
   return unbudgetedTransactions
 }
 
-function generateMarkdownApiCalls(budgets: BudgetRead[], transactionId: string, messageId: string): String[] {
+function generateMarkdownApiCalls(budgets: BudgetRead[], transactionId: string): String[] {
   const ret = []
   for (const budget of budgets) {
     const {
       id,
       attributes: { name },
     } = budget
-    ret.push(`[\`${name}\`](<${env.serviceUrl}transaction/${transactionId}/budget/${id}/${messageId}/>)`)
+    ret.push(`[\`${name}\`](<${env.serviceUrl}transaction/${transactionId}/budget/${id}>)`)
   }
   return ret
 }

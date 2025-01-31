@@ -56,10 +56,11 @@ async function trigger(_req: express.Request, res: express.Response) {
 // At start trigger the endpoint
 app.get("/", trigger)
 app.post("/", trigger)
-app.get("/transaction/:transactionId/budget/:budget_id/:messageId", async (req, res) => {
+app.get("/transaction/:transactionId/budget/:budget_id", async (req, res) => {
   console.log("=================================== Setting budget for transaction ===================================")
   console.log("Delete message")
-  const { transactionId, budget_id, messageId } = req.params
+  const { transactionId, budget_id } = req.params
+  const messageId = await transactionHandler.getMessageId(transactionId)
   await transactionHandler.deleteMessage(messageId, transactionId)
   console.log("Update transaction")
   await TransactionsService.updateTransaction(transactionId, {
