@@ -6,7 +6,7 @@ import { checkUnbudgetedTransactions } from "./controllers/checkUnbudgetedTransa
 import { linkPaypalTransactions } from "./controllers/linkPaypalTransactions"
 import { updateBillsBudgetLimit } from "./controllers/updateBillsBudgetLimit"
 import { updateLeftoversBudget } from "./controllers/updateLeftoversBudget"
-import { deleteDiscordMessage } from "./modules/discord"
+import { transactionHandler } from "./modules/transactionHandler"
 import { BudgetsService, TransactionsService } from "./types"
 
 const app = express()
@@ -60,7 +60,7 @@ app.get("/transaction/:transactionId/budget/:budget_id/:messageId", async (req, 
   console.log("=================================== Setting budget for transaction ===================================")
   console.log("Delete message")
   const { transactionId, budget_id, messageId } = req.params
-  await deleteDiscordMessage(messageId, transactionId)
+  await transactionHandler.deleteMessage(messageId, transactionId)
   console.log("Update transaction")
   await TransactionsService.updateTransaction(transactionId, {
     apply_rules: true,

@@ -1,5 +1,6 @@
 import { env } from "../config"
-import { getMessageId, sendDiscordMessage, setMessageId, updateDiscordMessage } from "../modules/discord"
+// import { getMessageId, sendDiscordMessage, setMessageId, updateDiscordMessage } from "../modules/discord"
+import { transactionHandler } from "../modules/transactionHandler"
 import { BudgetRead, BudgetsService, TransactionArray, TransactionSplit, TransactionsService, TransactionTypeFilter } from "../types"
 import { sleep } from "../utils/sleep"
 
@@ -65,15 +66,15 @@ export async function checkUnbudgetedTransactions(startDate: string, endDate: st
   // Send a message to discord for each unbudgeted transaction
   for (const transaction of unbudgetedTransactions) {
     const { amount, currency_decimal_places, currency_symbol, description, transaction_journal_id } = transaction
-    let messageId = await getMessageId(transaction_journal_id)
+    let messageId = await transactionHandler.getMessageId(transaction_journal_id)
     if (!messageId) {
-      messageId = await sendDiscordMessage("Checking unbudgeted transactions")
-      await setMessageId(transaction_journal_id, messageId)
+      messageId = await transactionHandler.sendMessage("Checking unbudgeted transactions")
+      await transactionHandler.setMessageId(transaction_journal_id, messageId)
     }
     const apis = generateMarkdownApiCalls(budgets, transaction_journal_id, messageId)
     const msg = `\`${parseFloat(amount).toFixed(currency_decimal_places).padStart(padAmount)} ${currency_symbol}\` ${description} \n${apis.join(" ")}`
     try {
-      await updateDiscordMessage(messageId, msg)
+      await transactionHandler.updateMessage(messageId, msg)
       // Limit to 5 messages every 2 seconds
       await sleep(500)
     } catch (error) {
