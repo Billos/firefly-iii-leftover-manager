@@ -2,18 +2,21 @@ import express from "express"
 import { DateTime } from "luxon"
 
 import { env } from "./config"
-import { checkUnbudgetedTransactions } from "./controllers/checkUnbudgetedTransactions"
+import { checkUnbudgetedTransaction, checkUnbudgetedTransactions } from "./controllers/checkUnbudgetedTransactions"
 import { linkPaypalTransactions } from "./controllers/linkPaypalTransactions"
 import { updateBillsBudgetLimit } from "./controllers/updateBillsBudgetLimit"
 import { updateLeftoversBudget } from "./controllers/updateLeftoversBudget"
 import { transactionHandler } from "./modules/transactionHandler"
 import { BudgetsService, TransactionsService } from "./types"
+import { WebhookTransactionBody } from "./webhooks"
 
 const app = express()
 
 app.listen(env.port, () => {
   console.log("Server is running on http://localhost:3000")
 })
+
+app.use(express.json())
 
 async function trigger(_req: express.Request, res: express.Response) {
   console.log("=========================================== Triggered ===========================================")
@@ -35,11 +38,6 @@ async function trigger(_req: express.Request, res: express.Response) {
   // If leftovers budget is found
   if (leftoversBudget) {
     await updateLeftoversBudget(leftoversBudget, startDate, endDate)
-  }
-
-  // Check unbudgeted transactions
-  if (transactionHandler) {
-    await checkUnbudgetedTransactions(startDate, endDate)
   }
 
   if (env.fireflyPaypalAccountToken && env.paypalBudget) {
@@ -72,4 +70,22 @@ app.get("/transaction/:transactionId/budget/:budget_id", async (req, res) => {
   res.send("<script>window.close()</script>")
 })
 
+app.post("/transaction", async (req, res) => {
+  console.log("=================================== Transaction webhook ===================================")
+  // Print raw request
+  const body: WebhookTransactionBody = req.body as WebhookTransactionBody
+  console.log(req.body)
+  // Check unbudgeted transactions
+  if (transactionHandler) {
+    await checkUnbudgetedTransaction(`${body.content.id}`)
+  }
+
+  res.send("OK")
+})
+
 trigger(null, null)
+if (transactionHandler) {
+  const startDate = DateTime.now().startOf("month").toISODate()
+  const endDate = DateTime.now().endOf("month").toISODate()
+  checkUnbudgetedTransactions(startDate, endDate)
+}
