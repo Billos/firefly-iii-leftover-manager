@@ -18,7 +18,7 @@ app.listen(env.port, () => {
 
 app.use(express.json())
 
-async function trigger(_req: express.Request, res: express.Response) {
+async function updateAutoBudgets(_req: express.Request, res: express.Response) {
   console.log("=========================================== Triggered ===========================================")
   // Get all budgets
   const startDate = DateTime.now().startOf("month").toISODate()
@@ -52,8 +52,8 @@ async function trigger(_req: express.Request, res: express.Response) {
 }
 
 // At start trigger the endpoint
-app.get("/", trigger)
-app.post("/", trigger)
+app.get("/", updateAutoBudgets)
+app.post("/", updateAutoBudgets)
 app.get("/transaction/:transactionId/budget/:budget_id", async (req, res) => {
   console.log("=================================== Setting budget for transaction ===================================")
   console.log("Delete message")
@@ -74,16 +74,15 @@ app.post("/transaction", async (req, res) => {
   console.log("=================================== Transaction webhook ===================================")
   // Print raw request
   const body: WebhookTransactionBody = req.body as WebhookTransactionBody
-  console.log(req.body)
   // Check unbudgeted transactions
   if (transactionHandler) {
     await checkUnbudgetedTransaction(`${body.content.id}`)
   }
 
-  res.send("OK")
+  await updateAutoBudgets(req, res)
 })
 
-trigger(null, null)
+updateAutoBudgets(null, null)
 if (transactionHandler) {
   const startDate = DateTime.now().startOf("month").toISODate()
   const endDate = DateTime.now().endOf("month").toISODate()
