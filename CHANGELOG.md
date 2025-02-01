@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.7.0...1.7.1) (2025-02-01)
+
+
+### Bug Fixes
+
+* **updateLeftoversBudget:** prevent updating budget with negative leftover amount ([d66e1dc](https://github.com/Billos/firefly-iii-leftover-manager/commit/d66e1dc05db343e29c3c4c2e111d9ad2b8b3826b))
+
 # [1.7.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.6.0...1.7.0) (2025-01-31)
 
 
