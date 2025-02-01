@@ -2,10 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { BillRead } from "./BillRead"
-import type { Meta } from "./Meta"
-
+import type { BillRead } from './BillRead';
+import type { Meta } from './Meta';
 export type BillArray = {
-  data: Array<BillRead>
-  meta: Meta
-}
+    data: Array<BillRead>;
+    meta: Meta;
+};
+

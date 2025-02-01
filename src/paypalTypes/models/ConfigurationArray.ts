@@ -2,6 +2,5 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Configuration } from "./Configuration"
-
-export type ConfigurationArray = Array<Configuration>
+import type { Configuration } from './Configuration';
+export type ConfigurationArray = Array<Configuration>;

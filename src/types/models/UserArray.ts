@@ -2,12 +2,12 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Meta } from "./Meta"
-import type { PageLink } from "./PageLink"
-import type { UserRead } from "./UserRead"
-
+import type { Meta } from './Meta';
+import type { PageLink } from './PageLink';
+import type { UserRead } from './UserRead';
 export type UserArray = {
-  data: Array<UserRead>
-  meta: Meta
-  links: PageLink
-}
+    data: Array<UserRead>;
+    meta: Meta;
+    links: PageLink;
+};
+

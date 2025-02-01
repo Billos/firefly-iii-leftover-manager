@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { BillRead } from "./BillRead"
-
+import type { BillRead } from './BillRead';
 export type BillSingle = {
-  data: BillRead
-}
+    data: BillRead;
+};
+

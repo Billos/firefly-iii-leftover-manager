@@ -3,9 +3,10 @@
 /* tslint:disable */
 /* eslint-disable */
 export type PageLink = {
-  self?: string
-  first?: string
-  next?: string | null
-  prev?: string | null
-  last?: string
-}
+    self?: string;
+    first?: string;
+    next?: string | null;
+    prev?: string | null;
+    last?: string;
+};
+

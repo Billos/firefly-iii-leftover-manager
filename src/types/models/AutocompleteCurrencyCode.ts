@@ -3,15 +3,16 @@
 /* tslint:disable */
 /* eslint-disable */
 export type AutocompleteCurrencyCode = {
-  id: string
-  /**
-   * Currency name with the code between brackets.
-   */
-  name: string
-  /**
-   * Currency code.
-   */
-  code: string
-  symbol: string
-  decimal_places: number
-}
+    id: string;
+    /**
+     * Currency name with the code between brackets.
+     */
+    name: string;
+    /**
+     * Currency code.
+     */
+    code: string;
+    symbol: string;
+    decimal_places: number;
+};
+

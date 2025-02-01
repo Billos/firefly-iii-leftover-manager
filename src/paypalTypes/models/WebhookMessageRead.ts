@@ -2,13 +2,13 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { WebhookMessage } from "./WebhookMessage"
-
+import type { WebhookMessage } from './WebhookMessage';
 export type WebhookMessageRead = {
-  /**
-   * Immutable value
-   */
-  type: string
-  id: string
-  attributes: WebhookMessage
-}
+    /**
+     * Immutable value
+     */
+    type: string;
+    id: string;
+    attributes: WebhookMessage;
+};
+

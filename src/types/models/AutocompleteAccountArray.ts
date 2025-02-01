@@ -2,6 +2,5 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { AutocompleteAccount } from "./AutocompleteAccount"
-
-export type AutocompleteAccountArray = Array<AutocompleteAccount>
+import type { AutocompleteAccount } from './AutocompleteAccount';
+export type AutocompleteAccountArray = Array<AutocompleteAccount>;

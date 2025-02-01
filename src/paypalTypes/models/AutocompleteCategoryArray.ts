@@ -2,6 +2,5 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { AutocompleteCategory } from "./AutocompleteCategory"
-
-export type AutocompleteCategoryArray = Array<AutocompleteCategory>
+import type { AutocompleteCategory } from './AutocompleteCategory';
+export type AutocompleteCategoryArray = Array<AutocompleteCategory>;

@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type NotFoundResponse = {
-  message?: string
-  exception?: string
-}
+    message?: string;
+    exception?: string;
+};
+

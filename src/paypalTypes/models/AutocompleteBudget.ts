@@ -3,9 +3,10 @@
 /* tslint:disable */
 /* eslint-disable */
 export type AutocompleteBudget = {
-  id: string
-  /**
-   * Name of the budget found by an auto-complete search.
-   */
-  name: string
-}
+    id: string;
+    /**
+     * Name of the budget found by an auto-complete search.
+     */
+    name: string;
+};
+

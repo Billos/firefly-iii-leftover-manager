@@ -3,9 +3,9 @@
 /* tslint:disable */
 /* eslint-disable */
 export enum AccountSearchFieldFilter {
-  ALL = "all",
-  IBAN = "iban",
-  NAME = "name",
-  NUMBER = "number",
-  ID = "id",
+    ALL = 'all',
+    IBAN = 'iban',
+    NAME = 'name',
+    NUMBER = 'number',
+    ID = 'id',
 }

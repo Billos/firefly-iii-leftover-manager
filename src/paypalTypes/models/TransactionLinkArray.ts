@@ -2,12 +2,12 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Meta } from "./Meta"
-import type { PageLink } from "./PageLink"
-import type { TransactionLinkRead } from "./TransactionLinkRead"
-
+import type { Meta } from './Meta';
+import type { PageLink } from './PageLink';
+import type { TransactionLinkRead } from './TransactionLinkRead';
 export type TransactionLinkArray = {
-  data: Array<TransactionLinkRead>
-  meta: Meta
-  links: PageLink
-}
+    data: Array<TransactionLinkRead>;
+    meta: Meta;
+    links: PageLink;
+};
+

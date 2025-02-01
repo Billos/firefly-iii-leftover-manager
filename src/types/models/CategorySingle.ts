@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CategoryRead } from "./CategoryRead"
-
+import type { CategoryRead } from './CategoryRead';
 export type CategorySingle = {
-  data: CategoryRead
-}
+    data: CategoryRead;
+};
+

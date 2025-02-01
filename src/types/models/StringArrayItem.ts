@@ -5,4 +5,4 @@
 /**
  * The actual preference content.
  */
-export type StringArrayItem = string
+export type StringArrayItem = string;

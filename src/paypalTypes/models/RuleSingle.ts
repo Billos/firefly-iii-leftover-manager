@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { RuleRead } from "./RuleRead"
-
+import type { RuleRead } from './RuleRead';
 export type RuleSingle = {
-  data: RuleRead
-}
+    data: RuleRead;
+};
+

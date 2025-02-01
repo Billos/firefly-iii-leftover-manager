@@ -2,6 +2,5 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { AutocompleteTransactionType } from "./AutocompleteTransactionType"
-
-export type AutocompleteTransactionTypeArray = Array<AutocompleteTransactionType>
+import type { AutocompleteTransactionType } from './AutocompleteTransactionType';
+export type AutocompleteTransactionTypeArray = Array<AutocompleteTransactionType>;

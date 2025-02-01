@@ -2,13 +2,13 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Preference } from "./Preference"
-
+import type { Preference } from './Preference';
 export type PreferenceRead = {
-  /**
-   * Immutable value
-   */
-  type: string
-  id: string
-  attributes: Preference
-}
+    /**
+     * Immutable value
+     */
+    type: string;
+    id: string;
+    attributes: Preference;
+};
+

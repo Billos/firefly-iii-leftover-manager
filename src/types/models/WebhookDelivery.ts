@@ -6,5 +6,5 @@
  * Format of the delivered response.
  */
 export enum WebhookDelivery {
-  JSON = "JSON",
+    JSON = 'JSON',
 }

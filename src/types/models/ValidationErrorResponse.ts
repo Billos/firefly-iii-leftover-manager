@@ -3,17 +3,20 @@
 /* tslint:disable */
 /* eslint-disable */
 export type ValidationErrorResponse = {
-  message?: string
-  errors?: {
-    email?: Array<string>
-    blocked?: Array<string>
-    role?: Array<string>
-    blocked_code?: Array<string>
-    name?: Array<string>
-    type?: Array<string>
-    iban?: Array<string>
-    start?: Array<string>
-    end?: Array<string>
-    date?: Array<string>
-  }
-}
+    message?: string;
+    errors?: {
+        email?: Array<string>;
+        force?: Array<string>;
+        blocked?: Array<string>;
+        field?: Array<string>;
+        role?: Array<string>;
+        blocked_code?: Array<string>;
+        name?: Array<string>;
+        type?: Array<string>;
+        iban?: Array<string>;
+        start?: Array<string>;
+        end?: Array<string>;
+        date?: Array<string>;
+    };
+};
+

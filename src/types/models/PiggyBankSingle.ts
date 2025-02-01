@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { PiggyBankRead } from "./PiggyBankRead"
-
+import type { PiggyBankRead } from './PiggyBankRead';
 export type PiggyBankSingle = {
-  data: PiggyBankRead
-}
+    data: PiggyBankRead;
+};
+

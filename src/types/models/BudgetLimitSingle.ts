@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { BudgetLimitRead } from "./BudgetLimitRead"
-
+import type { BudgetLimitRead } from './BudgetLimitRead';
 export type BudgetLimitSingle = {
-  data: BudgetLimitRead
-}
+    data: BudgetLimitRead;
+};
+

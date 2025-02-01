@@ -6,5 +6,5 @@
  * Mandatory when the account_role is ccAsset. Can only be monthlyFull or null.
  */
 export enum CreditCardTypeProperty {
-  MONTHLY_FULL = "monthlyFull",
+    MONTHLY_FULL = 'monthlyFull',
 }

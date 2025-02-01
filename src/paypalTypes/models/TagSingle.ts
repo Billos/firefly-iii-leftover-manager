@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { TagRead } from "./TagRead"
-
+import type { TagRead } from './TagRead';
 export type TagSingle = {
-  data: TagRead
-}
+    data: TagRead;
+};
+

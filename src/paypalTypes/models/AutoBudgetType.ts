@@ -6,7 +6,7 @@
  * The type of auto-budget that Firefly III must create.
  */
 export enum AutoBudgetType {
-  RESET = "reset",
-  ROLLOVER = "rollover",
-  NONE = "none",
+    RESET = 'reset',
+    ROLLOVER = 'rollover',
+    NONE = 'none',
 }

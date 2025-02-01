@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CurrencyRead } from "./CurrencyRead"
-
+import type { CurrencyRead } from './CurrencyRead';
 export type CurrencySingle = {
-  data: CurrencyRead
-}
+    data: CurrencyRead;
+};
+

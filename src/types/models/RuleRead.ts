@@ -2,15 +2,15 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { ObjectLink } from "./ObjectLink"
-import type { Rule } from "./Rule"
-
+import type { ObjectLink } from './ObjectLink';
+import type { Rule } from './Rule';
 export type RuleRead = {
-  /**
-   * Immutable value
-   */
-  type: string
-  id: string
-  attributes: Rule
-  links: ObjectLink
-}
+    /**
+     * Immutable value
+     */
+    type: string;
+    id: string;
+    attributes: Rule;
+    links: ObjectLink;
+};
+

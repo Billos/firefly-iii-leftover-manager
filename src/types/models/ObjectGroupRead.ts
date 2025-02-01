@@ -2,13 +2,13 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { ObjectGroup } from "./ObjectGroup"
-
+import type { ObjectGroup } from './ObjectGroup';
 export type ObjectGroupRead = {
-  /**
-   * Immutable value
-   */
-  type: string
-  id: string
-  attributes: ObjectGroup
-}
+    /**
+     * Immutable value
+     */
+    type: string;
+    id: string;
+    attributes: ObjectGroup;
+};
+

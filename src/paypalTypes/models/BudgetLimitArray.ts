@@ -2,10 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { BudgetLimitRead } from "./BudgetLimitRead"
-import type { Meta } from "./Meta"
-
+import type { BudgetLimitRead } from './BudgetLimitRead';
+import type { Meta } from './Meta';
 export type BudgetLimitArray = {
-  data: Array<BudgetLimitRead>
-  meta: Meta
-}
+    data: Array<BudgetLimitRead>;
+    meta: Meta;
+};
+

@@ -3,13 +3,14 @@
 /* tslint:disable */
 /* eslint-disable */
 export type AutocompleteObjectGroup = {
-  id: string
-  /**
-   * Title of the object group found by an auto-complete search.
-   */
-  title: string
-  /**
-   * Title of the object group found by an auto-complete search.
-   */
-  name: string
-}
+    id: string;
+    /**
+     * Title of the object group found by an auto-complete search.
+     */
+    title: string;
+    /**
+     * Title of the object group found by an auto-complete search.
+     */
+    name: string;
+};
+

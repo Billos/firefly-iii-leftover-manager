@@ -3,14 +3,15 @@
 /* tslint:disable */
 /* eslint-disable */
 export type SystemInfo = {
-  data?: {
-    version?: string
-    /**
-     * Same value as the version field.
-     */
-    api_version?: string
-    php_version?: string
-    os?: string
-    driver?: string
-  }
-}
+    data?: {
+        version?: string;
+        /**
+         * Same value as the version field.
+         */
+        api_version?: string;
+        php_version?: string;
+        os?: string;
+        driver?: string;
+    };
+};
+

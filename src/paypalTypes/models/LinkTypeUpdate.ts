@@ -3,7 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export type LinkTypeUpdate = {
-  name?: string
-  inward?: string
-  outward?: string
-}
+    name?: string;
+    inward?: string;
+    outward?: string;
+};
+

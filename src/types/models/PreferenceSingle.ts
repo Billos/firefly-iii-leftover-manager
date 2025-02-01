@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { PreferenceRead } from "./PreferenceRead"
-
+import type { PreferenceRead } from './PreferenceRead';
 export type PreferenceSingle = {
-  data: PreferenceRead
-}
+    data: PreferenceRead;
+};
+

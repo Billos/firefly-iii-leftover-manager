@@ -6,6 +6,6 @@
  * Role for the user. Can be empty or omitted.
  */
 export enum UserRoleProperty {
-  OWNER = "owner",
-  DEMO = "demo",
+    OWNER = 'owner',
+    DEMO = 'demo',
 }

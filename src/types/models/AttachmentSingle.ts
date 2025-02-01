@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { AttachmentRead } from "./AttachmentRead"
-
+import type { AttachmentRead } from './AttachmentRead';
 export type AttachmentSingle = {
-  data: AttachmentRead
-}
+    data: AttachmentRead;
+};
+

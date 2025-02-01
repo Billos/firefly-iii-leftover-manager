@@ -6,6 +6,6 @@
  * Which action is necessary for the rule to fire? Use either store-journal or update-journal.
  */
 export enum RuleTriggerType {
-  STORE_JOURNAL = "store-journal",
-  UPDATE_JOURNAL = "update-journal",
+    STORE_JOURNAL = 'store-journal',
+    UPDATE_JOURNAL = 'update-journal',
 }

@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { WebhookMessageRead } from "./WebhookMessageRead"
-
+import type { WebhookMessageRead } from './WebhookMessageRead';
 export type WebhookMessageSingle = {
-  data: WebhookMessageRead
-}
+    data: WebhookMessageRead;
+};
+

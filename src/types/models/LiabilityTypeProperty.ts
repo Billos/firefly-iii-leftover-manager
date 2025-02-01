@@ -6,7 +6,7 @@
  * Mandatory when type is liability. Specifies the exact type.
  */
 export enum LiabilityTypeProperty {
-  LOAN = "loan",
-  DEBT = "debt",
-  MORTGAGE = "mortgage",
+    LOAN = 'loan',
+    DEBT = 'debt',
+    MORTGAGE = 'mortgage',
 }

@@ -6,7 +6,7 @@
  * Indicator for what Firefly III will deliver to the webhook URL.
  */
 export enum WebhookResponse {
-  TRANSACTIONS = "TRANSACTIONS",
-  ACCOUNTS = "ACCOUNTS",
-  NONE = "NONE",
+    TRANSACTIONS = 'TRANSACTIONS',
+    ACCOUNTS = 'ACCOUNTS',
+    NONE = 'NONE',
 }

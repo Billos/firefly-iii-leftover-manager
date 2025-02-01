@@ -2,6 +2,5 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { InsightTotalEntry } from "./InsightTotalEntry"
-
-export type InsightTotal = Array<InsightTotalEntry>
+import type { InsightTotalEntry } from './InsightTotalEntry';
+export type InsightTotal = Array<InsightTotalEntry>;

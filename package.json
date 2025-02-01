@@ -44,7 +44,8 @@
     "release": "semantic-release",
     "start": "tsx src/index.ts",
     "type-check": "tsc --noEmit",
-    "types:api:generate": "openapi --input https://api-docs.firefly-iii.org/firefly-iii-6.1.24-v1.yaml --output ./src/types"
+    "types:api:generate": "openapi --input https://api-docs.firefly-iii.org/firefly-iii-6.2.0-v1.yaml --output ./src/types",
+    "types:paypal:api:generate": "openapi --input https://api-docs.firefly-iii.org/firefly-iii-6.2.0-v1.yaml --output ./src/paypalTypes"
   },
   "license": "GPL-3.0-only"
 }

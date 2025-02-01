@@ -6,9 +6,9 @@
  * How often the bill must be paid.
  */
 export enum BillRepeatFrequency {
-  WEEKLY = "weekly",
-  MONTHLY = "monthly",
-  QUARTERLY = "quarterly",
-  HALF_YEAR = "half-year",
-  YEARLY = "yearly",
+    WEEKLY = 'weekly',
+    MONTHLY = 'monthly',
+    QUARTERLY = 'quarterly',
+    HALF_YEAR = 'half-year',
+    YEARLY = 'yearly',
 }

@@ -6,9 +6,9 @@
  * Mandatory when type is liability. Period over which the interest is calculated.
  */
 export enum InterestPeriodProperty {
-  WEEKLY = "weekly",
-  MONTHLY = "monthly",
-  QUARTERLY = "quarterly",
-  HALF_YEAR = "half-year",
-  YEARLY = "yearly",
+    WEEKLY = 'weekly',
+    MONTHLY = 'monthly',
+    QUARTERLY = 'quarterly',
+    HALF_YEAR = 'half-year',
+    YEARLY = 'yearly',
 }

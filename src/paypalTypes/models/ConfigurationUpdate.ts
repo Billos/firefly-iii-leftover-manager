@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { PolymorphicProperty } from "./PolymorphicProperty"
-
+import type { PolymorphicProperty } from './PolymorphicProperty';
 export type ConfigurationUpdate = {
-  value: PolymorphicProperty
-}
+    value: PolymorphicProperty;
+};
+

@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { ObjectGroupRead } from "./ObjectGroupRead"
-
+import type { ObjectGroupRead } from './ObjectGroupRead';
 export type ObjectGroupSingle = {
-  data: ObjectGroupRead
-}
+    data: ObjectGroupRead;
+};
+

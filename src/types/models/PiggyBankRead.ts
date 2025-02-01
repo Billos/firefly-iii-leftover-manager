@@ -2,15 +2,15 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { ObjectLink } from "./ObjectLink"
-import type { PiggyBank } from "./PiggyBank"
-
+import type { ObjectLink } from './ObjectLink';
+import type { PiggyBank } from './PiggyBank';
 export type PiggyBankRead = {
-  /**
-   * Immutable value
-   */
-  type: string
-  id: string
-  attributes: PiggyBank
-  links: ObjectLink
-}
+    /**
+     * Immutable value
+     */
+    type: string;
+    id: string;
+    attributes: PiggyBank;
+    links: ObjectLink;
+};
+

@@ -6,9 +6,9 @@
  * Is only mandatory when the type is asset.
  */
 export enum AccountRoleProperty {
-  DEFAULT_ASSET = "defaultAsset",
-  SHARED_ASSET = "sharedAsset",
-  SAVING_ASSET = "savingAsset",
-  CC_ASSET = "ccAsset",
-  CASH_WALLET_ASSET = "cashWalletAsset",
+    DEFAULT_ASSET = 'defaultAsset',
+    SHARED_ASSET = 'sharedAsset',
+    SAVING_ASSET = 'savingAsset',
+    CC_ASSET = 'ccAsset',
+    CASH_WALLET_ASSET = 'cashWalletAsset',
 }

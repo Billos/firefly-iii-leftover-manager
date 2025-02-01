@@ -3,8 +3,9 @@
 /* tslint:disable */
 /* eslint-disable */
 export type LinkType = {
-  name: string
-  inward: string
-  outward: string
-  readonly editable?: boolean
-}
+    name: string;
+    inward: string;
+    outward: string;
+    readonly editable?: boolean;
+};
+

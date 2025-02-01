@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { LinkTypeRead } from "./LinkTypeRead"
-
+import type { LinkTypeRead } from './LinkTypeRead';
 export type LinkTypeSingle = {
-  data: LinkTypeRead
-}
+    data: LinkTypeRead;
+};
+

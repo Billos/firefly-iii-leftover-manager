@@ -2,6 +2,5 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { AutocompleteRuleGroup } from "./AutocompleteRuleGroup"
-
-export type AutocompleteRuleGroupArray = Array<AutocompleteRuleGroup>
+import type { AutocompleteRuleGroup } from './AutocompleteRuleGroup';
+export type AutocompleteRuleGroupArray = Array<AutocompleteRuleGroup>;

@@ -2,15 +2,15 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { ObjectLink } from "./ObjectLink"
-import type { Recurrence } from "./Recurrence"
-
+import type { ObjectLink } from './ObjectLink';
+import type { Recurrence } from './Recurrence';
 export type RecurrenceRead = {
-  /**
-   * Immutable value
-   */
-  type: string
-  id: string
-  attributes: Recurrence
-  links: ObjectLink
-}
+    /**
+     * Immutable value
+     */
+    type: string;
+    id: string;
+    attributes: Recurrence;
+    links: ObjectLink;
+};
+

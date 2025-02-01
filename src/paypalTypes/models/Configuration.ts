@@ -2,14 +2,14 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { ConfigValueFilter } from "./ConfigValueFilter"
-import type { PolymorphicProperty } from "./PolymorphicProperty"
-
+import type { ConfigValueFilter } from './ConfigValueFilter';
+import type { PolymorphicProperty } from './PolymorphicProperty';
 export type Configuration = {
-  title: ConfigValueFilter
-  value: PolymorphicProperty
-  /**
-   * If this config variable can be edited by the user
-   */
-  editable: boolean
-}
+    title: ConfigValueFilter;
+    value: PolymorphicProperty;
+    /**
+     * If this config variable can be edited by the user
+     */
+    editable: boolean;
+};
+

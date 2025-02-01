@@ -2,6 +2,5 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { AutocompleteTransactionID } from "./AutocompleteTransactionID"
-
-export type AutocompleteTransactionIDArray = Array<AutocompleteTransactionID>
+import type { AutocompleteTransactionID } from './AutocompleteTransactionID';
+export type AutocompleteTransactionIDArray = Array<AutocompleteTransactionID>;

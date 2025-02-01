@@ -3,9 +3,10 @@
 /* tslint:disable */
 /* eslint-disable */
 export type ObjectLink = {
-  "0"?: {
-    rel?: string
-    uri?: string
-  }
-  self?: string
-}
+    '0'?: {
+        rel?: string;
+        uri?: string;
+    };
+    self?: string;
+};
+

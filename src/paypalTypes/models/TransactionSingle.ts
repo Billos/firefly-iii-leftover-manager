@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { TransactionRead } from "./TransactionRead"
-
+import type { TransactionRead } from './TransactionRead';
 export type TransactionSingle = {
-  data: TransactionRead
-}
+    data: TransactionRead;
+};
+

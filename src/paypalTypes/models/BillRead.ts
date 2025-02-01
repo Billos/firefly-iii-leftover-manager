@@ -2,13 +2,13 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Bill } from "./Bill"
-
+import type { Bill } from './Bill';
 export type BillRead = {
-  /**
-   * Immutable value
-   */
-  type: string
-  id: string
-  attributes: Bill
-}
+    /**
+     * Immutable value
+     */
+    type: string;
+    id: string;
+    attributes: Bill;
+};
+

@@ -2,10 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { AccountRead } from "./AccountRead"
-import type { Meta } from "./Meta"
-
+import type { AccountRead } from './AccountRead';
+import type { Meta } from './Meta';
 export type AccountArray = {
-  data: Array<AccountRead>
-  meta: Meta
-}
+    data: Array<AccountRead>;
+    meta: Meta;
+};
+

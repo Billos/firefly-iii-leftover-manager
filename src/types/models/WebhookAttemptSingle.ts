@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { WebhookAttemptRead } from "./WebhookAttemptRead"
-
+import type { WebhookAttemptRead } from './WebhookAttemptRead';
 export type WebhookAttemptSingle = {
-  data: WebhookAttemptRead
-}
+    data: WebhookAttemptRead;
+};
+

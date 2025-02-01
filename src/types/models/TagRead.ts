@@ -2,15 +2,15 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { ObjectLink } from "./ObjectLink"
-import type { TagModel } from "./TagModel"
-
+import type { ObjectLink } from './ObjectLink';
+import type { TagModel } from './TagModel';
 export type TagRead = {
-  /**
-   * Immutable value
-   */
-  type: string
-  id: string
-  attributes: TagModel
-  links: ObjectLink
-}
+    /**
+     * Immutable value
+     */
+    type: string;
+    id: string;
+    attributes: TagModel;
+    links: ObjectLink;
+};
+

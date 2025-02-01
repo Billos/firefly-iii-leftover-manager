@@ -2,6 +2,5 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { AutocompleteRecurrence } from "./AutocompleteRecurrence"
-
-export type AutocompleteRecurrenceArray = Array<AutocompleteRecurrence>
+import type { AutocompleteRecurrence } from './AutocompleteRecurrence';
+export type AutocompleteRecurrenceArray = Array<AutocompleteRecurrence>;

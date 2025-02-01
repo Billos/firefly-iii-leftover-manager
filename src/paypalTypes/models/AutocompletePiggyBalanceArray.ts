@@ -2,6 +2,5 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { AutocompletePiggyBalance } from "./AutocompletePiggyBalance"
-
-export type AutocompletePiggyBalanceArray = Array<AutocompletePiggyBalance>
+import type { AutocompletePiggyBalance } from './AutocompletePiggyBalance';
+export type AutocompletePiggyBalanceArray = Array<AutocompletePiggyBalance>;

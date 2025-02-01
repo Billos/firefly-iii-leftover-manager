@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { UserRead } from "./UserRead"
-
+import type { UserRead } from './UserRead';
 export type UserSingle = {
-  data: UserRead
-}
+    data: UserRead;
+};
+

@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type CategoryUpdate = {
-  name: string
-  notes?: string | null
-}
+    name: string;
+    notes?: string | null;
+};
+

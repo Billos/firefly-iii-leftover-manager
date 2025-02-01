@@ -2,10 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Meta } from "./Meta"
-import type { WebhookAttemptRead } from "./WebhookAttemptRead"
-
+import type { Meta } from './Meta';
+import type { WebhookAttemptRead } from './WebhookAttemptRead';
 export type WebhookAttemptArray = {
-  data: Array<WebhookAttemptRead>
-  meta: Meta
-}
+    data: Array<WebhookAttemptRead>;
+    meta: Meta;
+};
+

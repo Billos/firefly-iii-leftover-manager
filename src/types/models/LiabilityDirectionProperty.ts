@@ -6,6 +6,6 @@
  * 'credit' indicates somebody owes you the liability. 'debit' Indicates you owe this debt yourself. Works only for liabiltiies.
  */
 export enum LiabilityDirectionProperty {
-  CREDIT = "credit",
-  DEBIT = "debit",
+    CREDIT = 'credit',
+    DEBIT = 'debit',
 }

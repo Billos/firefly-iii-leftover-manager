@@ -3,9 +3,10 @@
 /* tslint:disable */
 /* eslint-disable */
 export type ObjectGroupUpdate = {
-  title: string
-  /**
-   * Order of the object group
-   */
-  order?: number
-}
+    title: string;
+    /**
+     * Order of the object group
+     */
+    order?: number;
+};
+

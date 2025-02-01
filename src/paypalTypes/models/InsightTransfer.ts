@@ -2,6 +2,5 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { InsightTransferEntry } from "./InsightTransferEntry"
-
-export type InsightTransfer = Array<InsightTransferEntry>
+import type { InsightTransferEntry } from './InsightTransferEntry';
+export type InsightTransfer = Array<InsightTransferEntry>;

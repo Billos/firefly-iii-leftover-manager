@@ -3,7 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export type AttachmentUpdate = {
-  filename?: string
-  title?: string
-  notes?: string | null
-}
+    filename?: string;
+    title?: string;
+    notes?: string | null;
+};
+

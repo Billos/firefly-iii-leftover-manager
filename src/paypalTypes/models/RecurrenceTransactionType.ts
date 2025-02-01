@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export enum RecurrenceTransactionType {
-  WITHDRAWAL = "withdrawal",
-  TRANSFER = "transfer",
-  DEPOSIT = "deposit",
+    WITHDRAWAL = 'withdrawal',
+    TRANSFER = 'transfer',
+    DEPOSIT = 'deposit',
 }

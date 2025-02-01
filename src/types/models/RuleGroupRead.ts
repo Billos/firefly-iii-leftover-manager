@@ -2,15 +2,15 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { ObjectLink } from "./ObjectLink"
-import type { RuleGroup } from "./RuleGroup"
-
+import type { ObjectLink } from './ObjectLink';
+import type { RuleGroup } from './RuleGroup';
 export type RuleGroupRead = {
-  /**
-   * Immutable value
-   */
-  type: string
-  id: string
-  attributes: RuleGroup
-  links: ObjectLink
-}
+    /**
+     * Immutable value
+     */
+    type: string;
+    id: string;
+    attributes: RuleGroup;
+    links: ObjectLink;
+};
+
