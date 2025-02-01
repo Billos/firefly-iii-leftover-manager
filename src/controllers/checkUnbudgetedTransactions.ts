@@ -75,7 +75,8 @@ export async function checkUnbudgetedTransaction(transactionId: string): Promise
   const budgets = await getBudgetsByTransactionId()
 
   const apis = generateMarkdownApiCalls(budgets, transactionId)
-  const msg = `\`${parseFloat(amount).toFixed(currency_decimal_places)} ${currency_symbol}\` ${description} \n${apis.join(" ")}`
+  const link = `[Link](${env.fireflyUrl}/transactions/show/${transactionId})`
+  const msg = `\`${parseFloat(amount).toFixed(currency_decimal_places)} ${currency_symbol}\` ${description} \n${apis.join(" ")} - ${link}`
   try {
     const messageId = await transactionHandler.getMessageId(transactionId)
     if (messageId) {
