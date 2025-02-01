@@ -377,7 +377,7 @@ export class BudgetsService {
     ): CancelablePromise<TransactionArray> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/v1/budgets//transactions-without-budget',
+            url: '/v1/budgets/transactions-without-budget',
             headers: {
                 'X-Trace-Id': xTraceId,
             },
