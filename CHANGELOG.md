@@ -1,3 +1,12 @@
+## [1.8.1](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.8.0...1.8.1) (2025-02-01)
+
+
+### Bug Fixes
+
+* **BudgetsService:** correct URL for fetching transactions without budget ([4016136](https://github.com/Billos/firefly-iii-leftover-manager/commit/401613610ce5b3ab24386dae6870364112c418cb))
+* **checkUnbudgetedTransactions:** Using the transaction Without budget api rather than computing those ourself ([a54dffd](https://github.com/Billos/firefly-iii-leftover-manager/commit/a54dffd82339441c63086d35908f40ec92312ffc))
+* **request:** handle response parsing for string and object types ([dbe82f0](https://github.com/Billos/firefly-iii-leftover-manager/commit/dbe82f076dba9412ab8bfa51e78288f180fd7530))
+
 # [1.8.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.7.1...1.8.0) (2025-02-01)
 
 
