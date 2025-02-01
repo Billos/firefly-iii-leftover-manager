@@ -1,39 +1,7 @@
 import { env } from "../config"
 import { transactionHandler } from "../modules/transactionHandler"
-import { BudgetRead, BudgetsService, TransactionArray, TransactionSplit, TransactionsService, TransactionTypeFilter } from "../types"
+import { BudgetRead, BudgetsService, TransactionsService } from "../types"
 import { sleep } from "../utils/sleep"
-
-async function getTransactions(amout: number, page: number, startDate: string, endDate: string): Promise<TransactionArray> {
-  return TransactionsService.listTransaction(null, amout, page, startDate, endDate, TransactionTypeFilter.WITHDRAWAL)
-}
-
-async function countPagesToFetch(amount: number, startDate: string, endDate: string): Promise<number> {
-  const { meta } = await getTransactions(amount, 1, startDate, endDate)
-  return meta.pagination.total_pages
-}
-
-async function getUnbudgetedTransactions(startDate: string, endDate: string): Promise<TransactionSplit[]> {
-  console.log("================ Getting the unbudgeted =================")
-  const amountPerPage = 50
-  const totalPages = await countPagesToFetch(amountPerPage, startDate, endDate)
-  const unbudgetedTransactions: TransactionSplit[] = []
-
-  for (let page = 1; page <= totalPages; page++) {
-    const { data: transactions } = await getTransactions(amountPerPage, page, startDate, endDate)
-    for (const transactionItem of transactions) {
-      const {
-        attributes: {
-          transactions: [transaction],
-        },
-      } = transactionItem
-      if (!transaction.budget_id) {
-        unbudgetedTransactions.push(transaction)
-      }
-    }
-  }
-  console.log(`Found ${unbudgetedTransactions.length} unbudgeted transactions`)
-  return unbudgetedTransactions
-}
 
 function generateMarkdownApiCalls(budgets: BudgetRead[], transactionId: string): String[] {
   const ret = []
@@ -91,12 +59,11 @@ export async function checkUnbudgetedTransaction(transactionId: string): Promise
   }
 }
 
-export async function checkUnbudgetedTransactions(startDate: string, endDate: string) {
+export async function checkUnbudgetedTransactions() {
   console.log("================ Checking the no-budget transactions =================")
-  const unbudgetedTransactions = await getUnbudgetedTransactions(startDate, endDate)
-
+  const { data } = await BudgetsService.listTransactionWithoutBudget(null, 50, 1)
   // Send a message to discord for each unbudgeted transaction
-  for (const transaction of unbudgetedTransactions) {
-    await checkUnbudgetedTransaction(transaction.transaction_journal_id)
+  for (const { id } of data) {
+    await checkUnbudgetedTransaction(id)
   }
 }

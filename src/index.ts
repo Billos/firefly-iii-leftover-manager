@@ -84,7 +84,5 @@ app.post("/transaction", async (req, res) => {
 
 updateAutoBudgets(null, null)
 if (transactionHandler) {
-  const startDate = DateTime.now().startOf("month").toISODate()
-  const endDate = DateTime.now().endOf("month").toISODate()
-  checkUnbudgetedTransactions(startDate, endDate)
+  checkUnbudgetedTransactions()
 }
