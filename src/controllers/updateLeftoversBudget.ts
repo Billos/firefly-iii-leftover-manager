@@ -14,6 +14,12 @@ export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDa
   for (const limit of limitsWithoutLeftovers) {
     leftoverAmount -= parseFloat(limit.attributes.amount)
   }
+
+  if (leftoverAmount < 0) {
+    console.log("Leftover amount is negative, not updating")
+    return
+  }
+
   console.log("Leftover amount", leftoverAmount)
   const params: BudgetLimit = {
     amount: leftoverAmount.toString(),
