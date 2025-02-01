@@ -1,3 +1,15 @@
+# [1.8.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.7.1...1.8.0) (2025-02-01)
+
+
+### Bug Fixes
+
+* **OpenAPI:** update BASE URL to include /api path ([67c3b6a](https://github.com/Billos/firefly-iii-leftover-manager/commit/67c3b6a757dc0adc0288106ed0257105bdaa8fbe))
+
+
+### Features
+
+* **checkUnbudgetedTransactions:** add transaction link to message output ([6667844](https://github.com/Billos/firefly-iii-leftover-manager/commit/666784412c5f02d70426ba041a4382f0efa67dda))
+
 ## [1.7.1](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.7.0...1.7.1) (2025-02-01)
 
 
