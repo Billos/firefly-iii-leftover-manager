@@ -21,8 +21,8 @@ export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDa
   }
 
   if (leftoverAmount < 0) {
-    console.log("Leftover amount is negative, not updating")
-    return
+    console.log("Leftover amount is negative, setting to 0.1")
+    leftoverAmount = 0.1
   }
 
   console.log("Leftover amount", leftoverAmount)
