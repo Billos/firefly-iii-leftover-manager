@@ -27,6 +27,18 @@ LEFTOVERS_BUDGET=
 DISCORD_WEBHOOK=
 # The URL of the service, used to generate the links in the discord message
 SERVICE_URL=
+# The URL of the gotify instance
+GOTIFY_URL=
+# The token to use to send notifications to the gotify instance
+GOTIFY_TOKEN=
+# The user token to use to delete the notifications
+GOTIFY_USER_TOKEN=
+# The token to use to authenticate to the account that handles the paypal transactions
+FIREFLY_III_PAYPAL_ACCOUNT_TOKEN=
+# The id of the asset account, used to compute
+ASSET_ACCOUNT_ID=
+# The URL of the service, used to generate the links in the notification message
+SERVICE_URL=
 ```
 
 The budgets should already exist in the firefly iii, with a basic limit set.

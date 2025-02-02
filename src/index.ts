@@ -40,7 +40,7 @@ async function updateAutoBudgets(_req: express.Request, res: express.Response) {
     await updateLeftoversBudget(leftoversBudget, startDate, endDate)
   }
 
-  if (env.fireflyPaypalAccountToken && env.paypalBudget) {
+  if (env.fireflyPaypalAccountToken) {
     await linkPaypalTransactions()
   }
 

@@ -6,7 +6,6 @@ const env = {
   assetAccountId: process.env.ASSET_ACCOUNT_ID,
   billsBudget: process.env.BILLS_BUDGET,
   leftoversBudget: process.env.LEFTOVERS_BUDGET,
-  paypalBudget: process.env.PAYPAL_BUDGET,
   discordWebhook: process.env.DISCORD_WEBHOOK,
   gotifyUrl: process.env.GOTIFY_URL,
   gotifyUserToken: process.env.GOTIFY_USER_TOKEN,
