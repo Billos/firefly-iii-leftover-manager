@@ -1,11 +1,16 @@
-import { BudgetLimit, BudgetRead, BudgetsService, InsightService } from "../types"
+import { env } from "../config"
+import { AccountsService, BudgetLimit, BudgetRead, BudgetsService } from "../types"
 
 export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDate: string, endDate: string) {
   console.log("================ Updating Leftovers Budget Limit =================")
 
-  const revenues = await InsightService.insightIncomeRevenue(startDate, endDate)
-  const totalRevenue = revenues.reduce((acc, { difference_float }) => acc + difference_float, 0)
-  let leftoverAmount = totalRevenue
+  const assetAccount = await AccountsService.getAccount(env.assetAccountId)
+  if (!assetAccount) {
+    console.log("Asset account not found")
+    return
+  }
+
+  let leftoverAmount = Number.parseFloat(assetAccount.data.attributes.current_balance)
 
   const allLimits = await BudgetsService.listBudgetLimit(startDate, endDate)
   const limitsWithoutLeftovers = allLimits.data.filter(({ attributes: { budget_id } }) => budget_id !== leftoversBudget.id)
