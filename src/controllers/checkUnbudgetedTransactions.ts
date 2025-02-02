@@ -1,6 +1,6 @@
 import { env } from "../config"
 import { transactionHandler } from "../modules/transactionHandler"
-import { BudgetRead, BudgetsService, TransactionsService } from "../types"
+import { BudgetRead, BudgetsService, TransactionsService, TransactionTypeProperty } from "../types"
 import { sleep } from "../utils/sleep"
 
 function generateMarkdownApiCalls(budgets: BudgetRead[], transactionId: string): String[] {
@@ -29,7 +29,13 @@ export async function checkUnbudgetedTransaction(transactionId: string): Promise
       },
     },
   } = await TransactionsService.getTransaction(transactionId)
-  const { amount, currency_decimal_places, currency_symbol, description } = transaction
+
+  // Ensure the transaction is a withdrawal
+  const { type, amount, currency_decimal_places, currency_symbol, description } = transaction
+  if (type !== TransactionTypeProperty.WITHDRAWAL) {
+    console.log(`Transaction ${transactionId} is not a withdrawal`)
+    return
+  }
   if (!transaction) {
     console.log(`Transaction ${transactionId} not found`)
     return
