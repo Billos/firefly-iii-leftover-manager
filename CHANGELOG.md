@@ -1,3 +1,10 @@
+## [1.8.3](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.8.2...1.8.3) (2025-02-02)
+
+
+### Bug Fixes
+
+* **checkUnbudgetedTransactions:** open transaction link in a new tab ([a3fe6a0](https://github.com/Billos/firefly-iii-leftover-manager/commit/a3fe6a0e2cdffe800ec235a1afe96e9f77c5c44a))
+
 ## [1.8.2](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.8.1...1.8.2) (2025-02-02)
 
 
