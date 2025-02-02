@@ -1,3 +1,10 @@
+## [1.8.4](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.8.3...1.8.4) (2025-02-02)
+
+
+### Bug Fixes
+
+* **checkUnbudgetedTransactions:** update link format and message separator ([f43e212](https://github.com/Billos/firefly-iii-leftover-manager/commit/f43e212c30977e3c299c63408aab0a227f3316b6))
+
 ## [1.8.3](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.8.2...1.8.3) (2025-02-02)
 
 
