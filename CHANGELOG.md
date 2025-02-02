@@ -1,3 +1,14 @@
+## [1.8.2](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.8.1...1.8.2) (2025-02-02)
+
+
+### Bug Fixes
+
+* **checkUnbudgetedTransactions:** validate transaction type as withdrawal before processing ([ecf45b2](https://github.com/Billos/firefly-iii-leftover-manager/commit/ecf45b2230efa325985d51e1ae5ea9cecb2304f2))
+* **config:** add assetAccountId to configuration ([7b62cdb](https://github.com/Billos/firefly-iii-leftover-manager/commit/7b62cdb3cb3b99e087288819cb8f6d8cc7f8d39d))
+* **env:** clean config ([8c26c68](https://github.com/Billos/firefly-iii-leftover-manager/commit/8c26c68bfff707c2a2551c88873e323797af2572))
+* **updateLeftoversBudget:** set leftover amount to 0.1 if negative ([6aaf9a9](https://github.com/Billos/firefly-iii-leftover-manager/commit/6aaf9a9248372a3a4e6e8742914b1ddd0d538c12))
+* **updateLeftoversBudget:** using asset account balance to compute leftover amount ([6a901e9](https://github.com/Billos/firefly-iii-leftover-manager/commit/6a901e9e62d5fcf9c7e4e998644f5fc082c70fdd))
+
 ## [1.8.1](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.8.0...1.8.1) (2025-02-01)
 
 
