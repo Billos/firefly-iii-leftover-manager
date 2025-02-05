@@ -1,3 +1,10 @@
+## [1.8.5](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.8.4...1.8.5) (2025-02-05)
+
+
+### Bug Fixes
+
+* **transaction:** add periodic check for unbudgeted transactions ([8282785](https://github.com/Billos/firefly-iii-leftover-manager/commit/8282785a6d79f5eb7453c6ca5e7d76b1374f9553))
+
 ## [1.8.4](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.8.3...1.8.4) (2025-02-02)
 
 
