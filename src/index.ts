@@ -70,18 +70,37 @@ app.get("/transaction/:transactionId/budget/:budget_id", async (req, res) => {
   res.send("<script>window.close()</script>")
 })
 
+// Add a task list for unbudgeted transactions
+// Those tasks will be checked every 10 seconds
+const unbudgetedTransactions: Map<string, boolean> = new Map()
+// Check unbudgeted transactions every 10 seconds
+setInterval(async () => {
+  console.log("Checking unbudgeted transactions")
+  const { value: transaction } = unbudgetedTransactions.entries().next()
+
+  if (!transaction) {
+    console.log("No unbudgeted transactions")
+    return
+  }
+  if (transactionHandler && transaction) {
+    const [key] = transaction
+    console.log(`Checking unbudgeted transaction with key ${key}`)
+    await checkUnbudgetedTransaction(key)
+    unbudgetedTransactions.delete(key)
+  }
+}, 10000 * 1)
+
 app.post("/transaction", async (req, res) => {
   console.log("=================================== Transaction webhook ===================================")
   // Print raw request
   const body: WebhookTransactionBody = req.body as WebhookTransactionBody
   // Check unbudgeted transactions
-  if (transactionHandler) {
-    await checkUnbudgetedTransaction(`${body.content.id}`)
-  }
-
-  await updateAutoBudgets(req, res)
+  console.log("Pushing unbudgeted transaction to task list")
+  unbudgetedTransactions.set(`${body.content.id}`, true)
+  res.send("<script>window.close()</script>")
 })
 
+// Checking budgets and unbudgeted transactions at start
 updateAutoBudgets(null, null)
 if (transactionHandler) {
   checkUnbudgetedTransactions()
