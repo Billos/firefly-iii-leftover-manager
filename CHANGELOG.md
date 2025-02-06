@@ -1,3 +1,10 @@
+## [1.8.6](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.8.5...1.8.6) (2025-02-06)
+
+
+### Bug Fixes
+
+* **checkUnbudgetedTransactions:** rename file and implement hourly check for unbudgeted transactions ([1617a4a](https://github.com/Billos/firefly-iii-leftover-manager/commit/1617a4a82c1f618470e5510f45cc35828760b043))
+
 ## [1.8.5](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.8.4...1.8.5) (2025-02-05)
 
 
