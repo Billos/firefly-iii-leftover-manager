@@ -64,12 +64,3 @@ export async function checkUnbudgetedTransaction(transactionId: string): Promise
     console.error("Error updating message", error)
   }
 }
-
-export async function checkUnbudgetedTransactions() {
-  console.log("================ Checking the no-budget transactions =================")
-  const { data } = await BudgetsService.listTransactionWithoutBudget(null, 50, 1)
-  // Send a message to discord for each unbudgeted transaction
-  for (const { id } of data) {
-    await checkUnbudgetedTransaction(id)
-  }
-}

@@ -2,7 +2,7 @@ import express from "express"
 import { DateTime } from "luxon"
 
 import { env } from "./config"
-import { checkUnbudgetedTransaction, checkUnbudgetedTransactions } from "./controllers/checkUnbudgetedTransactions"
+import { checkUnbudgetedTransaction } from "./controllers/checkUnbudgetedTransaction"
 import { linkPaypalTransactions } from "./controllers/linkPaypalTransactions"
 import { updateBillsBudgetLimit } from "./controllers/updateBillsBudgetLimit"
 import { updateLeftoversBudget } from "./controllers/updateLeftoversBudget"
@@ -100,8 +100,18 @@ app.post("/transaction", async (req, res) => {
   res.send("<script>window.close()</script>")
 })
 
-// Checking budgets and unbudgeted transactions at start
-updateAutoBudgets(null, null)
-if (transactionHandler) {
-  checkUnbudgetedTransactions()
-}
+// Every hour check the unbudgeted transactions
+setInterval(
+  async () => {
+    console.log("=================================== Checking unbudgeted transactions ===================================")
+    updateAutoBudgets(null, null)
+    console.log("================ Checking the no-budget transactions =================")
+    if (transactionHandler) {
+      const { data } = await BudgetsService.listTransactionWithoutBudget(null, 50, 1)
+      for (const { id } of data) {
+        unbudgetedTransactions.set(`${id}`, true)
+      }
+    }
+  },
+  1000 * 60 * 60,
+)
