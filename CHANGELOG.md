@@ -1,3 +1,10 @@
+## [1.8.8](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.8.7...1.8.8) (2025-02-09)
+
+
+### Bug Fixes
+
+* **transaction:** Setting a budget redirects to the transaction show page ([acb8a88](https://github.com/Billos/firefly-iii-leftover-manager/commit/acb8a889522cf2f74daba2808dd100225e67ee46))
+
 ## [1.8.7](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.8.6...1.8.7) (2025-02-09)
 
 
