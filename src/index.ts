@@ -2,7 +2,7 @@ import express from "express"
 import { DateTime } from "luxon"
 
 import { env } from "./config"
-import { checkUnbudgetedTransaction } from "./controllers/checkUnbudgetedTransaction"
+import { checkUnbudgetedTransaction, getTransactionShowLink } from "./controllers/checkUnbudgetedTransaction"
 import { linkPaypalTransactions } from "./controllers/linkPaypalTransactions"
 import { updateBillsBudgetLimit } from "./controllers/updateBillsBudgetLimit"
 import { updateLeftoversBudget } from "./controllers/updateLeftoversBudget"
@@ -58,6 +58,7 @@ app.get("/transaction/:transactionId/budget/:budget_id", async (req, res) => {
   console.log("=================================== Setting budget for transaction ===================================")
   console.log("Delete message")
   const { transactionId, budget_id } = req.params
+
   const messageId = await transactionHandler.getMessageId(transactionId)
   await transactionHandler.deleteMessage(messageId, transactionId)
   console.log("Update transaction")
@@ -67,6 +68,11 @@ app.get("/transaction/:transactionId/budget/:budget_id", async (req, res) => {
     transactions: [{ budget_id }],
   })
   console.log("Transaction updated")
+  // Redirect to the transaction link
+  const transaction = await TransactionsService.getTransaction(transactionId)
+  if (transaction) {
+    return res.redirect(getTransactionShowLink(transactionId))
+  }
   res.send("<script>window.close()</script>")
 })
 

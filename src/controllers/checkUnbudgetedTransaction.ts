@@ -21,6 +21,10 @@ async function getBudgetsByTransactionId(startDate?: string, endDate?: string): 
   return budgets
 }
 
+export function getTransactionShowLink(transactionId: string): string {
+  return `${env.fireflyUrl}/transactions/show/${transactionId}`
+}
+
 export async function checkUnbudgetedTransaction(transactionId: string): Promise<void> {
   const {
     data: {
@@ -49,7 +53,7 @@ export async function checkUnbudgetedTransaction(transactionId: string): Promise
   const budgets = await getBudgetsByTransactionId()
 
   const apis = generateMarkdownApiCalls(budgets, transactionId)
-  const link = `[Link](<${env.fireflyUrl}/transactions/show/${transactionId}>)`
+  const link = `[Link](<${getTransactionShowLink(transactionId)}>)`
   const msg = `\`${parseFloat(amount).toFixed(currency_decimal_places)} ${currency_symbol}\` ${description} \n${apis.join(" | ")} - ${link}`
   try {
     const messageId = await transactionHandler.getMessageId(transactionId)
