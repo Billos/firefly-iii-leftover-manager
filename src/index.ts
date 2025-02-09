@@ -109,7 +109,12 @@ setInterval(
     if (transactionHandler) {
       const { data } = await BudgetsService.listTransactionWithoutBudget(null, 50, 1)
       for (const { id } of data) {
-        unbudgetedTransactions.set(`${id}`, true)
+        const hasHandlerMessageId = await transactionHandler.getMessageId(id)
+        if (!hasHandlerMessageId) {
+          unbudgetedTransactions.set(`${id}`, true)
+        } else {
+          console.log(`Transaction ${id} already has a handler message id`)
+        }
       }
     }
   },
