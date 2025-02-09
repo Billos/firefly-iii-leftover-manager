@@ -1,3 +1,10 @@
+## [1.8.7](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.8.6...1.8.7) (2025-02-09)
+
+
+### Bug Fixes
+
+* **transaction:** do not regular check the unbudgeted transactions if they already have a specified messageId ([ad93434](https://github.com/Billos/firefly-iii-leftover-manager/commit/ad93434a171b8745dbd62a38ddf7aebf9e3b3b3a))
+
 ## [1.8.6](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.8.5...1.8.6) (2025-02-06)
 
 
