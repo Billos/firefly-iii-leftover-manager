@@ -124,3 +124,5 @@ setInterval(
   },
   1000 * 60 * 60,
 )
+
+updateAutoBudgets(null, null)
