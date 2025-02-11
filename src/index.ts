@@ -81,11 +81,9 @@ app.get("/transaction/:transactionId/budget/:budget_id", async (req, res) => {
 const unbudgetedTransactions: Map<string, boolean> = new Map()
 // Check unbudgeted transactions every 10 seconds
 setInterval(async () => {
-  console.log("Checking unbudgeted transactions")
   const { value: transaction } = unbudgetedTransactions.entries().next()
 
   if (!transaction) {
-    console.log("No unbudgeted transactions")
     return
   }
   if (transactionHandler && transaction) {
