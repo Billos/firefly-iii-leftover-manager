@@ -1,3 +1,12 @@
+## [1.8.9](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.8.8...1.8.9) (2025-02-11)
+
+
+### Bug Fixes
+
+* **budget:** filter inactive bills when updating budget limits ([8b82e51](https://github.com/Billos/firefly-iii-leftover-manager/commit/8b82e5126406abc921243c0b2f133255790ca672))
+* **budget:** improve leftover budget calculation using the leftover of this budget ([0caaf5d](https://github.com/Billos/firefly-iii-leftover-manager/commit/0caaf5d1186711b9b3ec5d4c6583509d53c69190))
+* **budget:** update auto budgets at start ([832b487](https://github.com/Billos/firefly-iii-leftover-manager/commit/832b4872ec78d54e552d75f436ef95a8f4073d02))
+
 ## [1.8.8](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.8.7...1.8.8) (2025-02-09)
 
 
