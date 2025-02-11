@@ -3,9 +3,13 @@ import { BillsService, BudgetLimit, BudgetRead, BudgetsService } from "../types"
 export async function updateBillsBudgetLimit(billsBudget: BudgetRead, startDate: string, endDate: string) {
   console.log("================ Updating Bills Budget Limit ================")
   // Updating Bills auto_budget_amount to be the sum of all paid bills value + the maximum value of the unpaid bills
-  const bills = await BillsService.listBill(null, 50, 1, startDate, endDate)
-  const paidBills = bills.data.filter(({ attributes: { paid_dates } }) => paid_dates.length > 0)
-  const unpaidBills = bills.data.filter(({ attributes: { paid_dates } }) => paid_dates.length === 0)
+  const allBills = await BillsService.listBill(null, 50, 1, startDate, endDate)
+  // Filtering inactive bills
+  const bills = allBills.data.filter(({ attributes }) => attributes.active)
+  const paidBills = bills.filter(({ attributes: { paid_dates } }) => paid_dates.length > 0)
+  const unpaidBills = bills
+    .filter(({ attributes: { paid_dates } }) => paid_dates.length === 0)
+    .filter(({ attributes: { next_expected_match } }) => !!next_expected_match)
 
   const maximumUnpaidBill = unpaidBills.reduce((acc, bill) => acc + parseFloat(bill.attributes.amount_max), 0)
   let paidBillsValue = 0
