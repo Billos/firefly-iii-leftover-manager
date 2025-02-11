@@ -11,13 +11,19 @@ export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDa
   }
 
   let leftoverAmount = Number.parseFloat(assetAccount.data.attributes.current_balance)
+  console.log("Current balance", leftoverAmount)
 
   const allLimits = await BudgetsService.listBudgetLimit(startDate, endDate)
   const limitsWithoutLeftovers = allLimits.data.filter(({ attributes: { budget_id } }) => budget_id !== leftoversBudget.id)
   const leftOverLimit = allLimits.data.find(({ attributes: { budget_id } }) => budget_id === leftoversBudget.id)
 
-  for (const limit of limitsWithoutLeftovers) {
-    leftoverAmount -= parseFloat(limit.attributes.amount)
+  for (const {
+    attributes: { spent, budget_id, amount },
+  } of limitsWithoutLeftovers) {
+    const { data: budget } = await BudgetsService.getBudget(budget_id)
+    const budgetLeftover = parseFloat(amount) + parseFloat(spent)
+    console.log(`Subtracting ${budget.attributes.name} - limit of ${amount} - spent ${spent} - Budget leftover ${budgetLeftover}`)
+    leftoverAmount -= budgetLeftover
   }
 
   if (leftoverAmount < 0) {
