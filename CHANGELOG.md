@@ -1,3 +1,10 @@
+## [1.8.10](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.8.9...1.8.10) (2025-02-13)
+
+
+### Bug Fixes
+
+* **budget:** budget limit is the LeftOver + already spent ([67995bb](https://github.com/Billos/firefly-iii-leftover-manager/commit/67995bb65e9ccff6d7bf08addf7f6f31dcc667dd))
+
 ## [1.8.9](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.8.8...1.8.9) (2025-02-11)
 
 
