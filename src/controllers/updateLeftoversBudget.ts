@@ -31,13 +31,30 @@ export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDa
     leftoverAmount = 0.1
   }
 
+  const currentLeftOverBudget = await BudgetsService.getBudget(leftoversBudget.id, null, startDate, endDate)
+  const [spent] = currentLeftOverBudget.data.attributes.spent
+
+  if (!spent) {
+    console.log("No spent amount found, stopping")
+    return
+  }
+
+  const amount = `${-parseFloat(spent.sum) + leftoverAmount}`
+
   console.log("Leftover amount", leftoverAmount)
+  console.log("Leftover spent", spent.sum)
+  console.log("Budget limit should be", amount)
+
+  if (parseFloat(amount) < 0) {
+    console.log("Amount is negative, stopping")
+    return
+  }
+
   const params: BudgetLimit = {
-    amount: leftoverAmount.toString(),
+    amount,
     budget_id: leftOverLimit.attributes.budget_id,
     start: leftOverLimit.attributes.start,
     end: leftOverLimit.attributes.end,
   }
   await BudgetsService.updateBudgetLimit(leftoversBudget.id, leftOverLimit.id, params)
-  console.log("Leftovers budget limit updated")
 }
