@@ -1,3 +1,14 @@
+## [1.8.13](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.8.12...1.8.13) (2025-02-22)
+
+
+### Bug Fixes
+
+* **deps:** remove tslog from dependencies ([30b22d3](https://github.com/Billos/firefly-iii-leftover-manager/commit/30b22d3e2138709dfeaa0e345eb6559cd57263ad))
+* **docker:** expose port 3000 in Dockerfile ([28ba50f](https://github.com/Billos/firefly-iii-leftover-manager/commit/28ba50f4586e7d5c4cc1383da5bfd0554df91380))
+* **docker:** update Dockerfile for production image and change entrypoint to npm ([6c4ab75](https://github.com/Billos/firefly-iii-leftover-manager/commit/6c4ab754962f759ea7d12867e57f01c82a7778c7))
+* **scripts:** use --no-cache option in docker build command ([08c6b5a](https://github.com/Billos/firefly-iii-leftover-manager/commit/08c6b5a635f8fe19f732228dd53a44ad2d892a4f))
+* **tsconfig:** update module and moduleResolution to NodeNext, exclude build directory ([34caca3](https://github.com/Billos/firefly-iii-leftover-manager/commit/34caca373129fcbc229facd7aade5c2fa27e6bd0))
+
 ## [1.8.12](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.8.11...1.8.12) (2025-02-22)
 
 
