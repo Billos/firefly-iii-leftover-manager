@@ -14,5 +14,7 @@ COPY ./package.json ./package.json
 RUN npm install --omit=dev
 COPY --from=builder /app/build ./build
 
+EXPOSE 3000
+
 ENTRYPOINT [ "npm", "run" ]
 CMD [ "start" ]
