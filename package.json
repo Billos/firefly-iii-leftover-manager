@@ -36,7 +36,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsx watch --clear-screen src/index.ts",
-    "docker:build": "docker build . -t billos/firefly-iii-leftover-manager:latest",
+    "docker:build": "docker build --no-cache . -t billos/firefly-iii-leftover-manager:latest",
     "format": "prettier . --write",
     "format-check": "prettier . --check",
     "lint": "eslint src",
