@@ -1,3 +1,10 @@
+## [1.8.12](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.8.11...1.8.12) (2025-02-22)
+
+
+### Bug Fixes
+
+* **docker:** copy node_modules from builder stage to optimize Docker image ([8335bf1](https://github.com/Billos/firefly-iii-leftover-manager/commit/8335bf1463b95c195dc4a5dd8b3b97a0de2b6995))
+
 ## [1.8.11](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.8.10...1.8.11) (2025-02-22)
 
 
