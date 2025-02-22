@@ -6,12 +6,13 @@ COPY . .
 RUN yarn 
 RUN yarn build
 
-FROM node:22.14.0-alpine AS runner
-
+# Final production image
+FROM node:22.14.0-alpine AS runtime
 WORKDIR /app
-COPY --from=builder /app/build ./build
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
 
-ENTRYPOINT [ "yarn" ]
+COPY ./package.json ./package.json
+RUN npm install --omit=dev
+COPY --from=builder /app/build ./build
+
+ENTRYPOINT [ "npm", "run" ]
 CMD [ "start" ]
