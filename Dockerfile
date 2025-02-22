@@ -1,20 +1,16 @@
 # Use an official Node.js runtime as a parent image
-FROM node:22.6.0
-
-RUN apt-get update
-RUN apt-get install -y \
-        wget \ 
-        iputils-ping \
-        dnsutils \ 
-        iproute2
+FROM node:22.14.0-alpine AS builder
 
 WORKDIR /app
-
 COPY . .
-
 RUN yarn 
-
 RUN yarn build
 
-ENTRYPOINT [ "yarn", "run" ]
+FROM node:22.14.0-alpine AS runner
+
+WORKDIR /app
+COPY --from=builder /app/build ./build
+COPY --from=builder /app/package.json ./package.json
+
+ENTRYPOINT [ "yarn" ]
 CMD [ "start" ]
