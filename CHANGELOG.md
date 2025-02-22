@@ -1,3 +1,10 @@
+## [1.8.11](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.8.10...1.8.11) (2025-02-22)
+
+
+### Bug Fixes
+
+* **docker:** update Node.js version and optimize Dockerfile for multi-stage builds ([e108bf1](https://github.com/Billos/firefly-iii-leftover-manager/commit/e108bf11a40bb6a5761b9a1b1910b9425beaed2b))
+
 ## [1.8.10](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.8.9...1.8.10) (2025-02-13)
 
 
