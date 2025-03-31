@@ -7,27 +7,34 @@ export async function linkPaypalTransactions() {
   console.log("================ Link Paypal Transactions =================")
 
   // StartDate and EndDate are today - 20 days to today
-  const startDate = DateTime.now().minus({ days: 20 }).toISODate()
+  const startDate = DateTime.now().minus({ days: 10 }).toISODate()
   const endDate = DateTime.now().toISODate()
 
   // This function will retrieve the Paypal transactions that do not have the tag "Linked"
   const { data } = await PaypalTransactionsService.listTransaction(null, 50, 1, startDate, endDate)
+  const unlinkedPaypalTransactions = data.filter(({ attributes: { transactions } }) => !transactions[0].tags.includes("Linked"))
 
-  for (const paypalTransaction of data) {
+  const { data: ffData } = await TransactionsService.listTransaction(null, 50, 1, startDate, endDate)
+  const unlinkedFFTransactions = ffData.filter(({ attributes: { transactions } }) => !transactions[0].tags.includes("Linked"))
+
+  console.log("Found Unlinked Paypal transactions", unlinkedPaypalTransactions.length)
+  console.log("Found Unlinked Firefly III transactions", unlinkedFFTransactions.length)
+
+  for (const paypalTransaction of unlinkedPaypalTransactions) {
     const [transaction] = paypalTransaction.attributes.transactions
     // It will retrieve the transactions that do not have the tag "Linked"
     if (transaction.tags.includes("Linked")) {
       continue
     }
+    console.log(`Checking Paypal transaction ${paypalTransaction.id}`)
     // Getting the transactions from Firefly III each time to avoid having outdated data
-    const transactions = await TransactionsService.listTransaction(null, 50, 1, startDate, endDate)
     // Then it will try to find match the transaction with the Paypal transaction
     for (const {
       id,
       attributes: {
         transactions: [ffTransaction],
       },
-    } of transactions.data) {
+    } of unlinkedFFTransactions) {
       //  - Description should include Paypal
       if (!ffTransaction.description.includes("PayPal")) {
         continue
