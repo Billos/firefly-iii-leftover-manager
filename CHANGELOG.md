@@ -1,3 +1,16 @@
+# [1.9.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.8.13...1.9.0) (2025-03-31)
+
+
+### Bug Fixes
+
+* **linkPaypalTransactions:** adjust date range and improve transaction filtering ([bfa7859](https://github.com/Billos/firefly-iii-leftover-manager/commit/bfa78596a35ed922afd7b69b594e648709fddf01))
+* **updateLeftoversBudget:** handle negative budget leftover correctly ([2df445f](https://github.com/Billos/firefly-iii-leftover-manager/commit/2df445f571d3780cdd1cdc456935782e67e5b7df))
+
+
+### Features
+
+* **CodeQL:** Create codeql.yml ([bdde612](https://github.com/Billos/firefly-iii-leftover-manager/commit/bdde612d0ac12b6f4c3ea6f8b1c7edb6ba916a87))
+
 ## [1.8.13](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.8.12...1.8.13) (2025-02-22)
 
 
