@@ -23,7 +23,8 @@ export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDa
     const { data: budget } = await BudgetsService.getBudget(budget_id)
     const budgetLeftover = parseFloat(amount) + parseFloat(spent)
     console.log(`Subtracting ${budget.attributes.name} - limit of ${amount} - spent ${spent} - Budget leftover ${budgetLeftover}`)
-    leftoverAmount -= budgetLeftover
+    // A budget leftover might be negative, if the budget is overspent, this means it will be added to the leftover amount
+    leftoverAmount -= Math.abs(budgetLeftover)
   }
 
   if (leftoverAmount < 0) {
