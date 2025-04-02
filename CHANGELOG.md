@@ -1,3 +1,11 @@
+## [1.9.1](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.9.0...1.9.1) (2025-04-02)
+
+
+### Bug Fixes
+
+* **updateBillsBudgetLimit:** refactor budget limit handling and improve limit creation logic ([49cea4c](https://github.com/Billos/firefly-iii-leftover-manager/commit/49cea4c2ed264d4b79cea3ede65ce60baaac7daf))
+* **updateLeftoversBudget:** enhance budget limit creation and update logic ([0e83741](https://github.com/Billos/firefly-iii-leftover-manager/commit/0e837417e666b1a61f563ba80ed868782e863c8f))
+
 # [1.9.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.8.13...1.9.0) (2025-03-31)
 
 
