@@ -1,5 +1,5 @@
 import { env } from "../config"
-import { AccountsService, BudgetLimit, BudgetRead, BudgetsService } from "../types"
+import { AccountsService, BudgetLimit, BudgetLimitStore, BudgetRead, BudgetsService } from "../types"
 
 export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDate: string, endDate: string) {
   console.log("================ Updating Leftovers Budget Limit =================")
@@ -51,11 +51,18 @@ export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDa
     return
   }
 
-  const params: BudgetLimit = {
+  const params: BudgetLimitStore | BudgetLimit = {
     amount,
-    budget_id: leftOverLimit.attributes.budget_id,
-    start: leftOverLimit.attributes.start,
-    end: leftOverLimit.attributes.end,
+    budget_id: leftoversBudget.id,
+    start: startDate,
+    end: endDate,
+  }
+
+  if (!leftOverLimit) {
+    console.log("No leftovers budget limit found, creating budget limit")
+    await BudgetsService.storeBudgetLimit(leftoversBudget.id, params)
+    return
   }
   await BudgetsService.updateBudgetLimit(leftoversBudget.id, leftOverLimit.id, params)
+  console.log("Leftovers budget limit updated")
 }
