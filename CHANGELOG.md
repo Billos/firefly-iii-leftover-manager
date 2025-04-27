@@ -1,3 +1,10 @@
+## [1.9.2](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.9.1...1.9.2) (2025-04-27)
+
+
+### Bug Fixes
+
+* **transaction:** handle message deletion error gracefully ([d9f718c](https://github.com/Billos/firefly-iii-leftover-manager/commit/d9f718c66d3ebfb065fe4d2b0f007839b8bba89a))
+
 ## [1.9.1](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.9.0...1.9.1) (2025-04-02)
 
 
