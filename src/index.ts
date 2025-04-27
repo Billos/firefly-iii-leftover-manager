@@ -58,9 +58,16 @@ app.get("/transaction/:transactionId/budget/:budget_id", async (req, res) => {
   console.log("=================================== Setting budget for transaction ===================================")
   console.log("Delete message")
   const { transactionId, budget_id } = req.params
+  try {
+    const messageId = await transactionHandler.getMessageId(transactionId)
+    await transactionHandler.deleteMessage(messageId, transactionId)
+  } catch (error) {
+    // Could not delete message. Ignore
+    console.log("Could not delete message", error)
+    res.send("<script>window.close()</script>")
+    return
+  }
 
-  const messageId = await transactionHandler.getMessageId(transactionId)
-  await transactionHandler.deleteMessage(messageId, transactionId)
   console.log("Update transaction")
   await TransactionsService.updateTransaction(transactionId, {
     apply_rules: true,
