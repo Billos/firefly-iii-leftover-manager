@@ -15,7 +15,10 @@ export async function linkPaypalTransactions() {
   const unlinkedPaypalTransactions = data.filter(({ attributes: { transactions } }) => !transactions[0].tags.includes("Linked"))
 
   const { data: ffData } = await TransactionsService.listTransaction(null, 50, 1, startDate, endDate)
-  const unlinkedFFTransactions = ffData.filter(({ attributes: { transactions } }) => !transactions[0].tags.includes("Linked"))
+  // Filtering Firefly III transactions to only include those that do not have the tag "Linked" and have "PayPal" in the description
+  const unlinkedFFTransactions = ffData.filter(
+    ({ attributes: { transactions } }) => !transactions[0].tags.includes("Linked") && transactions[0].description.includes("PayPal"),
+  )
 
   console.log("Found Unlinked Paypal transactions", unlinkedPaypalTransactions.length)
   console.log("Found Unlinked Firefly III transactions", unlinkedFFTransactions.length)
@@ -35,11 +38,6 @@ export async function linkPaypalTransactions() {
         transactions: [ffTransaction],
       },
     } of unlinkedFFTransactions) {
-      //  - Description should include Paypal
-      if (!ffTransaction.description.includes("PayPal")) {
-        continue
-      }
-
       //  - Tags should not include Linked
       if (ffTransaction.tags.includes("Linked")) {
         continue
