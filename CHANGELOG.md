@@ -1,3 +1,12 @@
+## [1.9.3](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.9.2...1.9.3) (2025-06-18)
+
+
+### Bug Fixes
+
+* **linkPaypalTransactions:** improve logging for unlinked Paypal transactions ([ba30f7d](https://github.com/Billos/firefly-iii-leftover-manager/commit/ba30f7d7cc378c32bcd23f768fe74fe2279570c4))
+* **linkPaypalTransactions:** refine filtering of Firefly III transactions to include only those with "PayPal" in the description ([72b1e88](https://github.com/Billos/firefly-iii-leftover-manager/commit/72b1e88c1e566b8eba4b1b808023af980cc79f05))
+* **linkPaypalTransactions:** update start date to 20 days ago for transaction retrieval ([8ddad55](https://github.com/Billos/firefly-iii-leftover-manager/commit/8ddad55a97c1d1bd1e998416bcf7ad9b4b1ed6b8))
+
 ## [1.9.2](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.9.1...1.9.2) (2025-04-27)
 
 
