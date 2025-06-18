@@ -7,7 +7,7 @@ export async function linkPaypalTransactions() {
   console.log("================ Link Paypal Transactions =================")
 
   // StartDate and EndDate are today - 20 days to today
-  const startDate = DateTime.now().minus({ days: 10 }).toISODate()
+  const startDate = DateTime.now().minus({ days: 20 }).toISODate()
   const endDate = DateTime.now().toISODate()
 
   // This function will retrieve the Paypal transactions that do not have the tag "Linked"
