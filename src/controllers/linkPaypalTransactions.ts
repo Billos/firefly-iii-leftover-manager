@@ -26,7 +26,7 @@ export async function linkPaypalTransactions() {
     if (transaction.tags.includes("Linked")) {
       continue
     }
-    console.log(`Checking Paypal transaction ${paypalTransaction.id}`)
+    console.log(`Checking unlinked Paypal transaction ${paypalTransaction.id} - ${transaction.amount}`)
     // Getting the transactions from Firefly III each time to avoid having outdated data
     // Then it will try to find match the transaction with the Paypal transaction
     for (const {
