@@ -1,4 +1,5 @@
 import { env } from "../config"
+import { updateAutomaticBudgets } from "../endpoints/updateAutomaticBudgets"
 import { transactionHandler } from "../modules/transactionHandler"
 import { BudgetRead, BudgetsService, TransactionsService, TransactionTypeProperty } from "../types"
 import { sleep } from "../utils/sleep"
@@ -25,7 +26,7 @@ export function getTransactionShowLink(transactionId: string): string {
   return `${env.fireflyUrl}/transactions/show/${transactionId}`
 }
 
-export async function checkUnbudgetedTransaction(transactionId: string): Promise<void> {
+async function checkUnbudgetedTransaction(transactionId: string): Promise<void> {
   const {
     data: {
       attributes: {
@@ -68,3 +69,45 @@ export async function checkUnbudgetedTransaction(transactionId: string): Promise
     console.error("Error updating message", error)
   }
 }
+
+// Those tasks will be checked every 10 seconds
+// Check unbudgeted transactions every 10 seconds
+const unbudgetedTransactions: Map<string, boolean> = new Map()
+
+// Every hour check the unbudgeted transactions
+setInterval(
+  async () => {
+    console.log("=================================== Checking unbudgeted transactions ===================================")
+    updateAutomaticBudgets(null, null)
+    console.log("================ Checking the no-budget transactions =================")
+    if (transactionHandler) {
+      const { data } = await BudgetsService.listTransactionWithoutBudget(null, 50, 1)
+      for (const { id } of data) {
+        const hasHandlerMessageId = await transactionHandler.getMessageId(id)
+        if (!hasHandlerMessageId) {
+          unbudgetedTransactions.set(`${id}`, true)
+        } else {
+          console.log(`Transaction ${id} already has a handler message id`)
+        }
+      }
+    }
+  },
+  1000 * 60 * 60,
+)
+
+setInterval(async () => {
+  console.log("=================================== Checking unbudgeted transactions ===================================")
+  const { value: transaction } = unbudgetedTransactions.entries().next()
+
+  if (!transaction) {
+    return
+  }
+  if (transactionHandler && transaction) {
+    const [key] = transaction
+    console.log(`Checking unbudgeted transaction with key ${key}`)
+    await checkUnbudgetedTransaction(key)
+    unbudgetedTransactions.delete(key)
+  }
+}, 10000 * 1)
+
+export { unbudgetedTransactions }
