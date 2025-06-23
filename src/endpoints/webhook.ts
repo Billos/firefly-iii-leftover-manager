@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 
 import { unbudgetedTransactions } from "../controllers/checkUnbudgetedTransaction"
+import { uncategorizedTransactions } from "../controllers/checkUncategorizedTransaction"
 import { Transaction } from "../types"
 
 type WebhookTransactionBody = {
@@ -20,5 +21,6 @@ export async function webhook(req: Request, res: Response) {
   // Check unbudgeted transactions
   console.log("Pushing unbudgeted transaction to task list")
   unbudgetedTransactions.set(`${body.content.id}`, true)
+  uncategorizedTransactions.set(`${body.content.id}`, true)
   res.send("<script>window.close()</script>")
 }

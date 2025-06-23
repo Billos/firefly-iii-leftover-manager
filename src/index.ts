@@ -2,6 +2,7 @@ import express from "express"
 
 import { env } from "./config"
 import { settingBudgetForTransaction } from "./endpoints/settingBudgetForTransaction"
+import { settingCategoryForTransaction } from "./endpoints/settingCategoryForTransaction"
 import { updateAutomaticBudgets } from "./endpoints/updateAutomaticBudgets"
 import { webhook } from "./endpoints/webhook"
 
@@ -17,6 +18,7 @@ app.use(express.json())
 app.get("/", updateAutomaticBudgets)
 app.post("/", updateAutomaticBudgets)
 app.get("/transaction/:transactionId/budget/:budget_id", settingBudgetForTransaction)
+app.get("/transaction/:transactionId/category/:category_id", settingCategoryForTransaction)
 app.post("/transaction", webhook)
 
 updateAutomaticBudgets(null, null)
