@@ -1,8 +1,8 @@
 import { Request, Response } from "express"
 
-import { getTransactionShowLink } from "../controllers/checkUnbudgetedTransaction"
 import { transactionHandler } from "../modules/transactionHandler"
 import { TransactionsService } from "../types"
+import { getTransactionShowLink } from "../utils/getTransactionShowLink"
 
 export async function settingBudgetForTransaction(req: Request, res: Response) {
   console.log("=================================== Setting budget for transaction ===================================")

@@ -1,6 +1,7 @@
 import { env } from "../config"
 import { transactionHandler } from "../modules/transactionHandler"
 import { BudgetRead, BudgetsService, TransactionsService, TransactionTypeProperty } from "../types"
+import { getTransactionShowLink } from "../utils/getTransactionShowLink"
 import { sleep } from "../utils/sleep"
 
 function generateMarkdownApiCalls(budgets: BudgetRead[], transactionId: string): String[] {
@@ -19,10 +20,6 @@ async function getBudgets(startDate?: string, endDate?: string): Promise<BudgetR
   const { data: allBbudgets } = await BudgetsService.listBudget(null, 50, 1, startDate, endDate)
   const budgets = allBbudgets.filter(({ attributes: { name } }) => !(env.billsBudget && name === env.billsBudget))
   return budgets
-}
-
-export function getTransactionShowLink(transactionId: string): string {
-  return `${env.fireflyUrl}/transactions/show/${transactionId}`
 }
 
 async function checkUnbudgetedTransaction(transactionId: string): Promise<void> {
