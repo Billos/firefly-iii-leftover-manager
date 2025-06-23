@@ -33,5 +33,4 @@ export async function settingBudgetForTransaction(req: Request, res: Response) {
   } else {
     res.send("<script>window.close()</script>")
   }
-  res.send("<script>window.close()</script>")
 }
