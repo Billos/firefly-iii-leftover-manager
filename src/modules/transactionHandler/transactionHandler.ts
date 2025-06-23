@@ -1,16 +1,18 @@
 import { TransactionSplit, TransactionsService } from "../../types"
 
+export type MessageType = "BudgetMessageId" | "CategoryMessageId"
+
 export interface TransactionHandler {
   // Function about transactions
-  getMessageId(transactionId: string): Promise<string>
+  getMessageId: (type: MessageType, transactionId: string) => Promise<string>
   // Generic function about messages
-  sendMessage: (content: string, transactionId: string) => Promise<string>
-  updateMessage(id: string, content: string, transactionId: string): Promise<void>
-  deleteMessage(id: string, transactionId: string): Promise<void>
+  sendMessage: (type: MessageType, content: string, transactionId: string) => Promise<string>
+  updateMessage: (type: MessageType, id: string, content: string, transactionId: string) => Promise<void>
+  deleteMessage: (type: MessageType, id: string, transactionId: string) => Promise<void>
   // Functions about messages, implemented by the child class
-  sendMessageImpl: (message: string, transactionId: string) => Promise<string>
-  updateMessageImpl: (id: string, content: string, transactionId: string) => Promise<void>
-  deleteMessageImpl: (id: string, transactionId: string) => Promise<void>
+  sendMessageImpl: (type: MessageType, message: string, transactionId: string) => Promise<string>
+  updateMessageImpl: (type: MessageType, id: string, content: string, transactionId: string) => Promise<void>
+  deleteMessageImpl: (type: MessageType, id: string, transactionId: string) => Promise<void>
 }
 
 export abstract class AbstractTransactionHandler implements TransactionHandler {
@@ -25,11 +27,10 @@ export abstract class AbstractTransactionHandler implements TransactionHandler {
     return transaction
   }
 
-  public async getMessageId(transactionId: string): Promise<string> {
-    const { notes } = await this.getTransaction(transactionId)
-    // The notes should include (HandlerMessageId: <messageId>)
-    const regex = /HandlerMessageId: (\d+)/
-    const match = (notes || "").match(regex)
+  public async getMessageId(type: MessageType, transactionId: string): Promise<string> {
+    const transaction = await this.getTransaction(transactionId)
+    const regex = new RegExp(`${type}: (\\d+)`)
+    const match = (transaction.notes || "").match(regex)
     if (match) {
       return match[1]
     }
@@ -44,42 +45,42 @@ export abstract class AbstractTransactionHandler implements TransactionHandler {
     })
   }
 
-  private async setMessageId(transactionId: string, messageId: string): Promise<void> {
+  private async setMessageId(type: MessageType, transactionId: string, messageId: string): Promise<void> {
     const transaction = await this.getTransaction(transactionId)
     // Notes might not include the HandlerMessageId yet
     let notes = transaction.notes || ""
-    if (!notes.includes("HandlerMessageId")) {
-      notes += `\nHandlerMessageId: ${messageId}\n`
+    if (!notes.includes(type)) {
+      notes += `\n${type}: ${messageId}\n`
     } else {
-      notes = (transaction.notes || "").replace(/HandlerMessageId: (\d+)/, `HandlerMessageId: ${messageId}`)
+      notes = (transaction.notes || "").replace(new RegExp(`${type}: (\\d+)`), `${type}: ${messageId}`)
     }
     await this.setNotes(transactionId, notes)
   }
 
-  private async unsetMessageId(transactionId: string): Promise<void> {
+  private async unsetMessageId(type: MessageType, transactionId: string): Promise<void> {
     const transaction = await this.getTransaction(transactionId)
-    const notes = transaction.notes.replace(/HandlerMessageId: (\d+)/, "")
+    const notes = transaction.notes.replace(new RegExp(`${type}: (\\d+)`), "")
     await this.setNotes(transactionId, notes)
   }
 
-  public async sendMessage(content: string, transactionId: string): Promise<string> {
-    const messageId = await this.sendMessageImpl(content, transactionId)
-    await this.setMessageId(transactionId, messageId)
+  public async sendMessage(type: MessageType, content: string, transactionId: string): Promise<string> {
+    const messageId = await this.sendMessageImpl(type, content, transactionId)
+    await this.setMessageId(type, transactionId, messageId)
     return messageId
   }
 
-  public async updateMessage(id: string, content: string, transactionId: string): Promise<void> {
-    return this.updateMessageImpl(id, content, transactionId)
+  public async updateMessage(type: MessageType, id: string, content: string, transactionId: string): Promise<void> {
+    return this.updateMessageImpl(type, id, content, transactionId)
   }
 
-  public async deleteMessage(id: string, transactionId: string): Promise<void> {
-    await this.unsetMessageId(transactionId)
-    return this.deleteMessageImpl(id, transactionId)
+  public async deleteMessage(type: MessageType, id: string, transactionId: string): Promise<void> {
+    await this.unsetMessageId(type, transactionId)
+    return this.deleteMessageImpl(type, id, transactionId)
   }
 
-  abstract sendMessageImpl(content: string, transactionId: string): Promise<string>
+  abstract sendMessageImpl(type: MessageType, content: string, transactionId: string): Promise<string>
 
-  abstract updateMessageImpl(id: string, content: string, transactionId: string): Promise<void>
+  abstract updateMessageImpl(type: MessageType, id: string, content: string, transactionId: string): Promise<void>
 
-  abstract deleteMessageImpl(id: string, transactionId: string): Promise<void>
+  abstract deleteMessageImpl(type: MessageType, id: string, transactionId: string): Promise<void>
 }

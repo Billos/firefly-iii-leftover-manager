@@ -57,11 +57,11 @@ async function checkUnbudgetedTransaction(transactionId: string): Promise<void> 
   const link = `[Link](<${getTransactionShowLink(transactionId)}>)`
   const msg = `\`${parseFloat(amount).toFixed(currency_decimal_places)} ${currency_symbol}\` ${description} \n${apis.join(" | ")} - ${link}`
   try {
-    const messageId = await transactionHandler.getMessageId(transactionId)
+    const messageId = await transactionHandler.getMessageId("BudgetMessageId", transactionId)
     if (messageId) {
-      await transactionHandler.updateMessage(messageId, msg, transactionId)
+      await transactionHandler.updateMessage("BudgetMessageId", messageId, msg, transactionId)
     } else {
-      await transactionHandler.sendMessage(msg, transactionId)
+      await transactionHandler.sendMessage("BudgetMessageId", msg, transactionId)
     }
     // Limit to 5 messages every 2 seconds
     await sleep(500)
@@ -83,7 +83,7 @@ setInterval(
     if (transactionHandler) {
       const { data } = await BudgetsService.listTransactionWithoutBudget(null, 50, 1)
       for (const { id } of data) {
-        const hasHandlerMessageId = await transactionHandler.getMessageId(id)
+        const hasHandlerMessageId = await transactionHandler.getMessageId("BudgetMessageId", id)
         if (!hasHandlerMessageId) {
           unbudgetedTransactions.set(`${id}`, true)
         } else {

@@ -9,8 +9,8 @@ export async function settingBudgetForTransaction(req: Request, res: Response) {
   console.log("Delete message")
   const { transactionId, budget_id } = req.params
   try {
-    const messageId = await transactionHandler.getMessageId(transactionId)
-    await transactionHandler.deleteMessage(messageId, transactionId)
+    const messageId = await transactionHandler.getMessageId("BudgetMessageId", transactionId)
+    await transactionHandler.deleteMessage("BudgetMessageId", messageId, transactionId)
   } catch (error) {
     // Could not delete message. Ignore
     console.log("Could not delete message", error)
