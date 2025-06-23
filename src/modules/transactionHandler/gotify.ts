@@ -15,10 +15,20 @@ export class GotifyTransactionHandler extends AbstractTransactionHandler {
     super()
   }
 
+  private getTitle(type: MessageType): string {
+    switch (type) {
+      case "CategoryMessageId":
+        return "Uncategorized Transaction"
+      case "BudgetMessageId":
+        return "Unbudgeted Transaction"
+      default:
+        throw new Error(`Unknown message type: ${type}`)
+    }
+  }
+
   override async sendMessageImpl(type: MessageType, message: string): Promise<string> {
-    const title = type === "CategoryMessageId" ? "Uncategorized Transaction" : "Unbudgeted Transaction"
     const result = await this.request.post<{ id: number }>("/message", {
-      title,
+      title: this.getTitle(type),
       message,
       extras: {
         "client::display": {
