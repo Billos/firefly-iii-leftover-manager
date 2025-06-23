@@ -30,6 +30,8 @@ export async function settingBudgetForTransaction(req: Request, res: Response) {
   console.log(transaction)
   if (transaction) {
     return res.redirect(getTransactionShowLink(transactionId))
+  } else {
+    res.send("<script>window.close()</script>")
   }
   res.send("<script>window.close()</script>")
 }
