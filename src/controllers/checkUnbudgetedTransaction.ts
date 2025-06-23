@@ -1,5 +1,4 @@
 import { env } from "../config"
-import { updateAutomaticBudgets } from "../endpoints/updateAutomaticBudgets"
 import { transactionHandler } from "../modules/transactionHandler"
 import { BudgetRead, BudgetsService, TransactionsService, TransactionTypeProperty } from "../types"
 import { sleep } from "../utils/sleep"
@@ -16,7 +15,7 @@ function generateMarkdownApiCalls(budgets: BudgetRead[], transactionId: string):
   return ret
 }
 
-async function getBudgetsByTransactionId(startDate?: string, endDate?: string): Promise<BudgetRead[]> {
+async function getBudgets(startDate?: string, endDate?: string): Promise<BudgetRead[]> {
   const { data: allBbudgets } = await BudgetsService.listBudget(null, 50, 1, startDate, endDate)
   const budgets = allBbudgets.filter(({ attributes: { name } }) => !(env.billsBudget && name === env.billsBudget))
   return budgets
@@ -51,7 +50,7 @@ async function checkUnbudgetedTransaction(transactionId: string): Promise<void> 
     return
   }
 
-  const budgets = await getBudgetsByTransactionId()
+  const budgets = await getBudgets()
 
   const apis = generateMarkdownApiCalls(budgets, transactionId)
   const link = `[Link](<${getTransactionShowLink(transactionId)}>)`
@@ -74,40 +73,31 @@ async function checkUnbudgetedTransaction(transactionId: string): Promise<void> 
 // Check unbudgeted transactions every 10 seconds
 const unbudgetedTransactions: Map<string, boolean> = new Map()
 
-// Every hour check the unbudgeted transactions
-setInterval(
-  async () => {
-    console.log("=================================== Checking unbudgeted transactions ===================================")
-    updateAutomaticBudgets(null, null)
-    console.log("================ Checking the no-budget transactions =================")
-    if (transactionHandler) {
-      const { data } = await BudgetsService.listTransactionWithoutBudget(null, 50, 1)
-      for (const { id } of data) {
-        const hasHandlerMessageId = await transactionHandler.getMessageId("BudgetMessageId", id)
-        if (!hasHandlerMessageId) {
-          unbudgetedTransactions.set(`${id}`, true)
-        } else {
-          console.log(`Transaction ${id} already has a handler message id`)
-        }
-      }
+async function initUnbudgetedTransactions() {
+  if (transactionHandler) {
+    const { data } = await BudgetsService.listTransactionWithoutBudget(null, 50, 1)
+    for (const { id } of data) {
+      console.log(`Adding unbudgeted transaction with id ${id}`)
+      unbudgetedTransactions.set(`${id}`, true)
     }
-  },
-  1000 * 60 * 60,
-)
-
-setInterval(async () => {
-  console.log("=================================== Checking unbudgeted transactions ===================================")
-  const { value: transaction } = unbudgetedTransactions.entries().next()
-
-  if (!transaction) {
-    return
   }
+}
+
+async function consumeUnbudgetedTransactions() {
+  const { value: transaction } = unbudgetedTransactions.entries().next()
   if (transactionHandler && transaction) {
     const [key] = transaction
-    console.log(`Checking unbudgeted transaction with key ${key}`)
+    console.log(`Consuming unbudgeted transaction with key ${key}`)
     await checkUnbudgetedTransaction(key)
     unbudgetedTransactions.delete(key)
   }
-}, 10000 * 1)
+}
+
+// Every hour check the unbudgeted transactions
+setInterval(async () => initUnbudgetedTransactions(), 1000 * 60 * 60)
+
+initUnbudgetedTransactions()
+
+setInterval(async () => consumeUnbudgetedTransactions(), 10000 * 1)
 
 export { unbudgetedTransactions }
