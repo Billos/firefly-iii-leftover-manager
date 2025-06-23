@@ -16,8 +16,9 @@ export class GotifyTransactionHandler extends AbstractTransactionHandler {
   }
 
   override async sendMessageImpl(type: MessageType, message: string): Promise<string> {
+    const title = type === "CategoryMessageId" ? "Uncategorized Transaction" : "Unbudgeted Transaction"
     const result = await this.request.post<{ id: number }>("/message", {
-      title: "Unbudgeted Transaction",
+      title,
       message,
       extras: {
         "client::display": {
