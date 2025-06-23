@@ -1,3 +1,22 @@
+# [1.10.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.9.3...1.10.0) (2025-06-23)
+
+
+### Bug Fixes
+
+* **getTransactionShowLink:** update service URL to use env.serviceUrl ([ccc609b](https://github.com/Billos/firefly-iii-leftover-manager/commit/ccc609b8a44291b0d7be1aa953c53c53eee3a1b8))
+* **gotify:** dynamic title assignment in sendMessageImpl based on message type ([294db41](https://github.com/Billos/firefly-iii-leftover-manager/commit/294db412437afcf382c4acd2080d02a50f7a3300))
+* **gotify:** handle potential errors when deleting messages in updateMessageImpl ([2739a45](https://github.com/Billos/firefly-iii-leftover-manager/commit/2739a45247566eafe17eb81c1431732775cf4e93))
+* **link:** revert using the bad url ([818741d](https://github.com/Billos/firefly-iii-leftover-manager/commit/818741dc5955372f248c4d164f60e582a0e4ed68))
+* **settingBudgetForTransaction:** ensure proper response handling when transaction is not found ([873abae](https://github.com/Billos/firefly-iii-leftover-manager/commit/873abaebd3e776c1e70b4bbe567ee144c11d469c))
+* **settingBudgetForTransaction:** remove duplicate response handling when transaction is not found ([b3f986a](https://github.com/Billos/firefly-iii-leftover-manager/commit/b3f986a8b37a62fce27511856a542287aedeed26))
+
+
+### Features
+
+* **message:** multiple message types ([cb60dfc](https://github.com/Billos/firefly-iii-leftover-manager/commit/cb60dfc5c10d073a73830561a6f923c0d5827997))
+* **transaction:** handle uncategorized transactions ([886a9b3](https://github.com/Billos/firefly-iii-leftover-manager/commit/886a9b37e818383da3fda45085436c206575941d))
+* **transaction:** move getTransactionShowLink function to its own module ([2d7900b](https://github.com/Billos/firefly-iii-leftover-manager/commit/2d7900b54b47ab5704ea9f8f3c78263e496fce94))
+
 ## [1.9.3](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.9.2...1.9.3) (2025-06-18)
 
 
