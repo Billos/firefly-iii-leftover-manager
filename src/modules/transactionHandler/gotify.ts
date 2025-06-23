@@ -30,7 +30,12 @@ export class GotifyTransactionHandler extends AbstractTransactionHandler {
   }
 
   override async updateMessageImpl(type: MessageType, id: string, content: string, transactionId: string): Promise<void> {
-    await this.deleteMessage(type, id, transactionId)
+    try {
+      await this.deleteMessage(type, id, transactionId)
+    } catch (error) {
+      console.error(`Error deleting message of type ${type} with id ${id}:`)
+      // Ignore the error, as it might not exist
+    }
     await this.sendMessage(type, content, transactionId)
   }
 
