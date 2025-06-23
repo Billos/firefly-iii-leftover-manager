@@ -23,7 +23,7 @@ async function getBudgetsByTransactionId(startDate?: string, endDate?: string): 
 }
 
 export function getTransactionShowLink(transactionId: string): string {
-  return `${env.fireflyUrl}/transactions/show/${transactionId}`
+  return `${env.serviceUrl}/transactions/show/${transactionId}`
 }
 
 async function checkUnbudgetedTransaction(transactionId: string): Promise<void> {
