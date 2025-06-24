@@ -1,3 +1,15 @@
+# [1.11.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.10.0...1.11.0) (2025-06-24)
+
+
+### Bug Fixes
+
+* **messages:** deleteAllMessages at service init ([d07878e](https://github.com/Billos/firefly-iii-leftover-manager/commit/d07878edbc1beb1e1fe28684e9d981659c663a39))
+
+
+### Features
+
+* **BullMQ:** integrate BullMQ for task management and add Redis configuration ([26f9f5d](https://github.com/Billos/firefly-iii-leftover-manager/commit/26f9f5de9a1599cfbf6ec142647903bfda0ee5a7))
+
 # [1.10.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.9.3...1.10.0) (2025-06-23)
 
 
