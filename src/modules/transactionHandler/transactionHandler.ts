@@ -7,17 +7,26 @@ export interface TransactionHandler {
   getMessageId: (type: MessageType, transactionId: string) => Promise<string>
   // Generic function about messages
   sendMessage: (type: MessageType, content: string, transactionId: string) => Promise<string>
-  updateMessage: (type: MessageType, id: string, content: string, transactionId: string) => Promise<void>
   deleteMessage: (type: MessageType, id: string, transactionId: string) => Promise<void>
   deleteAllMessages: () => Promise<void>
   // Functions about messages, implemented by the child class
-  sendMessageImpl: (type: MessageType, message: string, transactionId: string) => Promise<string>
-  updateMessageImpl: (type: MessageType, id: string, content: string, transactionId: string) => Promise<void>
-  deleteMessageImpl: (type: MessageType, id: string, transactionId: string) => Promise<void>
+  sendMessageImpl: (title: string, message: string, transactionId: string) => Promise<string>
+  deleteMessageImpl: (id: string, transactionId: string) => Promise<void>
   deleteAllMessagesImpl: () => Promise<void>
 }
 
 export abstract class AbstractTransactionHandler implements TransactionHandler {
+  private getTitle(type: MessageType): string {
+    switch (type) {
+      case "CategoryMessageId":
+        return "Uncategorized Transaction"
+      case "BudgetMessageId":
+        return "Unbudgeted Transaction"
+      default:
+        throw new Error(`Unknown message type: ${type}`)
+    }
+  }
+
   private async getTransaction(transactionId: string): Promise<TransactionSplit> {
     const {
       data: {
@@ -66,29 +75,32 @@ export abstract class AbstractTransactionHandler implements TransactionHandler {
   }
 
   public async sendMessage(type: MessageType, content: string, transactionId: string): Promise<string> {
-    const messageId = await this.sendMessageImpl(type, content, transactionId)
+    const messageId = await this.sendMessageImpl(this.getTitle(type), content, transactionId)
     await this.setMessageId(type, transactionId, messageId)
     return messageId
   }
 
-  public async updateMessage(type: MessageType, id: string, content: string, transactionId: string): Promise<void> {
-    return this.updateMessageImpl(type, id, content, transactionId)
-  }
-
   public async deleteMessage(type: MessageType, id: string, transactionId: string): Promise<void> {
-    await this.unsetMessageId(type, transactionId)
-    return this.deleteMessageImpl(type, id, transactionId)
+    try {
+      await this.unsetMessageId(type, transactionId)
+    } catch (error) {
+      console.log(`Could not unset message ID for type ${type} and transaction ${transactionId}:`, error.message)
+      return
+    }
+    try {
+      await this.deleteMessageImpl(id, transactionId)
+    } catch (error) {
+      console.log(`Could not delete message for type ${type} and transaction ${transactionId}:`, error.message)
+    }
   }
 
   public async deleteAllMessages(): Promise<void> {
     await this.deleteAllMessagesImpl()
   }
 
-  abstract sendMessageImpl(type: MessageType, content: string, transactionId: string): Promise<string>
+  abstract sendMessageImpl(title: string, content: string, transactionId: string): Promise<string>
 
-  abstract updateMessageImpl(type: MessageType, id: string, content: string, transactionId: string): Promise<void>
-
-  abstract deleteMessageImpl(type: MessageType, id: string, transactionId: string): Promise<void>
+  abstract deleteMessageImpl(id: string, transactionId: string): Promise<void>
 
   abstract deleteAllMessagesImpl(): Promise<void>
 }

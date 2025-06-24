@@ -52,18 +52,13 @@ async function checkUnbudgetedTransaction(transactionId: string): Promise<void> 
   const apis = generateMarkdownApiCalls(budgets, transactionId)
   const link = `[Link](<${getTransactionShowLink(transactionId)}>)`
   const msg = `\`${parseFloat(amount).toFixed(currency_decimal_places)} ${currency_symbol}\` ${description} \n${apis.join(" | ")} - ${link}`
-  try {
-    const messageId = await transactionHandler.getMessageId("BudgetMessageId", transactionId)
-    if (messageId) {
-      await transactionHandler.updateMessage("BudgetMessageId", messageId, msg, transactionId)
-    } else {
-      await transactionHandler.sendMessage("BudgetMessageId", msg, transactionId)
-    }
-    // Limit to 5 messages every 2 seconds
-    await sleep(500)
-  } catch (error) {
-    console.error("Error updating message", error)
+  const messageId = await transactionHandler.getMessageId("BudgetMessageId", transactionId)
+  if (messageId) {
+    await transactionHandler.deleteMessage("BudgetMessageId", messageId, transactionId)
   }
+  await transactionHandler.sendMessage("BudgetMessageId", msg, transactionId)
+  // Limit to 5 messages every 2 seconds
+  await sleep(500)
 }
 
 // Those tasks will be checked every 10 seconds

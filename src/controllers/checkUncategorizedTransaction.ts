@@ -73,18 +73,13 @@ async function checkUncategorizedTransaction(transactionId: string): Promise<voi
   const apis = generateMarkdownApiCalls(categories, transactionId)
   const link = `[Link](<${getTransactionShowLink(transactionId)}>)`
   const msg = `\`${parseFloat(amount).toFixed(currency_decimal_places)} ${currency_symbol}\` ${description} \n${apis.join(" | ")} - ${link}`
-  try {
-    const messageId = await transactionHandler.getMessageId("CategoryMessageId", transactionId)
-    if (messageId) {
-      await transactionHandler.updateMessage("CategoryMessageId", messageId, msg, transactionId)
-    } else {
-      await transactionHandler.sendMessage("CategoryMessageId", msg, transactionId)
-    }
-    // Limit to 5 messages every 2 seconds
-    await sleep(500)
-  } catch (error) {
-    console.error("Error updating message", error)
+  const messageId = await transactionHandler.getMessageId("CategoryMessageId", transactionId)
+  if (messageId) {
+    await transactionHandler.deleteMessage("CategoryMessageId", messageId, transactionId)
   }
+  await transactionHandler.sendMessage("CategoryMessageId", msg, transactionId)
+  // Limit to 5 messages every 2 seconds
+  await sleep(500)
 }
 
 // Those tasks will be checked every 10 seconds
