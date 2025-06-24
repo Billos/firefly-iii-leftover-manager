@@ -6,9 +6,7 @@ import { AbstractTransactionHandler } from "./transactionHandler"
 export class GotifyTransactionHandler extends AbstractTransactionHandler {
   private request: AxiosInstance = axios.create({
     baseURL: env.gotifyUrl,
-    headers: {
-      "X-Gotify-Key": env.gotifyToken,
-    },
+    headers: { "X-Gotify-Key": env.gotifyToken },
   })
 
   constructor() {

@@ -31,11 +31,8 @@ async function getUncategorizedTransactions(startDate?: string, endDate?: string
 
 function generateMarkdownApiCalls(categories: CategoryRead[], transactionId: string): String[] {
   const ret = []
-  for (const {
-    id,
-    attributes: { name },
-  } of categories) {
-    ret.push(`[\`${name}\`](<${env.serviceUrl}transaction/${transactionId}/category/${id}>)`)
+  for (const { id, attributes } of categories) {
+    ret.push(`[\`${attributes.name}\`](<${env.serviceUrl}transaction/${transactionId}/category/${id}>)`)
   }
   return ret
 }

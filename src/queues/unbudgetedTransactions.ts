@@ -10,11 +10,8 @@ const id = "unbudgeted-transactions"
 
 function generateMarkdownApiCalls(budgets: BudgetRead[], transactionId: string): String[] {
   const ret = []
-  for (const {
-    id,
-    attributes: { name },
-  } of budgets) {
-    ret.push(`[\`${name}\`](<${env.serviceUrl}transaction/${transactionId}/budget/${id}>)`)
+  for (const { id, attributes } of budgets) {
+    ret.push(`[\`${attributes.name}\`](<${env.serviceUrl}transaction/${transactionId}/budget/${id}>)`)
   }
   return ret
 }
