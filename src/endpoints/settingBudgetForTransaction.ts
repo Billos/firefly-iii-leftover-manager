@@ -6,7 +6,6 @@ import { getTransactionShowLink } from "../utils/getTransactionShowLink"
 
 export async function settingBudgetForTransaction(req: Request, res: Response) {
   console.log("=================================== Setting budget for transaction ===================================")
-  console.log("Delete message")
   const { transactionId, budget_id } = req.params
   try {
     const messageId = await transactionHandler.getMessageId("BudgetMessageId", transactionId)
@@ -27,7 +26,6 @@ export async function settingBudgetForTransaction(req: Request, res: Response) {
   console.log("Transaction updated")
   // Redirect to the transaction link
   const transaction = await TransactionsService.getTransaction(transactionId)
-  console.log(transaction)
   if (transaction) {
     return res.redirect(getTransactionShowLink(transactionId))
   } else {

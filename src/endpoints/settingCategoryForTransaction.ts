@@ -6,7 +6,6 @@ import { getTransactionShowLink } from "../utils/getTransactionShowLink"
 
 export async function settingCategoryForTransaction(req: Request, res: Response) {
   console.log("=================================== Setting category for transaction ===================================")
-  console.log("Delete message")
   const { transactionId, category_id } = req.params
   try {
     const messageId = await transactionHandler.getMessageId("CategoryMessageId", transactionId)
@@ -27,7 +26,6 @@ export async function settingCategoryForTransaction(req: Request, res: Response)
   console.log("Transaction updated")
   // Redirect to the transaction link
   const transaction = await TransactionsService.getTransaction(transactionId)
-  console.log(transaction)
   if (transaction) {
     console.log("Transaction found, redirecting to show link")
     return res.redirect(getTransactionShowLink(transactionId))
