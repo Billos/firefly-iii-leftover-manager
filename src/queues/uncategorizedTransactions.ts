@@ -1,27 +1,13 @@
+import { Queue } from "bullmq"
 import { DateTime } from "luxon"
 
 import { env } from "../config"
 import { transactionHandler } from "../modules/transactionHandler"
 import { CategoriesService, CategoryRead, TransactionRead, TransactionsService, TransactionTypeProperty } from "../types"
 import { getTransactionShowLink } from "../utils/getTransactionShowLink"
-import { sleep } from "../utils/sleep"
+import { QueueArgs } from "./queueArgs"
 
-function generateMarkdownApiCalls(categories: CategoryRead[], transactionId: string): String[] {
-  const ret = []
-  for (const {
-    id,
-    attributes: { name },
-  } of categories) {
-    ret.push(`[\`${name}\`](<${env.serviceUrl}transaction/${transactionId}/category/${id}>)`)
-  }
-  return ret
-}
-
-async function getCategories(): Promise<CategoryRead[]> {
-  const { data: allCategories } = await CategoriesService.listCategory(null, 50, 1)
-  const categories = allCategories.filter(({ attributes: { name } }) => !(env.billsBudget && name === env.billsBudget))
-  return categories
-}
+const id = "uncategorized-transactions"
 
 async function getUncategorizedTransactions(startDate?: string, endDate?: string): Promise<TransactionRead[]> {
   const transactions: TransactionRead[] = []
@@ -43,7 +29,19 @@ async function getUncategorizedTransactions(startDate?: string, endDate?: string
   return transactions
 }
 
-async function checkUncategorizedTransaction(transactionId: string): Promise<void> {
+function generateMarkdownApiCalls(categories: CategoryRead[], transactionId: string): String[] {
+  const ret = []
+  for (const {
+    id,
+    attributes: { name },
+  } of categories) {
+    ret.push(`[\`${name}\`](<${env.serviceUrl}transaction/${transactionId}/category/${id}>)`)
+  }
+  return ret
+}
+
+async function job(transactionId: string) {
+  console.log(`Creating a new message for uncategorized transaction with key ${transactionId}`)
   const {
     data: {
       attributes: {
@@ -68,7 +66,8 @@ async function checkUncategorizedTransaction(transactionId: string): Promise<voi
     return
   }
 
-  const categories = await getCategories()
+  const { data: allCategories } = await CategoriesService.listCategory(null, 50, 1)
+  const categories = allCategories.filter(({ attributes: { name } }) => !(env.billsBudget && name === env.billsBudget))
 
   const apis = generateMarkdownApiCalls(categories, transactionId)
   const link = `[Link](<${getTransactionShowLink(transactionId)}>)`
@@ -78,42 +77,18 @@ async function checkUncategorizedTransaction(transactionId: string): Promise<voi
     await transactionHandler.deleteMessage("CategoryMessageId", messageId, transactionId)
   }
   await transactionHandler.sendMessage("CategoryMessageId", msg, transactionId)
-  // Limit to 5 messages every 2 seconds
-  await sleep(500)
 }
 
-// Those tasks will be checked every 10 seconds
-// Check uncategorized transactions every 10 seconds
-const uncategorizedTransactions: Map<string, boolean> = new Map()
-
-// Every hour check the unbudgeted transactions
-
-async function initUncategorizedTransactions() {
+async function init(queue: Queue<QueueArgs>) {
   if (transactionHandler) {
     const startDate = DateTime.now().startOf("month").toISODate()
     const endDate = DateTime.now().toISODate()
     const uncategorizedTransactionsList = await getUncategorizedTransactions(startDate, endDate)
-    for (const { id } of uncategorizedTransactionsList) {
-      console.log(`Adding uncategorized transaction with id ${id}`)
-      uncategorizedTransactions.set(`${id}`, true)
+    for (const { id: transactionId } of uncategorizedTransactionsList) {
+      console.log(`Adding uncategorized transaction with id ${transactionId}`)
+      queue.add(transactionId, { job: id, transactionId: transactionId })
     }
   }
 }
 
-async function consumeUncategorizedTransactions() {
-  const { value: transaction } = uncategorizedTransactions.entries().next()
-  if (transactionHandler && transaction) {
-    const [key] = transaction
-    console.log(`Checking uncategorized transaction with key ${key}`)
-    await checkUncategorizedTransaction(key)
-    uncategorizedTransactions.delete(key)
-  }
-}
-
-setInterval(async () => initUncategorizedTransactions(), 1000 * 60 * 60)
-
-initUncategorizedTransactions()
-
-setInterval(async () => consumeUncategorizedTransactions(), 10000 * 1)
-
-export { uncategorizedTransactions }
+export { job, init, id }

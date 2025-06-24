@@ -33,12 +33,22 @@ GOTIFY_URL=
 GOTIFY_TOKEN=
 # The user token to use to delete the notifications
 GOTIFY_USER_TOKEN=
+# The application id to use to send notifications to the gotify instance
+GOTIFY_APPLICATION_ID=
 # The token to use to authenticate to the account that handles the paypal transactions
 FIREFLY_III_PAYPAL_ACCOUNT_TOKEN=
 # The id of the asset account, used to compute
 ASSET_ACCOUNT_ID=
 # The URL of the service, used to generate the links in the notification message
 SERVICE_URL=
+# The URL of the Redis instance, used to cache the budgets (localhost by default)
+REDIS_HOST=
+# The port of the Redis instance (6379 by default)
+REDIS_PORT=
+# The database number to use in the Redis instance (0 by default)
+REDIS_DB=
+# The password to use to authenticate to the Redis instance, if any
+REDIS_PASSWORD=
 ```
 
 The budgets should already exist in the firefly iii, with a basic limit set.

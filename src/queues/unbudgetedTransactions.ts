@@ -1,28 +1,26 @@
+import { Queue } from "bullmq"
+
 import { env } from "../config"
 import { transactionHandler } from "../modules/transactionHandler"
 import { BudgetRead, BudgetsService, TransactionsService, TransactionTypeProperty } from "../types"
 import { getTransactionShowLink } from "../utils/getTransactionShowLink"
-import { sleep } from "../utils/sleep"
+import { QueueArgs } from "./queueArgs"
+
+const id = "unbudgeted-transactions"
 
 function generateMarkdownApiCalls(budgets: BudgetRead[], transactionId: string): String[] {
   const ret = []
-  for (const budget of budgets) {
-    const {
-      id,
-      attributes: { name },
-    } = budget
+  for (const {
+    id,
+    attributes: { name },
+  } of budgets) {
     ret.push(`[\`${name}\`](<${env.serviceUrl}transaction/${transactionId}/budget/${id}>)`)
   }
   return ret
 }
 
-async function getBudgets(startDate?: string, endDate?: string): Promise<BudgetRead[]> {
-  const { data: allBbudgets } = await BudgetsService.listBudget(null, 50, 1, startDate, endDate)
-  const budgets = allBbudgets.filter(({ attributes: { name } }) => !(env.billsBudget && name === env.billsBudget))
-  return budgets
-}
-
-async function checkUnbudgetedTransaction(transactionId: string): Promise<void> {
+async function job(transactionId: string) {
+  console.log(`Creating a new message for unbudgeted transaction with key ${transactionId}`)
   const {
     data: {
       attributes: {
@@ -47,7 +45,8 @@ async function checkUnbudgetedTransaction(transactionId: string): Promise<void> 
     return
   }
 
-  const budgets = await getBudgets()
+  const { data: allBbudgets } = await BudgetsService.listBudget(null, 50, 1)
+  const budgets = allBbudgets.filter(({ attributes: { name } }) => !(env.billsBudget && name === env.billsBudget))
 
   const apis = generateMarkdownApiCalls(budgets, transactionId)
   const link = `[Link](<${getTransactionShowLink(transactionId)}>)`
@@ -57,39 +56,20 @@ async function checkUnbudgetedTransaction(transactionId: string): Promise<void> 
     await transactionHandler.deleteMessage("BudgetMessageId", messageId, transactionId)
   }
   await transactionHandler.sendMessage("BudgetMessageId", msg, transactionId)
-  // Limit to 5 messages every 2 seconds
-  await sleep(500)
 }
 
-// Those tasks will be checked every 10 seconds
-// Check unbudgeted transactions every 10 seconds
-const unbudgetedTransactions: Map<string, boolean> = new Map()
-
-async function initUnbudgetedTransactions() {
+async function init(queue: Queue<QueueArgs>) {
   if (transactionHandler) {
     const { data } = await BudgetsService.listTransactionWithoutBudget(null, 50, 1)
-    for (const { id } of data) {
-      console.log(`Adding unbudgeted transaction with id ${id}`)
-      unbudgetedTransactions.set(`${id}`, true)
+    for (const { id: transactionId } of data) {
+      console.log(`Adding unbudgeted transaction with id ${transactionId}`)
+      queue.add(transactionId, { job: id, transactionId })
+
+      setTimeout(async () => {
+        queue.add(transactionId, { job: id, transactionId })
+      }, 8000)
     }
   }
 }
 
-async function consumeUnbudgetedTransactions() {
-  const { value: transaction } = unbudgetedTransactions.entries().next()
-  if (transactionHandler && transaction) {
-    const [key] = transaction
-    console.log(`Consuming unbudgeted transaction with key ${key}`)
-    await checkUnbudgetedTransaction(key)
-    unbudgetedTransactions.delete(key)
-  }
-}
-
-// Every hour check the unbudgeted transactions
-setInterval(async () => initUnbudgetedTransactions(), 1000 * 60 * 60)
-
-initUnbudgetedTransactions()
-
-setInterval(async () => consumeUnbudgetedTransactions(), 10000 * 1)
-
-export { unbudgetedTransactions }
+export { job, init, id }

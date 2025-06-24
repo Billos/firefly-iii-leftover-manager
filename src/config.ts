@@ -12,6 +12,12 @@ const env = {
   gotifyUserToken: process.env.GOTIFY_USER_TOKEN,
   gotifyToken: process.env.GOTIFY_TOKEN,
   serviceUrl: process.env.SERVICE_URL,
+  redisConnection: {
+    host: process.env.REDIS_HOST || "localhost",
+    port: parseInt(process.env.REDIS_PORT || "6379", 10),
+    db: parseInt(process.env.REDIS_DB || "0", 10),
+    password: process.env.REDIS_PASSWORD,
+  },
 }
 
 export { env }

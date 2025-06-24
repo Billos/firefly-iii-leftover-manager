@@ -1,7 +1,6 @@
 import { Request, Response } from "express"
 
-import { unbudgetedTransactions } from "../controllers/checkUnbudgetedTransaction"
-import { uncategorizedTransactions } from "../controllers/checkUncategorizedTransaction"
+import { getQueue, queues } from "../queues"
 import { Transaction } from "../types"
 
 type WebhookTransactionBody = {
@@ -19,8 +18,9 @@ export async function webhook(req: Request, res: Response) {
   // Print raw request
   const body: WebhookTransactionBody = req.body as WebhookTransactionBody
   // Check unbudgeted transactions
-  console.log("Pushing unbudgeted transaction to task list")
-  unbudgetedTransactions.set(`${body.content.id}`, true)
-  uncategorizedTransactions.set(`${body.content.id}`, true)
+  const queue = await getQueue()
+  for (const { id } of queues) {
+    queue.add(id, { job: id, transactionId: `${body.content.id}` })
+  }
   res.send("<script>window.close()</script>")
 }
