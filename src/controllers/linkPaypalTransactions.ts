@@ -1,6 +1,6 @@
 import { DateTime } from "luxon"
 
-import { TransactionsService as PaypalTransactionsService } from "../paypalTypes"
+import { TransactionsService as PaypalTransactionsService, TransactionTypeProperty } from "../paypalTypes"
 import { TransactionsService } from "../types"
 
 export async function linkPaypalTransactions() {
@@ -12,12 +12,15 @@ export async function linkPaypalTransactions() {
 
   // This function will retrieve the Paypal transactions that do not have the tag "Linked"
   const { data } = await PaypalTransactionsService.listTransaction(null, 50, 1, startDate, endDate)
-  const unlinkedPaypalTransactions = data.filter(({ attributes: { transactions } }) => !transactions[0].tags.includes("Linked"))
+  const unlinkedPaypalTransactions = data.filter(
+    ({ attributes: { transactions } }) =>
+      !transactions[0].tags.includes("Linked") && transactions[0].type === TransactionTypeProperty.WITHDRAWAL,
+  )
 
   const { data: ffData } = await TransactionsService.listTransaction(null, 50, 1, startDate, endDate)
   // Filtering Firefly III transactions to only include those that do not have the tag "Linked" and have "PayPal" in the description
   const unlinkedFFTransactions = ffData.filter(
-    ({ attributes: { transactions } }) => !transactions[0].tags.includes("Linked") && transactions[0].description.includes("PayPal"),
+    ({ attributes: { transactions } }) => !transactions[0].tags.includes("Linked") && transactions[0].description.includes("PAYPAL"),
   )
 
   console.log("Found Unlinked Paypal transactions", unlinkedPaypalTransactions.length)
@@ -29,7 +32,7 @@ export async function linkPaypalTransactions() {
     if (transaction.tags.includes("Linked")) {
       continue
     }
-    console.log(`Checking unlinked Paypal transaction ${paypalTransaction.id} - ${transaction.amount}`)
+    console.log(`Checking unlinked Paypal transaction ${paypalTransaction.id} - type: ${transaction.type} - ${transaction.amount}`)
     // Getting the transactions from Firefly III each time to avoid having outdated data
     // Then it will try to find match the transaction with the Paypal transaction
     for (const {
@@ -38,11 +41,6 @@ export async function linkPaypalTransactions() {
         transactions: [ffTransaction],
       },
     } of unlinkedFFTransactions) {
-      //  - Tags should not include Linked
-      if (ffTransaction.tags.includes("Linked")) {
-        continue
-      }
-
       //  - Amount should match
       if (ffTransaction.amount !== transaction.amount) {
         continue
