@@ -1,3 +1,10 @@
+## [1.11.1](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.11.0...1.11.1) (2025-06-24)
+
+
+### Bug Fixes
+
+* **linkPaypalTransactions:** filter unlinked transactions by type and improve logging ([de722f3](https://github.com/Billos/firefly-iii-leftover-manager/commit/de722f326843135e3c8bd157120afa074cf85555))
+
 # [1.11.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.10.0...1.11.0) (2025-06-24)
 
 
