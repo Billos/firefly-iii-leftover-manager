@@ -5,6 +5,7 @@ import { settingBudgetForTransaction } from "./endpoints/settingBudgetForTransac
 import { settingCategoryForTransaction } from "./endpoints/settingCategoryForTransaction"
 import { updateAutomaticBudgets } from "./endpoints/updateAutomaticBudgets"
 import { webhook } from "./endpoints/webhook"
+import { transactionHandler } from "./modules/transactionHandler"
 
 const app = express()
 
@@ -22,3 +23,4 @@ app.get("/transaction/:transactionId/category/:category_id", settingCategoryForT
 app.post("/transaction", webhook)
 
 updateAutomaticBudgets(null, null)
+transactionHandler.deleteAllMessages()

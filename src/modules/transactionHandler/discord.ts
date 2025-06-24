@@ -22,4 +22,8 @@ export class DiscordTransactionHandler extends AbstractTransactionHandler {
   override async deleteMessageImpl(_type: MessageType, id: string): Promise<void> {
     await this.request.delete(`${env.discordWebhook}/messages/${id}`)
   }
+
+  override async deleteAllMessagesImpl(): Promise<void> {
+    throw new Error("Bulk deletion of messages is not supported by Discord webhooks.")
+  }
 }

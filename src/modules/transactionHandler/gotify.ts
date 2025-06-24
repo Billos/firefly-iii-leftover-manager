@@ -52,4 +52,8 @@ export class GotifyTransactionHandler extends AbstractTransactionHandler {
   override async deleteMessageImpl(_type: MessageType, id: string): Promise<void> {
     await this.request.delete(`/message/${id}?token=${env.gotifyUserToken}`)
   }
+
+  override async deleteAllMessagesImpl(): Promise<void> {
+    await this.request.delete(`/application/${env.gotifyApplicationId}/message?token=${env.gotifyUserToken}`)
+  }
 }
