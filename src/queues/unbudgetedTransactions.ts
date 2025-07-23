@@ -49,10 +49,11 @@ async function job(transactionId: string) {
   const link = `[Link](<${getTransactionShowLink(transactionId)}>)`
   const msg = `\`${parseFloat(amount).toFixed(currency_decimal_places)} ${currency_symbol}\` ${description} \n${apis.join(" | ")} - ${link}`
   const messageId = await transactionHandler.getMessageId("BudgetMessageId", transactionId)
-  if (messageId) {
-    await transactionHandler.deleteMessage("BudgetMessageId", messageId, transactionId)
+  if (!messageId) {
+    await transactionHandler.sendMessage("BudgetMessageId", msg, transactionId)
+    // Trying not to delete the message here, as it might be needed for future reference
+    // await transactionHandler.deleteMessage("BudgetMessageId", messageId, transactionId)
   }
-  await transactionHandler.sendMessage("BudgetMessageId", msg, transactionId)
 }
 
 async function init(queue: Queue<QueueArgs>) {
