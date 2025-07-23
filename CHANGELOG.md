@@ -1,3 +1,10 @@
+# [1.12.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.11.1...1.12.0) (2025-07-23)
+
+
+### Features
+
+* **transactions:** stop updating messages in TransactionHandler ([9a16aa9](https://github.com/Billos/firefly-iii-leftover-manager/commit/9a16aa90bc4611c5eccd2e9ee7c3be10ecbbbe10))
+
 ## [1.11.1](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.11.0...1.11.1) (2025-06-24)
 
 

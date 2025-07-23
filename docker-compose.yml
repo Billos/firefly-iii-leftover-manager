@@ -1,6 +1,6 @@
 services:
   manager:
-    image: docker.io/billos/firefly-iii-leftover-manager:1.11.1
+    image: docker.io/billos/firefly-iii-leftover-manager:1.12.0
     env_file:
       - .env
     environment:
