@@ -1,3 +1,10 @@
+# [1.13.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.12.0...1.13.0) (2025-07-31)
+
+
+### Features
+
+* **date:** new function to get a Date ([f95b28d](https://github.com/Billos/firefly-iii-leftover-manager/commit/f95b28d7e38edd7306f438a4a20da2da18fe4920))
+
 # [1.12.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.11.1...1.12.0) (2025-07-23)
 
 
