@@ -1,3 +1,10 @@
+## [1.14.1](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.14.0...1.14.1) (2025-07-31)
+
+
+### Bug Fixes
+
+* **budget:** handle missing spent amount correctly in updateLeftoversBudget function ([8399b31](https://github.com/Billos/firefly-iii-leftover-manager/commit/8399b31c7ed45c9d1d03ab5ee0946f92fdd7811f))
+
 # [1.14.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.13.0...1.14.0) (2025-07-31)
 
 
