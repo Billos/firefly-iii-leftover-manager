@@ -1,11 +1,11 @@
 import { Queue } from "bullmq"
-import { DateTime } from "luxon"
 
 import { env } from "../config"
 import { linkPaypalTransactions } from "../controllers/linkPaypalTransactions"
 import { updateBillsBudgetLimit } from "../controllers/updateBillsBudgetLimit"
 import { updateLeftoversBudget } from "../controllers/updateLeftoversBudget"
 import { BudgetsService } from "../types"
+import { getDateNow } from "../utils/date"
 import { QueueArgs } from "./queueArgs"
 
 const id = "update-automatic-budgets"
@@ -13,8 +13,8 @@ const id = "update-automatic-budgets"
 async function job() {
   console.log("Running updateAutomaticBudgets job")
   // Get all budgets
-  const startDate = DateTime.now().startOf("month").toISODate()
-  const endDate = DateTime.now().endOf("month").toISODate()
+  const startDate = getDateNow().startOf("month").toISODate()
+  const endDate = getDateNow().endOf("month").toISODate()
 
   const { data: budgets } = await BudgetsService.listBudget(null, 50, 1, startDate, endDate)
   // Get Bills Budget

@@ -2,13 +2,14 @@ import { DateTime } from "luxon"
 
 import { TransactionsService as PaypalTransactionsService, TransactionTypeProperty } from "../paypalTypes"
 import { TransactionsService } from "../types"
+import { getDateNow } from "../utils/date"
 
 export async function linkPaypalTransactions() {
   console.log("================ Link Paypal Transactions =================")
 
   // StartDate and EndDate are today - 20 days to today
-  const startDate = DateTime.now().minus({ days: 20 }).toISODate()
-  const endDate = DateTime.now().toISODate()
+  const startDate = getDateNow().minus({ days: 20 }).toISODate()
+  const endDate = getDateNow().toISODate()
 
   // This function will retrieve the Paypal transactions that do not have the tag "Linked"
   const { data } = await PaypalTransactionsService.listTransaction(null, 50, 1, startDate, endDate)

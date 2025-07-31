@@ -1,9 +1,9 @@
 import { Queue } from "bullmq"
-import { DateTime } from "luxon"
 
 import { env } from "../config"
 import { transactionHandler } from "../modules/transactionHandler"
 import { CategoriesService, CategoryRead, TransactionRead, TransactionsService, TransactionTypeProperty } from "../types"
+import { getDateNow } from "../utils/date"
 import { getTransactionShowLink } from "../utils/getTransactionShowLink"
 import { QueueArgs } from "./queueArgs"
 
@@ -79,8 +79,8 @@ async function job(transactionId: string) {
 
 async function init(queue: Queue<QueueArgs>) {
   if (transactionHandler) {
-    const startDate = DateTime.now().startOf("month").toISODate()
-    const endDate = DateTime.now().toISODate()
+    const startDate = getDateNow().startOf("month").toISODate()
+    const endDate = getDateNow().toISODate()
     const uncategorizedTransactionsList = await getUncategorizedTransactions(startDate, endDate)
     for (const { id: transactionId } of uncategorizedTransactionsList) {
       console.log(`Adding uncategorized transaction with id ${transactionId}`)
