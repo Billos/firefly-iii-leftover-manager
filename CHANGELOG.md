@@ -1,3 +1,10 @@
+# [1.14.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.13.0...1.14.0) (2025-07-31)
+
+
+### Features
+
+* **date:** replace DateTime with getDateNow utility for date handling ([813393d](https://github.com/Billos/firefly-iii-leftover-manager/commit/813393d3f2c476aa2035e32b285a6dadf6ec53e8))
+
 # [1.13.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.12.0...1.13.0) (2025-07-31)
 
 
