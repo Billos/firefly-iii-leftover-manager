@@ -36,14 +36,14 @@ export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDa
   const [spent] = currentLeftOverBudget.data.attributes.spent
 
   if (!spent) {
-    console.log("No spent amount found, stopping")
-    return
+    console.log("No spent amount found, setting it to 0")
   }
+  const sum = spent?.sum || "0"
 
-  const amount = `${-parseFloat(spent.sum) + leftoverAmount}`
+  const amount = `${-parseFloat(sum) + leftoverAmount}`
 
   console.log("Leftover amount", leftoverAmount)
-  console.log("Leftover spent", spent.sum)
+  console.log("Leftover spent", sum)
   console.log("Budget limit should be", amount)
 
   if (parseFloat(amount) < 0) {
