@@ -222,10 +222,10 @@ export class WebhooksService {
      * This endpoint will submit any open messages for this webhook. This is an asynchronous operation, so you can't see the result. Refresh the webhook message and/or the webhook message attempts to see the results. This may take some time if the webhook receiver is slow.
      * @param id The webhook ID.
      * @param xTraceId Unique identifier associated with this request.
-     * @returns any OK!
+     * @returns any OK.
      * @throws ApiError
      */
-    public static submitWebook(
+    public static submitWebhook(
         id: string,
         xTraceId?: string,
     ): CancelablePromise<any> {

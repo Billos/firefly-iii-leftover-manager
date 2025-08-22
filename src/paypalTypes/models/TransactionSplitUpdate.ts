@@ -26,11 +26,11 @@ export type TransactionSplitUpdate = {
      */
     order?: number | null;
     /**
-     * Currency ID. Default is the source account's currency, or the user's default currency. Can be used instead of currency_code.
+     * Currency ID. Default is the source account's currency, or the user's financial administration's primary currency. Can be used instead of currency_code.
      */
     currency_id?: string | null;
     /**
-     * Currency code. Default is the source account's currency, or the user's default currency. Can be used instead of currency_id.
+     * Currency code. Default is the source account's currency, or the user's financial administration's primary currency. Can be used instead of currency_id.
      */
     currency_code?: string | null;
     readonly currency_symbol?: string;
@@ -119,10 +119,6 @@ export type TransactionSplitUpdate = {
      * External, custom URL for this transaction.
      */
     external_url?: string | null;
-    /**
-     * Internal ID of bunq transaction.
-     */
-    bunq_payment_id?: string | null;
     /**
      * SEPA Clearing Code
      */

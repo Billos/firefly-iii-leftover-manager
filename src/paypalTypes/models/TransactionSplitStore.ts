@@ -22,11 +22,11 @@ export type TransactionSplitStore = {
      */
     order?: number | null;
     /**
-     * Currency ID. Default is the source account's currency, or the user's default currency. The value you submit may be overruled by the source or destination account.
+     * Currency ID. Default is the source account's currency, or the user's financial administration's currency. The value you submit may be overruled by the source or destination account.
      */
     currency_id?: string | null;
     /**
-     * Currency code. Default is the source account's currency, or the user's default currency. The value you submit may be overruled by the source or destination account.
+     * Currency code. Default is the source account's currency, or the user's financial administration's primary currency. The value you submit may be overruled by the source or destination account.
      */
     currency_code?: string | null;
     /**
@@ -48,7 +48,7 @@ export type TransactionSplitStore = {
     /**
      * The name of the budget to be used. If the budget name is unknown, the ID will be used or the value will be ignored.
      */
-    readonly budget_name?: string | null;
+    budget_name?: string | null;
     /**
      * The category ID for this transaction.
      */
@@ -110,10 +110,6 @@ export type TransactionSplitStore = {
      * External, custom URL for this transaction.
      */
     external_url?: string | null;
-    /**
-     * Internal ID of bunq transaction. Field is no longer used but still works.
-     */
-    bunq_payment_id?: string | null;
     /**
      * SEPA Clearing Code
      */

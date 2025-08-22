@@ -6,12 +6,12 @@ export type PiggyBankAccountRead = {
     /**
      * The ID of the account.
      */
-    readonly id: string;
-    readonly name: string;
-    current_amount: string;
+    readonly account_id?: string;
+    readonly name?: string;
+    current_amount?: string;
     /**
-     * If convertToNative is on, this will show the amount in the native currency.
+     * If convertToPrimary is on, this will show the amount in the primary currency.
      */
-    native_current_amount: string;
+    pc_current_amount?: string;
 };
 

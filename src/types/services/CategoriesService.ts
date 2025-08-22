@@ -3,9 +3,9 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { AttachmentArray } from '../models/AttachmentArray';
-import type { Category } from '../models/Category';
 import type { CategoryArray } from '../models/CategoryArray';
 import type { CategorySingle } from '../models/CategorySingle';
+import type { CategoryStore } from '../models/CategoryStore';
 import type { CategoryUpdate } from '../models/CategoryUpdate';
 import type { TransactionArray } from '../models/TransactionArray';
 import type { TransactionTypeFilter } from '../models/TransactionTypeFilter';
@@ -139,7 +139,7 @@ export class CategoriesService {
      * @throws ApiError
      */
     public static storeCategory(
-        requestBody: Category,
+        requestBody: CategoryStore,
         xTraceId?: string,
     ): CancelablePromise<CategorySingle> {
         return __request(OpenAPI, {

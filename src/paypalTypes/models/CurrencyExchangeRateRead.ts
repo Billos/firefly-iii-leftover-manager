@@ -2,15 +2,15 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CurrencyExchangeRateReadAttributes } from './CurrencyExchangeRateReadAttributes';
+import type { CurrencyExchangeProperties } from './CurrencyExchangeProperties';
 import type { ObjectLink } from './ObjectLink';
 export type CurrencyExchangeRateRead = {
     /**
      * Immutable value
      */
-    type: string;
-    id: string;
-    attributes: CurrencyExchangeRateReadAttributes;
-    links: ObjectLink;
+    readonly type?: string;
+    readonly id?: string;
+    attributes?: CurrencyExchangeProperties;
+    links?: ObjectLink;
 };
 

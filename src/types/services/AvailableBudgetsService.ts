@@ -10,7 +10,7 @@ import { request as __request } from '../core/request';
 export class AvailableBudgetsService {
     /**
      * List all available budget amounts.
-     * Firefly III allows users to set the amount that is available to be budgeted in so-called "available budgets". For example, the user could have 1200,- available to be divided during the coming month. This amount is used on the /budgets page. This endpoint returns all of these amounts and the periods for which they are set.
+     * Firefly III calculates the total amount of money budgeted in so-called "available budgets". This endpoint returns all of these amounts and the periods for which they are calculated.
      *
      * @param xTraceId Unique identifier associated with this request.
      * @param limit Number of items per page. The default pagination is per 50 items.
@@ -22,7 +22,7 @@ export class AvailableBudgetsService {
      * @returns AvailableBudgetArray A list of available budget amounts.
      * @throws ApiError
      */
-    public static listAvailableBudget(
+    public static listAvailableBudgets(
         xTraceId?: string,
         limit?: number,
         page?: number,

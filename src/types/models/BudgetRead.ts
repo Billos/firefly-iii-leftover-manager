@@ -2,13 +2,13 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Budget } from './Budget';
+import type { BudgetProperties } from './BudgetProperties';
 export type BudgetRead = {
     /**
      * Immutable value
      */
     type: string;
     id: string;
-    attributes: Budget;
+    attributes: BudgetProperties;
 };
 

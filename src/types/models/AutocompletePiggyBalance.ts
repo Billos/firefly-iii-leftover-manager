@@ -13,19 +13,19 @@ export type AutocompletePiggyBalance = {
      */
     name_with_balance?: string;
     /**
-     * Currency ID for the currency used by this piggy bank. This will always be the piggy bank's currency, never the native currency.
+     * Currency ID for the currency used by this piggy bank. This will always be the piggy bank's currency, never the primary currency.
      */
     currency_id?: string;
     /**
-     * Currency code for the currency used by this piggy bank. This will always be the piggy bank's currency, never the native currency.
+     * Currency code for the currency used by this piggy bank. This will always be the piggy bank's currency, never the primary currency.
      */
     currency_code?: string;
     /**
-     * Currency symbol for the currency used by this piggy bank. This will always be the piggy bank's currency, never the native currency.
+     * Currency symbol for the currency used by this piggy bank. This will always be the piggy bank's currency, never the primary currency.
      */
     currency_symbol?: string;
     /**
-     * Currency decimal places for the currency used by this piggy bank. This will always be the piggy bank's currency, never the native currency.
+     * Currency decimal places for the currency used by this piggy bank. This will always be the piggy bank's currency, never the primary currency.
      */
     currency_decimal_places?: number;
     /**

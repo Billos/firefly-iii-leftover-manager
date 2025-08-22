@@ -4,10 +4,10 @@
 /* eslint-disable */
 import type { AttachmentArray } from '../models/AttachmentArray';
 import type { BudgetArray } from '../models/BudgetArray';
-import type { BudgetLimit } from '../models/BudgetLimit';
 import type { BudgetLimitArray } from '../models/BudgetLimitArray';
 import type { BudgetLimitSingle } from '../models/BudgetLimitSingle';
 import type { BudgetLimitStore } from '../models/BudgetLimitStore';
+import type { BudgetLimitUpdate } from '../models/BudgetLimitUpdate';
 import type { BudgetSingle } from '../models/BudgetSingle';
 import type { BudgetStore } from '../models/BudgetStore';
 import type { BudgetUpdate } from '../models/BudgetUpdate';
@@ -178,7 +178,7 @@ export class BudgetsService {
     public static updateBudgetLimit(
         id: string,
         limitId: string,
-        requestBody: BudgetLimit,
+        requestBody: BudgetLimitUpdate,
         xTraceId?: string,
     ): CancelablePromise<BudgetLimitSingle> {
         return __request(OpenAPI, {

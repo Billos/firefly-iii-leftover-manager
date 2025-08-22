@@ -2,13 +2,13 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Account } from './Account';
+import type { AccountProperties } from './AccountProperties';
 export type AccountRead = {
     /**
      * Immutable value
      */
     type: string;
     id: string;
-    attributes: Account;
+    attributes: AccountProperties;
 };
 

@@ -8,9 +8,9 @@ export type CurrencyUpdate = {
      */
     enabled?: boolean;
     /**
-     * If the currency must be the default for the user. You can only submit TRUE. Submitting FALSE will not drop this currency as the default currency, because then the system would be without one.
+     * If the currency must be the primary for the user. You can only submit TRUE. Submitting FALSE will not drop this currency as the primary currency, because then the system would be without one.
      */
-    default?: boolean;
+    primary?: boolean;
     /**
      * The currency code
      */

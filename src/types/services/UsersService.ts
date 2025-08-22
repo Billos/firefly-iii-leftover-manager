@@ -136,7 +136,7 @@ export class UsersService {
     }
     /**
      * Delete a user.
-     * Delete a user. You cannot delete the user you're authenticated with. This cannot be undone. Be careful!
+     * Delete a user. You cannot delete the user you're authenticated with. This cannot be undone. Be careful.
      * @param id The user ID.
      * @param xTraceId Unique identifier associated with this request.
      * @returns void

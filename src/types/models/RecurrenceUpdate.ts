@@ -15,7 +15,7 @@ export type RecurrenceUpdate = {
      */
     first_date?: string;
     /**
-     * Date until the recurring transaction can fire. After that date, it's basically inactive. Use either this field or repetitions.
+     * Date until when the recurring transaction can fire. After that date, it's basically inactive. Use either this field or repetitions.
      */
     repeat_until?: string | null;
     /**

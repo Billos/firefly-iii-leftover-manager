@@ -23,7 +23,7 @@ export class InsightService {
      * asset accounts / liabilities will be included. You can combine both asset / liability and expense account ID's.
      * Other account ID's will be ignored.
      *
-     * @returns InsightGroup A list of expense accounts and expense details. Each expense acccount has one row per currency.
+     * @returns InsightGroup A list of expense accounts and expense details. Each expense account has one row per currency.
      * @throws ApiError
      */
     public static insightExpenseExpense(
@@ -107,7 +107,7 @@ export class InsightService {
      * asset accounts / liabilities will be included. You can combine both asset / liability and deposit account ID's.
      * Other account ID's will be ignored.
      *
-     * @returns InsightGroup A list of revenue accounts and income details. Each revenue acccount has one row per currency.
+     * @returns InsightGroup A list of revenue accounts and income details. Each revenue account has one row per currency.
      * @throws ApiError
      */
     public static insightIncomeRevenue(

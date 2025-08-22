@@ -6,7 +6,7 @@ export type PiggyBankAccountUpdate = {
     /**
      * The ID of the account.
      */
-    id: string | null;
+    account_id?: string | null;
     /**
      * The name of the account.
      */
@@ -14,6 +14,6 @@ export type PiggyBankAccountUpdate = {
     /**
      * The amount saved currently.
      */
-    current_amount?: string;
+    current_amount?: string | null;
 };
 

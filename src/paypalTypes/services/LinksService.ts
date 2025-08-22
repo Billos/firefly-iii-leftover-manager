@@ -2,8 +2,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CurrencyExchangeRateSingle } from '../models/CurrencyExchangeRateSingle';
-import type { CurrencyExchangeRateUpdate } from '../models/CurrencyExchangeRateUpdate';
 import type { LinkType } from '../models/LinkType';
 import type { LinkTypeArray } from '../models/LinkTypeArray';
 import type { LinkTypeSingle } from '../models/LinkTypeSingle';
@@ -18,40 +16,6 @@ import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class LinksService {
-    /**
-     * Update existing currency exchange rate.
-     * Used to update a single currency exchange rate
-     *
-     * @param id The ID of the currency exchange rate.
-     * @param requestBody JSON array or formdata with updated exchange rate information. See the model for the exact specifications.
-     * @param xTraceId Unique identifier associated with this request.
-     * @returns CurrencyExchangeRateSingle Updated exchange rate stored, result in response
-     * @throws ApiError
-     */
-    public static updateCurrencyExchangeRate(
-        id: string,
-        requestBody: CurrencyExchangeRateUpdate,
-        xTraceId?: string,
-    ): CancelablePromise<CurrencyExchangeRateSingle> {
-        return __request(OpenAPI, {
-            method: 'PUT',
-            url: '/v1/exchange-rates/{id}',
-            path: {
-                'id': id,
-            },
-            headers: {
-                'X-Trace-Id': xTraceId,
-            },
-            body: requestBody,
-            mediaType: 'application/json',
-            errors: {
-                400: `Bad request`,
-                401: `Unauthenticated`,
-                404: `Page not found`,
-                422: `Validation error. The body will have the exact details.`,
-            },
-        });
-    }
     /**
      * List all transactions under this link type.
      * List all transactions under this link type, both the inward and outward transactions.
@@ -198,7 +162,7 @@ export class LinksService {
      * Used to update a single link type. All fields that are not submitted will be cleared (set to NULL). The model will tell you which fields are mandatory. You cannot update some of the system provided link types, indicated by the editable=false flag when you list it.
      *
      * @param id The ID of the link type.
-     * @param requestBody JSON array or formdata with updated link type information. See the model for the exact specifications.
+     * @param requestBody JSON array or form-data with updated link type information. See the model for the exact specifications.
      * @param xTraceId Unique identifier associated with this request.
      * @returns LinkTypeSingle Updated link type stored, result in response
      * @throws ApiError
@@ -385,7 +349,7 @@ export class LinksService {
      * Used to update a single existing link.
      *
      * @param id The ID of the transaction link.
-     * @param requestBody JSON array or formdata with updated link type information. See the model for the exact specifications.
+     * @param requestBody JSON array or form-data with updated link type information. See the model for the exact specifications.
      * @param xTraceId Unique identifier associated with this request.
      * @returns TransactionLinkSingle Updated link type stored, result in response
      * @throws ApiError

@@ -8,12 +8,12 @@ export type UserGroupUpdate = {
      */
     title: string;
     /**
-     * Use either native_currency_id or native_currency_code. This will set the native currency for the user group ('financial administration').
+     * Use either primary_currency_id or primary_currency_code. This will set the primary currency for the user group ('financial administration').
      */
-    native_currency_id?: string;
+    primary_currency_id?: string;
     /**
-     * Use either native_currency_id or native_currency_code. This will set the native currency for the user group ('financial administration').
+     * Use either primary_currency_id or primary_currency_code. This will set the primary currency for the user group ('financial administration').
      */
-    native_currency_code?: string;
+    primary_currency_code?: string;
 };
 

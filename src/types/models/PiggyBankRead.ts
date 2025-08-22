@@ -3,14 +3,14 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { ObjectLink } from './ObjectLink';
-import type { PiggyBank } from './PiggyBank';
+import type { PiggyBankProperties } from './PiggyBankProperties';
 export type PiggyBankRead = {
     /**
      * Immutable value
      */
     type: string;
     id: string;
-    attributes: PiggyBank;
+    attributes: PiggyBankProperties;
     links: ObjectLink;
 };
 

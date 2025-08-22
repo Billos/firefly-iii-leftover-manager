@@ -19,21 +19,21 @@ export type UserGroupReadAttributes = {
      */
     title?: string;
     /**
-     * Returns the native currency ID of the user group.
+     * Returns the primary currency ID of the user group.
      */
-    readonly native_currency_id?: string;
+    readonly primary_currency_id?: string;
     /**
-     * Returns the native currency code of the user group.
+     * Returns the primary currency code of the user group.
      */
-    native_currency_code?: string;
+    primary_currency_code?: string;
     /**
-     * Returns the native currency symbol of the user group.
+     * Returns the primary currency symbol of the user group.
      */
-    readonly native_currency_symbol?: string;
+    readonly primary_currency_symbol?: string;
     /**
-     * Returns the native currency decimal places of the user group.
+     * Returns the primary currency decimal places of the user group.
      */
-    readonly native_currency_decimal_places?: number;
+    readonly primary_currency_decimal_places?: number;
     members?: Array<UserGroupReadMembers>;
 };
 

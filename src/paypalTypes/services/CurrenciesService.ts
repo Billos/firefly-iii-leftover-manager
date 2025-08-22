@@ -423,20 +423,20 @@ export class CurrenciesService {
         });
     }
     /**
-     * Make currency default currency.
-     * Make this currency the default currency for the user. If the currency is not enabled, it will be enabled as well.
+     * Make currency primary currency.
+     * Make this currency the primary currency for the current financial administration. If the currency is not enabled, it will be enabled as well.
      * @param code The currency code.
      * @param xTraceId Unique identifier associated with this request.
      * @returns void
      * @throws ApiError
      */
-    public static defaultCurrency(
+    public static primaryCurrency(
         code: string,
         xTraceId?: string,
     ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/v1/currencies/{code}/default',
+            url: '/v1/currencies/{code}/primary',
             path: {
                 'code': code,
             },
@@ -544,18 +544,18 @@ export class CurrenciesService {
         });
     }
     /**
-     * Get the native currency of the current administration.
-     * Get the native currency of the current administration. This replaces what was called "the user's default currency" although they are essentially the same.
+     * Get the primary currency of the current administration.
+     * Get the primary currency of the current administration. This replaces what was called "the user's default currency" although they are essentially the same.
      * @param xTraceId Unique identifier associated with this request.
-     * @returns CurrencySingle The native currency
+     * @returns CurrencySingle The primary currency
      * @throws ApiError
      */
-    public static getNativeCurrency(
+    public static getPrimaryCurrency(
         xTraceId?: string,
     ): CancelablePromise<CurrencySingle> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/v1/currencies/native',
+            url: '/v1/currencies/primary',
             headers: {
                 'X-Trace-Id': xTraceId,
             },

@@ -77,12 +77,12 @@ export class UserGroupsService {
      * Used to update a single user group. The available fields are still limited.
      *
      * @param id The ID of the account.
-     * @param requestBody JSON array or formdata with new user group information. See the model for the exact specifications.
+     * @param requestBody JSON array or form-data with new user group information. See the model for the exact specifications.
      * @param xTraceId Unique identifier associated with this request.
      * @returns UserGroupSingle Updated user group is stored, result is in the response
      * @throws ApiError
      */
-    public static updateAccount(
+    public static updateUserGroup(
         id: string,
         requestBody: UserGroupUpdate,
         xTraceId?: string,

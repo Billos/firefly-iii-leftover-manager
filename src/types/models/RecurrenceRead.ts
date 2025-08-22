@@ -3,14 +3,14 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { ObjectLink } from './ObjectLink';
-import type { Recurrence } from './Recurrence';
+import type { RecurrenceProperties } from './RecurrenceProperties';
 export type RecurrenceRead = {
     /**
      * Immutable value
      */
     type: string;
     id: string;
-    attributes: Recurrence;
+    attributes: RecurrenceProperties;
     links: ObjectLink;
 };
 

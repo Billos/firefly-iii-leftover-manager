@@ -9,20 +9,20 @@ export type AutocompletePiggy = {
      */
     name: string;
     /**
-     * Currency ID for this piggy bank. This will always be the currency of the piggy bank, never the user's native currency.
+     * Currency ID for this piggy bank. This will always be the currency of the piggy bank, never the user's primary currency.
      */
     currency_id?: string;
     /**
-     * Currency code for this piggy bank. This will always be the currency of the piggy bank, never the user's native currency.
+     * Currency code for this piggy bank. This will always be the currency of the piggy bank, never the user's primary currency.
      */
     currency_code?: string;
     currency_symbol?: string;
     /**
-     * Currency name for the currency used by this piggy bank. This will always be the currency of the piggy bank, never the user's native currency.
+     * Currency name for the currency used by this piggy bank. This will always be the currency of the piggy bank, never the user's primary currency.
      */
     currency_name?: string;
     /**
-     * Number of decimal places for the currency used by this piggy bank. This will always be the currency of the piggy bank, never the user's native currency.
+     * Number of decimal places for the currency used by this piggy bank. This will always be the currency of the piggy bank, never the user's primary currency.
      */
     currency_decimal_places?: number;
     /**

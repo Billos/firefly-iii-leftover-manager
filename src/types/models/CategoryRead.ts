@@ -2,13 +2,13 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Category } from './Category';
+import type { CategoryProperties } from './CategoryProperties';
 export type CategoryRead = {
     /**
      * Immutable value
      */
     type: string;
     id: string;
-    attributes: Category;
+    attributes: CategoryProperties;
 };
 

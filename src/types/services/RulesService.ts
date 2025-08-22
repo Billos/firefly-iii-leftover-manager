@@ -56,7 +56,7 @@ export class RulesService {
     }
     /**
      * Fire the rule on your transactions.
-     * Fire the rule group on your transactions. Changes will be made by the rules in the group! Limit the result if you want to.
+     * Fire the rule group on your transactions. Changes will be made by the rules in the group. Limit the result if you want to.
      * @param id The ID of the rule.
      * @param xTraceId Unique identifier associated with this request.
      * @param start A date formatted YYYY-MM-DD, to limit the transactions the actions will be applied to. If the start date is not present, it will be set to one year ago. If you use this field, both the start date and the end date must be present.

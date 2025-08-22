@@ -9,7 +9,6 @@ export type PiggyBankUpdate = {
     readonly currency_id?: string;
     readonly currency_code?: string;
     target_amount?: string | null;
-    current_amount?: string;
     /**
      * The date you started with this piggy bank.
      */

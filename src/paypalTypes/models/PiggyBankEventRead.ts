@@ -3,14 +3,14 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { ObjectLink } from './ObjectLink';
-import type { PiggyBankEvent } from './PiggyBankEvent';
+import type { PiggyBankEventProperties } from './PiggyBankEventProperties';
 export type PiggyBankEventRead = {
     /**
      * Immutable value
      */
     type: string;
     id: string;
-    attributes: PiggyBankEvent;
+    attributes: PiggyBankEventProperties;
     links: ObjectLink;
 };
 

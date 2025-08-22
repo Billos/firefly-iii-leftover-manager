@@ -20,15 +20,14 @@ export type OpenAPIConfig = {
     ENCODE_PATH?: ((path: string) => string) | undefined;
 };
 
-
 export const OpenAPI: OpenAPIConfig = {
     BASE: `${env.fireflyUrl}/api`,
-    VERSION: '6.2.0',
+    VERSION: '6.3.0',
     WITH_CREDENTIALS: false,
-    CREDENTIALS: "include",
+    CREDENTIALS: 'include',
     TOKEN: undefined,
     HEADERS: {
         Authorization: `Bearer ${env.fireflyToken}`,
     },
     ENCODE_PATH: undefined,
-}
+};

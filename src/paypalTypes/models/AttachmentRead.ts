@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Attachment } from './Attachment';
+import type { AttachmentProperties } from './AttachmentProperties';
 import type { ObjectLink } from './ObjectLink';
 export type AttachmentRead = {
     /**
@@ -10,7 +10,7 @@ export type AttachmentRead = {
      */
     type: string;
     id: string;
-    attributes: Attachment;
+    attributes: AttachmentProperties;
     links: ObjectLink;
 };
 

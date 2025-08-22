@@ -4,11 +4,11 @@
 /* eslint-disable */
 export type BudgetLimitStore = {
     /**
-     * Use either currency_id or currency_code. Defaults to the user's default currency.
+     * Use either currency_id or currency_code. Defaults to the user's primary currency.
      */
     currency_id?: string;
     /**
-     * Use either currency_id or currency_code. Defaults to the user's default currency.
+     * Use either currency_id or currency_code. Defaults to the user's primary currency.
      */
     currency_code?: string;
     /**

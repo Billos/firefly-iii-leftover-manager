@@ -26,6 +26,10 @@ export type BasicSummaryEntry = {
      */
     currency_decimal_places?: number;
     /**
+     * True if there are no available budgets available.
+     */
+    no_available_budgets?: boolean;
+    /**
      * The amount formatted according to the users locale
      */
     value_parsed?: string;

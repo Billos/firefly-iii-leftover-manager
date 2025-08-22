@@ -249,7 +249,7 @@ export class AccountsService {
      * Used to update a single account. All fields that are not submitted will be cleared (set to NULL). The model will tell you which fields are mandatory.
      *
      * @param id The ID of the account.
-     * @param requestBody JSON array or formdata with updated account information. See the model for the exact specifications.
+     * @param requestBody JSON array or form-data with updated account information. See the model for the exact specifications.
      * @param xTraceId Unique identifier associated with this request.
      * @returns AccountSingle Updated account stored, result in response
      * @throws ApiError

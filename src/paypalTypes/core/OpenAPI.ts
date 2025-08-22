@@ -21,13 +21,13 @@ export type OpenAPIConfig = {
 };
 
 export const OpenAPI: OpenAPIConfig = {
-  BASE: `${env.fireflyUrl}/api`,
-  VERSION: "6.2.0",
-  WITH_CREDENTIALS: false,
-  CREDENTIALS: "include",
-  TOKEN: undefined,
-  HEADERS: {
-    Authorization: `Bearer ${env.fireflyPaypalAccountToken}`,
-  },
-  ENCODE_PATH: undefined,
-}
+    BASE: `${env.fireflyUrl}/api`,
+    VERSION: '6.3.0',
+    WITH_CREDENTIALS: false,
+    CREDENTIALS: 'include',
+    TOKEN: undefined,
+    HEADERS: {
+        Authorization: `Bearer ${env.fireflyPaypalAccountToken}`,
+    },
+    ENCODE_PATH: undefined,
+};

@@ -11,11 +11,11 @@ export type BudgetStore = {
     notes?: string | null;
     auto_budget_type?: AutoBudgetType;
     /**
-     * Use either currency_id or currency_code. Defaults to the user's default currency.
+     * Use either currency_id or currency_code. Defaults to the user's financial administration's currency.
      */
     auto_budget_currency_id?: string | null;
     /**
-     * Use either currency_id or currency_code. Defaults to the user's default currency.
+     * Use either currency_id or currency_code. Defaults to the user's financial administration's currency.
      */
     auto_budget_currency_code?: string | null;
     auto_budget_amount?: string | null;

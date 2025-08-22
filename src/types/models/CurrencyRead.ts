@@ -2,13 +2,13 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Currency } from './Currency';
+import type { CurrencyProperties } from './CurrencyProperties';
 export type CurrencyRead = {
     /**
      * Immutable value
      */
     type: string;
     id: string;
-    attributes: Currency;
+    attributes: CurrencyProperties;
 };
 

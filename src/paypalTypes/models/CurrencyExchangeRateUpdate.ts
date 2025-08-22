@@ -11,5 +11,13 @@ export type CurrencyExchangeRateUpdate = {
      * The exchange rate from the base currency to the destination currency.
      */
     rate: string;
+    /**
+     * The base currency code.
+     */
+    from?: string | null;
+    /**
+     * The destination currency code.
+     */
+    to?: string | null;
 };
 

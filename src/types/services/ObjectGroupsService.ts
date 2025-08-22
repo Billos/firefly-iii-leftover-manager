@@ -87,8 +87,8 @@ export class ObjectGroupsService {
         });
     }
     /**
-     * List all oject groups.
-     * List all oject groups.
+     * List all object groups.
+     * List all object groups.
      * @param xTraceId Unique identifier associated with this request.
      * @param limit Number of items per page. The default pagination is per 50 items.
      * @param page Page number. The default pagination is per 50 items.

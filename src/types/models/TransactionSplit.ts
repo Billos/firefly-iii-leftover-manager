@@ -25,40 +25,90 @@ export type TransactionSplit = {
      */
     order?: number | null;
     /**
-     * Currency ID. Default is the source account's currency, or the user's default currency. Can be used instead of currency_code.
+     * Indicates whether the transaction has a currency setting. For transactions this is always true.
      */
-    currency_id?: string | null;
+    readonly object_has_currency_setting?: boolean;
     /**
-     * Currency code. Default is the source account's currency, or the user's default currency. Can be used instead of currency_id.
+     * Currency ID for the currency of this transaction.
      */
-    currency_code?: string | null;
+    currency_id?: string;
+    /**
+     * Currency code for the currency of this transaction.
+     */
+    currency_code?: string;
+    /**
+     * Currency symbol for the currency of this transaction.
+     */
     readonly currency_symbol?: string;
-    readonly currency_name?: string;
+    /**
+     * Currency name for the currency of this transaction.
+     */
+    currency_name?: string;
     /**
      * Number of decimals used in this currency.
      */
-    readonly currency_decimal_places?: number;
+    currency_decimal_places?: number;
     /**
-     * Currency ID of the foreign currency. Default is null. Is required when you submit a foreign amount.
+     * Currency ID of the foreign currency, if this transaction has a foreign amount.
      */
     foreign_currency_id?: string | null;
     /**
-     * Currency code of the foreign currency. Default is NULL. Can be used instead of the foreign_currency_id, but this or the ID is required when submitting a foreign amount.
+     * Currency code of the foreign currency. Default is NULL.
      */
     foreign_currency_code?: string | null;
     readonly foreign_currency_symbol?: string | null;
     /**
-     * Number of decimals in the currency
+     * Number of decimals in the foreign currency.
      */
     readonly foreign_currency_decimal_places?: number | null;
+    /**
+     * Returns the primary currency ID of the administration. This currency is used as the currency for all `pc_*` amount and balance fields of this account.
+     */
+    readonly primary_currency_id?: string | null;
+    /**
+     * Returns the primary currency code of the administration. This currency is used as the currency for all `pc_*` amount and balance fields of this account.
+     */
+    primary_currency_code?: string | null;
+    /**
+     * See the other `primary_*` fields.
+     */
+    readonly primary_currency_symbol?: string | null;
+    /**
+     * See the other `primary_*` fields.
+     */
+    readonly primary_currency_decimal_places?: number | null;
     /**
      * Amount of the transaction.
      */
     amount: string;
     /**
-     * The amount in a foreign currency.
+     * Amount of the transaction in the primary currency of this administration. The `primary_currency_*` fields reflect the currency used. This field is NULL if the user does have 'convert to primary' set to true in their settings.
+     */
+    pc_amount?: string;
+    /**
+     * The amount in the set foreign currency. May be NULL if the transaction does not have a foreign amount.
      */
     foreign_amount?: string | null;
+    /**
+     * Foreign amount of the transaction in the primary currency of this administration. The `primary_currency_*` fields reflect the currency used. This field is NULL if the user does have 'convert to primary' set to true in their settings.
+     */
+    pc_foreign_amount?: string;
+    /**
+     * The balance of the source account. This is the balance in the account's currency which may be different from this transaction, and is not provided in this model.
+     */
+    source_balance_after?: string | null;
+    /**
+     * The balance of the source account in the primary currency of this administration. The `primary_currency_*` fields reflect the currency used. This field is NULL if the user does have 'convert to primary' set to true in their settings.
+     */
+    pc_source_balance_after?: string | null;
+    /**
+     * The balance of the destination account. This is the balance in the account's currency which may be different from this transaction, and is not provided in this model.
+     */
+    destination_balance_after?: string | null;
+    /**
+     * The balance of the destination account in the primary currency of this administration. The `primary_currency_*` fields reflect the currency used. This field is NULL if the user does have 'convert to primary' set to true in their settings.
+     */
+    pc_destination_balance_after?: string | null;
     /**
      * Description of the transaction.
      */
@@ -88,7 +138,7 @@ export type TransactionSplit = {
      */
     budget_id?: string | null;
     /**
-     * The name of the budget to be used. If the budget name is unknown, the ID will be used or the value will be ignored.
+     * The name of the budget used.
      */
     readonly budget_name?: string | null;
     /**
@@ -100,13 +150,21 @@ export type TransactionSplit = {
      */
     category_name?: string | null;
     /**
-     * Optional. Use either this or the bill_name
+     * The associated subscription ID for this transaction. `bill` refers to the OLD name for subscriptions and this field will be removed.
      */
     bill_id?: string | null;
     /**
-     * Optional. Use either this or the bill_id
+     * The associated subscription name for this transaction. `bill` refers to the OLD name for subscriptions and this field will be removed.
      */
     bill_name?: string | null;
+    /**
+     * The associated subscription ID for this transaction.
+     */
+    subscription_id?: string | null;
+    /**
+     * The associated subscription name for this transaction.
+     */
+    subscription_name?: string | null;
     /**
      * If the transaction has been reconciled already. When you set this, the amount can no longer be edited by the user.
      */
@@ -144,10 +202,6 @@ export type TransactionSplit = {
      * The # of the current transaction created under this recurrence.
      */
     readonly recurrence_count?: number | null;
-    /**
-     * Internal ID of bunq transaction. DEPRECATED
-     */
-    bunq_payment_id?: string | null;
     /**
      * Hash value of original import transaction (for duplicate detection).
      */

@@ -7,33 +7,61 @@ export type RecurrenceTransaction = {
     id?: string;
     description: string;
     /**
+     * Indicates whether the object has a currency setting. If false, the object uses the administration's primary currency.
+     */
+    readonly object_has_currency_setting?: boolean;
+    /**
+     * The currency ID of the currency associated with this object.
+     */
+    currency_id?: string;
+    /**
+     * The currency name of the currency associated with this object.
+     */
+    currency_name?: string;
+    /**
+     * The currency code of the currency associated with this object.
+     */
+    currency_code?: string;
+    readonly currency_symbol?: string;
+    readonly currency_decimal_places?: number;
+    /**
+     * The currency ID of the administration's primary currency.
+     */
+    readonly primary_currency_id?: string;
+    /**
+     * The currency name of the administration's primary currency.
+     */
+    readonly primary_currency_name?: string;
+    /**
+     * The currency code of the administration's primary currency.
+     */
+    readonly primary_currency_code?: string;
+    /**
+     * The currency symbol of the administration's primary currency.
+     */
+    readonly primary_currency_symbol?: string;
+    /**
+     * The currency decimal places of the administration's primary currency.
+     */
+    readonly primary_currency_decimal_places?: number;
+    /**
      * Amount of the transaction.
      */
     amount: string;
+    /**
+     * Amount of the transaction in primary currency.
+     */
+    pc_amount?: string;
     /**
      * Foreign amount of the transaction.
      */
     foreign_amount?: string | null;
     /**
-     * Submit either a currency_id or a currency_code.
+     * Foreign amount of the transaction.
      */
-    currency_id?: string;
-    /**
-     * Submit either a currency_id or a currency_code.
-     */
-    currency_code?: string;
-    readonly currency_symbol?: string;
-    /**
-     * Number of decimals in the currency
-     */
-    readonly currency_decimal_places?: number;
-    /**
-     * Submit either a foreign_currency_id or a foreign_currency_code, or neither.
-     */
+    pc_foreign_amount?: string | null;
     foreign_currency_id?: string | null;
-    /**
-     * Submit either a foreign_currency_id or a foreign_currency_code, or neither.
-     */
+    foreign_currency_name?: string | null;
     foreign_currency_code?: string | null;
     readonly foreign_currency_symbol?: string | null;
     /**
@@ -80,21 +108,9 @@ export type RecurrenceTransaction = {
      * Array of tags.
      */
     tags?: Array<string> | null;
-    /**
-     * Optional. Use either this or the piggy_bank_name
-     */
     piggy_bank_id?: string | null;
-    /**
-     * Optional. Use either this or the piggy_bank_id
-     */
     piggy_bank_name?: string | null;
-    /**
-     * Optional. Use either this or the bill_name
-     */
-    bill_id?: string | null;
-    /**
-     * Optional. Use either this or the bill_id
-     */
-    bill_name?: string | null;
+    subscription_id?: string | null;
+    subscription_name?: string | null;
 };
 

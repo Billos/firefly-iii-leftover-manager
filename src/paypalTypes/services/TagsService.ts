@@ -162,7 +162,7 @@ export class TagsService {
     /**
      * Get a single tag.
      * Get a single tag.
-     * @param tag Either the tag itself or the tag ID. If you use the tag itself, and it contains international (non-ASCII) characters, your milage may vary.
+     * @param tag Either the tag itself or the tag ID. If you use the tag itself, and it contains international (non-ASCII) characters, your mileage may vary.
      * @param xTraceId Unique identifier associated with this request.
      * @param limit Number of items per page. The default pagination is per 50 items.
      * @param page Page number. The default pagination is per 50 items.
@@ -199,7 +199,7 @@ export class TagsService {
     /**
      * Update existing tag.
      * Update existing tag.
-     * @param tag Either the tag itself or the tag ID. If you use the tag itself, and it contains international (non-ASCII) characters, your milage may vary.
+     * @param tag Either the tag itself or the tag ID. If you use the tag itself, and it contains international (non-ASCII) characters, your mileage may vary.
      * @param requestBody JSON array with updated tag information. See the model for the exact specifications.
      * @param xTraceId Unique identifier associated with this request.
      * @returns TagSingle Updated tag stored, result in response
@@ -233,7 +233,7 @@ export class TagsService {
     /**
      * Delete an tag.
      * Delete an tag.
-     * @param tag Either the tag itself or the tag ID. If you use the tag itself, and it contains international (non-ASCII) characters, your milage may vary.
+     * @param tag Either the tag itself or the tag ID. If you use the tag itself, and it contains international (non-ASCII) characters, your mileage may vary.
      * @param xTraceId Unique identifier associated with this request.
      * @returns void
      * @throws ApiError

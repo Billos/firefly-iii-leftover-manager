@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * 'credit' indicates somebody owes you the liability. 'debit' Indicates you owe this debt yourself. Works only for liabiltiies.
+ * 'credit' indicates somebody owes you the liability. 'debit' Indicates you owe this debt yourself. Works only for liabilities.
  */
 export enum LiabilityDirectionProperty {
     CREDIT = 'credit',
