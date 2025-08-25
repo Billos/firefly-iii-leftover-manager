@@ -1,5 +1,5 @@
 import { env } from "../config"
-import { AccountsService, BudgetLimit, BudgetLimitStore, BudgetRead, BudgetsService } from "../types"
+import { AccountsService, BudgetLimitStore, BudgetRead, BudgetsService, InsightService } from "../types"
 
 export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDate: string, endDate: string) {
   console.log("================ Updating Leftovers Budget Limit =================")
@@ -16,13 +16,17 @@ export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDa
   const allLimits = await BudgetsService.listBudgetLimit(startDate, endDate)
   const limitsWithoutLeftovers = allLimits.data.filter(({ attributes: { budget_id } }) => budget_id !== leftoversBudget.id)
   const leftOverLimit = allLimits.data.find(({ attributes: { budget_id } }) => budget_id === leftoversBudget.id)
-
-  for (const {
-    attributes: { spent, budget_id, amount },
-  } of limitsWithoutLeftovers) {
-    const { data: budget } = await BudgetsService.getBudget(budget_id)
-    const budgetLeftover = parseFloat(amount) + parseFloat(spent)
-    console.log(`Subtracting ${budget.attributes.name} - limit of ${amount} - spent ${spent} - Budget leftover ${budgetLeftover}`)
+  for (const limit of limitsWithoutLeftovers) {
+    const {
+      attributes: { spent, budget_id, amount },
+    } = limit
+    // console.log(limit.attributes)
+    const [{ difference: spentValue, name }] = await InsightService.insightExpenseBudget(startDate, endDate, null, [Number(budget_id)])
+    // const { data: budget } = await BudgetsService.getBudget(budget_id)
+    // const spentValue = spent[0].sum || "0"
+    // const name = budget.attributes.name
+    const budgetLeftover = parseFloat(amount) + parseFloat(spentValue)
+    console.log(`Subtracting ${name} - limit of ${amount} - spent ${spentValue} - Budget leftover ${budgetLeftover}`)
     // A budget leftover might be negative, if the budget is overspent, this means it will be added to the leftover amount
     leftoverAmount -= Math.abs(budgetLeftover)
   }
@@ -51,12 +55,7 @@ export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDa
     return
   }
 
-  const params: BudgetLimitStore | BudgetLimit = {
-    amount,
-    budget_id: leftoversBudget.id,
-    start: startDate,
-    end: endDate,
-  }
+  const params: BudgetLimitStore = { amount, budget_id: leftoversBudget.id, start: startDate, end: endDate }
 
   if (!leftOverLimit) {
     console.log("No leftovers budget limit found, creating budget limit")
