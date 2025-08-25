@@ -18,7 +18,8 @@ export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDa
   const leftOverLimit = allLimits.data.find(({ attributes: { budget_id } }) => budget_id === leftoversBudget.id)
   for (const limit of limitsWithoutLeftovers) {
     const {
-      attributes: { spent, budget_id, amount },
+      // attributes: { spent, budget_id, amount },
+      attributes: { budget_id, amount },
     } = limit
     // console.log(limit.attributes)
     const [{ difference: spentValue, name }] = await InsightService.insightExpenseBudget(startDate, endDate, null, [Number(budget_id)])
