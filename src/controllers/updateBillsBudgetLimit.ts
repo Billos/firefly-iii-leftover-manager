@@ -1,4 +1,4 @@
-import { BillsService, BudgetLimit, BudgetLimitStore, BudgetRead, BudgetsService } from "../types"
+import { BillsService, BudgetLimitStore, BudgetRead, BudgetsService } from "../types"
 
 export async function updateBillsBudgetLimit(billsBudget: BudgetRead, startDate: string, endDate: string) {
   console.log("================ Updating Bills Budget Limit ================")
@@ -32,12 +32,7 @@ export async function updateBillsBudgetLimit(billsBudget: BudgetRead, startDate:
     throw new Error("There are more than one limit for the bills budget")
   }
 
-  const params: BudgetLimitStore | BudgetLimit = {
-    amount: total.toString(),
-    budget_id: billsBudget.id,
-    start: startDate,
-    end: endDate,
-  }
+  const params: BudgetLimitStore = { amount: total.toString(), budget_id: billsBudget.id, start: startDate, end: endDate }
 
   if (existingLimits.data.length === 0) {
     console.log("There are no limits for the bills budget, creating budget limit")
@@ -46,6 +41,10 @@ export async function updateBillsBudgetLimit(billsBudget: BudgetRead, startDate:
   }
 
   const [limit] = existingLimits.data
-  await BudgetsService.updateBudgetLimit(billsBudget.id, limit.id, params)
+  try {
+    await BudgetsService.updateBudgetLimit(billsBudget.id, limit.id, params)
+  } catch (error) {
+    console.error("Error updating bills budget limit:", error)
+  }
   console.log("Bills budget limit updated")
 }
