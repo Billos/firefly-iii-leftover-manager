@@ -6,6 +6,16 @@
 * **API:** update API clients ([99dfcd0](https://github.com/Billos/firefly-iii-leftover-manager/commit/99dfcd012abe5f8f3088bd19853de92d3d4a7e96))
 * **budget:** integrate InsightService for accurate budget calculations in updateLeftoversBudget function ([62663a1](https://github.com/Billos/firefly-iii-leftover-manager/commit/62663a18fed63fdebd910b425ef3b26304b169fd))
 * **budget:** safe call to update a budget limit ([c20f8c3](https://github.com/Billos/firefly-iii-leftover-manager/commit/c20f8c358f568fea755dbd7248bd52390090eadc))
+* **lint:** repair lint ([3edbb26](https://github.com/Billos/firefly-iii-leftover-manager/commit/3edbb26a42005968fab66613ba06fe8ab60f6c4a))
+
+## [1.14.2](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.14.1...1.14.2) (2025-08-25)
+
+
+### Bug Fixes
+
+* **API:** update API clients ([99dfcd0](https://github.com/Billos/firefly-iii-leftover-manager/commit/99dfcd012abe5f8f3088bd19853de92d3d4a7e96))
+* **budget:** integrate InsightService for accurate budget calculations in updateLeftoversBudget function ([62663a1](https://github.com/Billos/firefly-iii-leftover-manager/commit/62663a18fed63fdebd910b425ef3b26304b169fd))
+* **budget:** safe call to update a budget limit ([c20f8c3](https://github.com/Billos/firefly-iii-leftover-manager/commit/c20f8c358f568fea755dbd7248bd52390090eadc))
 
 ## [1.14.1](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.14.0...1.14.1) (2025-07-31)
 
