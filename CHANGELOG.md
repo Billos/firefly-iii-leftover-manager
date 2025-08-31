@@ -1,3 +1,10 @@
+## [1.14.3](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.14.2...1.14.3) (2025-08-31)
+
+
+### Bug Fixes
+
+* **budget:** leftover budget is computed even if budgets have no expenses yet ([990201f](https://github.com/Billos/firefly-iii-leftover-manager/commit/990201f809b7660ec7db3dc4d7dc52e5994aaed2))
+
 ## [1.14.2](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.14.1...1.14.2) (2025-08-25)
 
 
