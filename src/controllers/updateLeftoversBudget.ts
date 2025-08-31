@@ -1,5 +1,5 @@
 import { env } from "../config"
-import { AccountsService, BudgetLimitStore, BudgetRead, BudgetsService, InsightService } from "../types"
+import { AccountsService, BudgetLimitStore, BudgetRead, BudgetsService, InsightGroup, InsightService } from "../types"
 
 export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDate: string, endDate: string) {
   console.log("================ Updating Leftovers Budget Limit =================")
@@ -16,13 +16,26 @@ export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDa
   const allLimits = await BudgetsService.listBudgetLimit(startDate, endDate)
   const limitsWithoutLeftovers = allLimits.data.filter(({ attributes: { budget_id } }) => budget_id !== leftoversBudget.id)
   const leftOverLimit = allLimits.data.find(({ attributes: { budget_id } }) => budget_id === leftoversBudget.id)
+  const budgetsIds = limitsWithoutLeftovers.map(({ attributes: { budget_id } }) => Number(budget_id))
+
+  const insightsRaw = await InsightService.insightExpenseBudget(startDate, endDate, null, budgetsIds)
+  const insights: Record<number, InsightGroup> = insightsRaw.reduce((acc, insight) => ({ ...acc, [Number(insight.id)]: insight }), {})
+
   for (const limit of limitsWithoutLeftovers) {
     const {
       // attributes: { spent, budget_id, amount },
       attributes: { budget_id, amount },
     } = limit
-    // console.log(limit.attributes)
-    const [{ difference: spentValue, name }] = await InsightService.insightExpenseBudget(startDate, endDate, null, [Number(budget_id)])
+    const insight = insights[Number(budget_id)]
+
+    let spentValue = "0"
+    const budget = await BudgetsService.getBudget(budget_id)
+    const { name } = budget.data.attributes
+
+    if (insight && insight[0]) {
+      spentValue = insight[0].difference
+    }
+
     // const { data: budget } = await BudgetsService.getBudget(budget_id)
     // const spentValue = spent[0].sum || "0"
     // const name = budget.attributes.name
