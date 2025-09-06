@@ -1,5 +1,5 @@
 import { env } from "../config"
-import { AccountsService, BudgetLimitStore, BudgetRead, BudgetsService, InsightGroup, InsightGroupEntry, InsightService } from "../types"
+import { AccountsService, BudgetLimitStore, BudgetRead, BudgetsService, InsightGroupEntry, InsightService } from "../types"
 
 export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDate: string, endDate: string) {
   console.log("================ Updating Leftovers Budget Limit =================")
