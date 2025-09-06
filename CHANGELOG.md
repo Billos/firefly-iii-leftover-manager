@@ -1,3 +1,10 @@
+## [1.14.4](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.14.3...1.14.4) (2025-09-06)
+
+
+### Bug Fixes
+
+* **updateLeftoversBudget:** repair leftover budget compute ([3624038](https://github.com/Billos/firefly-iii-leftover-manager/commit/3624038160053201d79e0ba6b13b8755c92280d0))
+
 ## [1.14.3](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.14.2...1.14.3) (2025-08-31)
 
 
