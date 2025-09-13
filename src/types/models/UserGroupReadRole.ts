@@ -7,7 +7,6 @@
  *
  */
 export enum UserGroupReadRole {
-    OWNER = 'owner',
     RO = 'ro',
     MNG_TRX = 'mng_trx',
     MNG_META = 'mng_meta',
@@ -28,4 +27,5 @@ export enum UserGroupReadRole {
     VIEW_REPORTS = 'view_reports',
     VIEW_MEMBERSHIPS = 'view_memberships',
     FULL = 'full',
+    OWNER = 'owner',
 }
