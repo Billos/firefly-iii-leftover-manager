@@ -1,8 +1,6 @@
 import { BillsService, BudgetLimitStore, BudgetRead, BudgetsService } from "../types"
 
-export async function updateBillsBudgetLimit(billsBudget: BudgetRead, startDate: string, endDate: string) {
-  console.log("================ Updating Bills Budget Limit ================")
-  // Updating Bills auto_budget_amount to be the sum of all paid bills value + the maximum value of the unpaid bills
+async function getTotalAmountOfBills(startDate: string, endDate: string): Promise<number> {
   const allBills = await BillsService.listBill(null, 50, 1, startDate, endDate)
   // Filtering inactive bills
   const bills = allBills.data.filter(({ attributes }) => attributes.active)
@@ -25,6 +23,12 @@ export async function updateBillsBudgetLimit(billsBudget: BudgetRead, startDate:
   console.log("You have paid", paidBillsValue, "in bills")
   console.log("You have at most", maximumUnpaidBill, "in unpaid bills")
   console.log("Total bills value is at most", total)
+  return total
+}
+
+export async function updateBillsBudgetLimit(billsBudget: BudgetRead, startDate: string, endDate: string) {
+  console.log("================ Updating Bills Budget Limit ================")
+  const total = await getTotalAmountOfBills(startDate, endDate)
 
   const existingLimits = await BudgetsService.listBudgetLimitByBudget(billsBudget.id, null, startDate, endDate)
 

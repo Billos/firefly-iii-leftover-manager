@@ -1,21 +1,16 @@
 import { env } from "../config"
 import { AccountsService, BudgetLimitStore, BudgetRead, BudgetsService, InsightGroupEntry, InsightService } from "../types"
 
-export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDate: string, endDate: string) {
-  console.log("================ Updating Leftovers Budget Limit =================")
-
+async function getSumWithoutLeftovers(leftoversBudget: BudgetRead, startDate: string, endDate: string): Promise<number> {
   const assetAccount = await AccountsService.getAccount(env.assetAccountId)
   if (!assetAccount) {
-    console.log("Asset account not found")
-    return
+    throw new Error("Asset account not found")
   }
-
   let leftoverAmount = Number.parseFloat(assetAccount.data.attributes.current_balance)
   console.log("Current balance", leftoverAmount)
 
   const allLimits = await BudgetsService.listBudgetLimit(startDate, endDate)
   const limitsWithoutLeftovers = allLimits.data.filter(({ attributes: { budget_id } }) => budget_id !== leftoversBudget.id)
-  const leftOverLimit = allLimits.data.find(({ attributes: { budget_id } }) => budget_id === leftoversBudget.id)
   const budgetsIds = allLimits.data.map(({ attributes: { budget_id } }) => Number(budget_id))
 
   const insightsRaw = await InsightService.insightExpenseBudget(startDate, endDate, null, budgetsIds)
@@ -23,7 +18,6 @@ export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDa
     (acc, insight) => ({ ...acc, [insight.id]: insight }),
     {} as Record<string, InsightGroupEntry>,
   )
-
   for (const limit of limitsWithoutLeftovers) {
     const {
       // attributes: { spent, budget_id, amount },
@@ -46,6 +40,15 @@ export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDa
     // A budget leftover might be negative, if the budget is overspent, this means it will be added to the leftover amount
     leftoverAmount -= Math.abs(budgetLeftover)
   }
+  return leftoverAmount
+}
+
+export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDate: string, endDate: string) {
+  console.log("================ Updating Leftovers Budget Limit =================")
+  const allLimits = await BudgetsService.listBudgetLimit(startDate, endDate)
+  const leftOverLimit = allLimits.data.find(({ attributes: { budget_id } }) => budget_id === leftoversBudget.id)
+
+  let leftoverAmount = await getSumWithoutLeftovers(leftoversBudget, startDate, endDate)
 
   if (leftoverAmount < 0) {
     console.log("Leftover amount is negative, setting to 0.1")
