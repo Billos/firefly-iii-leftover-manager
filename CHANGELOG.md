@@ -1,3 +1,10 @@
+## [1.14.5](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.14.4...1.14.5) (2025-09-13)
+
+
+### Bug Fixes
+
+* **updateBudgets:** prevent unnecessary updates if amount is unchanged ([58c2f3f](https://github.com/Billos/firefly-iii-leftover-manager/commit/58c2f3f17c360d81dea5676a35a1e902e0dab0b3))
+
 ## [1.14.4](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.14.3...1.14.4) (2025-09-06)
 
 
