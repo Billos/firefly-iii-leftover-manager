@@ -71,6 +71,11 @@ export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDa
     return
   }
 
+  if (amount === leftOverLimit?.attributes.amount) {
+    console.log("Amount is the same as the current limit, stopping")
+    return
+  }
+
   const params: BudgetLimitStore = { amount, budget_id: leftoversBudget.id, start: startDate, end: endDate }
 
   if (!leftOverLimit) {
@@ -78,6 +83,7 @@ export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDa
     await BudgetsService.storeBudgetLimit(leftoversBudget.id, params)
     return
   }
+
   await BudgetsService.updateBudgetLimit(leftoversBudget.id, leftOverLimit.id, params)
   console.log("Leftovers budget limit updated")
 }

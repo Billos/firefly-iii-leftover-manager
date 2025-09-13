@@ -40,6 +40,11 @@ export async function updateBillsBudgetLimit(billsBudget: BudgetRead, startDate:
     return
   }
 
+  if (existingLimits.data[0].attributes.amount === params.amount) {
+    console.log("The bills budget limit is already up to date, no changes needed")
+    return
+  }
+
   const [limit] = existingLimits.data
   try {
     await BudgetsService.updateBudgetLimit(billsBudget.id, limit.id, params)
