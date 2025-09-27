@@ -4,24 +4,21 @@ import { env } from "../../config"
 import { AbstractTransactionHandler } from "./transactionHandler"
 
 export class GotifyTransactionHandler extends AbstractTransactionHandler {
-  private request: AxiosInstance = axios.create({
-    baseURL: env.gotifyUrl,
-    headers: { "X-Gotify-Key": env.gotifyToken },
-  })
+  private request: AxiosInstance = axios.create({ baseURL: env.gotifyUrl, headers: { "X-Gotify-Key": env.gotifyToken } })
 
   constructor() {
     super()
+  }
+
+  override async notifyImpl(title: string, message: string): Promise<void> {
+    await this.request.post("/message", { title, message, extras: { "client::display": { contentType: "text/markdown" } } })
   }
 
   override async sendMessageImpl(title: string, message: string): Promise<string> {
     const result = await this.request.post<{ id: number }>("/message", {
       title,
       message,
-      extras: {
-        "client::display": {
-          contentType: "text/markdown",
-        },
-      },
+      extras: { "client::display": { contentType: "text/markdown" } },
     })
     return `${result.data.id}`
   }

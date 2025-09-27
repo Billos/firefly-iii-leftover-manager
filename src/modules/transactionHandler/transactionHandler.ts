@@ -6,10 +6,12 @@ export interface TransactionHandler {
   // Function about transactions
   getMessageId: (type: MessageType, transactionId: string) => Promise<string>
   // Generic function about messages
+  notify: (title: string, message: string) => Promise<void>
   sendMessage: (type: MessageType, content: string, transactionId: string) => Promise<string>
   deleteMessage: (type: MessageType, id: string, transactionId: string) => Promise<void>
   deleteAllMessages: () => Promise<void>
   // Functions about messages, implemented by the child class
+  notifyImpl: (title: string, message: string) => Promise<void>
   sendMessageImpl: (title: string, message: string, transactionId: string) => Promise<string>
   deleteMessageImpl: (id: string, transactionId: string) => Promise<void>
   deleteAllMessagesImpl: () => Promise<void>
@@ -48,12 +50,12 @@ export abstract class AbstractTransactionHandler implements TransactionHandler {
     return null
   }
 
+  public async notify(title: string, message: string): Promise<void> {
+    await this.notifyImpl(title, message)
+  }
+
   private async setNotes(transactionId: string, notes: string): Promise<void> {
-    await TransactionsService.updateTransaction(transactionId, {
-      apply_rules: false,
-      fire_webhooks: false,
-      transactions: [{ notes }],
-    })
+    await TransactionsService.updateTransaction(transactionId, { apply_rules: false, fire_webhooks: false, transactions: [{ notes }] })
   }
 
   private async setMessageId(type: MessageType, transactionId: string, messageId: string): Promise<void> {
@@ -97,6 +99,8 @@ export abstract class AbstractTransactionHandler implements TransactionHandler {
   public async deleteAllMessages(): Promise<void> {
     await this.deleteAllMessagesImpl()
   }
+
+  abstract notifyImpl(title: string, message: string): Promise<void>
 
   abstract sendMessageImpl(title: string, content: string, transactionId: string): Promise<string>
 

@@ -10,6 +10,10 @@ export class DiscordTransactionHandler extends AbstractTransactionHandler {
     super()
   }
 
+  override async notifyImpl(_title: string, content: string): Promise<void> {
+    await this.request.post<{ id: number }>(`${env.discordWebhook}?wait=true`, { content })
+  }
+
   override async sendMessageImpl(content: string): Promise<string> {
     const result = await this.request.post<{ id: number }>(`${env.discordWebhook}?wait=true`, { content })
     return `${result.data.id}`
