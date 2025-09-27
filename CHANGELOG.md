@@ -1,3 +1,12 @@
+# [1.15.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.14.5...1.15.0) (2025-09-27)
+
+
+### Features
+
+* **budget:** implement reviewBudgetLimit function ([065ef85](https://github.com/Billos/firefly-iii-leftover-manager/commit/065ef8510790e86432189bdd140c2c62b644c2c7))
+* **transactionHandler:** add notify method and implementation in Discord and Gotify handlers ([ea1d3f1](https://github.com/Billos/firefly-iii-leftover-manager/commit/ea1d3f1ac3875ad8a7a2879db5b587540174c57f))
+* **updateAutomaticBudgets:** add review for underbudgeted budgets ([18a1d1a](https://github.com/Billos/firefly-iii-leftover-manager/commit/18a1d1a519dffa642cc9e2a9f20526130a35114b))
+
 ## [1.14.5](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.14.4...1.14.5) (2025-09-13)
 
 
