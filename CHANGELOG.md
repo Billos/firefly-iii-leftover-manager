@@ -1,3 +1,15 @@
+# [1.16.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.15.0...1.16.0) (2025-12-16)
+
+
+### Bug Fixes
+
+* **unbudgetedTransactions:** correct variable name for budgets retrieval ([fa91ce6](https://github.com/Billos/firefly-iii-leftover-manager/commit/fa91ce658cd80de8c0375b1c938cc492d423a099))
+
+
+### Features
+
+* **queue:** add options to remove jobs on completion or failure ([1c18e37](https://github.com/Billos/firefly-iii-leftover-manager/commit/1c18e377c52c68332ec07e191aee6a67cfdcad74))
+
 # [1.15.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.14.5...1.15.0) (2025-09-27)
 
 
