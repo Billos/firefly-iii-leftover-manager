@@ -6,11 +6,7 @@ import * as UnbudgetedTransactions from "./unbudgetedTransactions"
 import * as UncategorizedTransactions from "./uncategorizedTransactions"
 import * as UpdateAutomaticBudgets from "./updateAutomaticBudgets"
 
-type JobDefinition = {
-  id: string
-  job: (transactionId: string) => Promise<void>
-  init?: (queue: Queue<QueueArgs>) => Promise<void>
-}
+type JobDefinition = { id: string; job: (transactionId: string) => Promise<void>; init?: (queue: Queue<QueueArgs>) => Promise<void> }
 
 const jobDefinitions: JobDefinition[] = [
   UnbudgetedTransactions,
@@ -25,9 +21,7 @@ async function getQueue(): Promise<Queue> {
     return queue
   }
 
-  queue = new Queue("manager", {
-    connection: env.redisConnection,
-  })
+  queue = new Queue("manager", { connection: env.redisConnection })
   queue.setGlobalConcurrency(1)
   await queue.clean(200, 0, "active")
   await queue.obliterate()
@@ -36,6 +30,8 @@ async function getQueue(): Promise<Queue> {
   new Worker<QueueArgs>("manager", async ({ data: { job, transactionId } }) => jobs[job](transactionId), {
     connection: env.redisConnection,
     concurrency: 1,
+    removeOnComplete: { count: 5000 },
+    removeOnFail: { count: 5000 },
   })
 
   for (const { job, id, init } of jobDefinitions) {

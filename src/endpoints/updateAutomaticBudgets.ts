@@ -6,7 +6,7 @@ import { id } from "../queues/updateAutomaticBudgets"
 export async function updateAutomaticBudgets(_req: Request, res: Response) {
   // Get all budgets
   const queue = await getQueue()
-  queue.add(id, { job: id, transactionId: null })
+  queue.add(id, { job: id, transactionId: null }, { removeOnComplete: true, removeOnFail: true })
   if (res) {
     res.send("<script>window.close()</script>")
   }
