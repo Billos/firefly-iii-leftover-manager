@@ -42,8 +42,8 @@ async function job(transactionId: string) {
     return
   }
 
-  const { data: allBbudgets } = await BudgetsService.listBudget(null, 50, 1)
-  const budgets = allBbudgets.filter(({ attributes: { name } }) => !(env.billsBudget && name === env.billsBudget))
+  const { data: allBudgets } = await BudgetsService.listBudget(null, 50, 1)
+  const budgets = allBudgets.filter(({ attributes: { name } }) => !(env.billsBudget && name === env.billsBudget))
 
   const apis = generateMarkdownApiCalls(budgets, transactionId)
   const link = `[Link](<${getTransactionShowLink(transactionId)}>)`
