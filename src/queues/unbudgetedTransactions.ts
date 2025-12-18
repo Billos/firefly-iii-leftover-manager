@@ -61,10 +61,10 @@ async function init(queue: Queue<QueueArgs>) {
     const { data } = await BudgetsService.listTransactionWithoutBudget(null, 50, 1)
     for (const { id: transactionId } of data) {
       console.log(`Adding unbudgeted transaction with id ${transactionId}`)
-      queue.add(transactionId, { job: id, transactionId }, { removeOnComplete: true, removeOnFail: true })
+      queue.add(transactionId, { job: id, transactionId })
 
       setTimeout(async () => {
-        queue.add(transactionId, { job: id, transactionId }, { removeOnComplete: true, removeOnFail: true })
+        queue.add(transactionId, { job: id, transactionId })
       }, 8000)
     }
   }

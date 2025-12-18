@@ -84,7 +84,7 @@ async function init(queue: Queue<QueueArgs>) {
     const uncategorizedTransactionsList = await getUncategorizedTransactions(startDate, endDate)
     for (const { id: transactionId } of uncategorizedTransactionsList) {
       console.log(`Adding uncategorized transaction with id ${transactionId}`)
-      queue.add(transactionId, { job: id, transactionId: transactionId }, { removeOnComplete: true, removeOnFail: true })
+      queue.add(transactionId, { job: id, transactionId: transactionId })
     }
   }
 }
