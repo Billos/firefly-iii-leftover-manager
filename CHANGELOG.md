@@ -1,3 +1,10 @@
+## [1.16.1](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.16.0...1.16.1) (2025-12-18)
+
+
+### Bug Fixes
+
+* **queue:** remove options to delete jobs on completion or failure,  just keeping the max 5K limit ([6a645ae](https://github.com/Billos/firefly-iii-leftover-manager/commit/6a645ae965e7d743292017287df10522629a5a03))
+
 # [1.16.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.15.0...1.16.0) (2025-12-16)
 
 
