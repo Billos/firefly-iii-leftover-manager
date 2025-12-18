@@ -1,3 +1,11 @@
+## [1.16.2](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.16.1...1.16.2) (2025-12-18)
+
+
+### Bug Fixes
+
+* **budget:** disable webhook notifications when updating budget limits ([0de256a](https://github.com/Billos/firefly-iii-leftover-manager/commit/0de256a426e2210e230914a1847fd7dab82020da))
+* **lint:** ignore types ([bcf1363](https://github.com/Billos/firefly-iii-leftover-manager/commit/bcf136392f50719075c92e43372bb78f23681947))
+
 ## [1.16.1](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.16.0...1.16.1) (2025-12-18)
 
 
