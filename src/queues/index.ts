@@ -23,8 +23,9 @@ async function getQueue(): Promise<Queue> {
 
   queue = new Queue("manager", { connection: env.redisConnection })
   queue.setGlobalConcurrency(1)
+  await queue.pause()
   await queue.clean(200, 0, "active")
-  await queue.obliterate()
+  await queue.obliterate({ force: true })
   const jobs: Record<string, (transactionId: string) => Promise<void>> = {}
 
   new Worker<QueueArgs>("manager", async ({ data: { job, transactionId } }) => jobs[job](transactionId), {
