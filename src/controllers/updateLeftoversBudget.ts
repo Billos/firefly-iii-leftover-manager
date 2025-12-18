@@ -79,7 +79,7 @@ export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDa
     return
   }
 
-  const params: BudgetLimitStore = { amount, budget_id: leftoversBudget.id, start: startDate, end: endDate }
+  const params: BudgetLimitStore = { amount, budget_id: leftoversBudget.id, start: startDate, end: endDate, fire_webhooks: false }
 
   if (!leftOverLimit) {
     console.log("No leftovers budget limit found, creating budget limit")

@@ -15,7 +15,7 @@ export async function reviewBudgetLimit(budget: BudgetRead, start: string, end: 
   if (spent > limit) {
     console.log(`Budget is overspent! Spent: ${spent}, Limit: ${limit}`)
     // Setting the limit to spent and sending a notification
-    const params: BudgetLimitStore = { amount: spent.toString(), budget_id: budget.id, start, end }
+    const params: BudgetLimitStore = { amount: spent.toString(), budget_id: budget.id, start, end, fire_webhooks: false }
 
     if (!existingLimits) {
       console.log("No existing limits found, creating a new one")

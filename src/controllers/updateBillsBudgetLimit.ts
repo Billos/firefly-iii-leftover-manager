@@ -36,7 +36,13 @@ export async function updateBillsBudgetLimit(billsBudget: BudgetRead, startDate:
     throw new Error("There are more than one limit for the bills budget")
   }
 
-  const params: BudgetLimitStore = { amount: total.toString(), budget_id: billsBudget.id, start: startDate, end: endDate }
+  const params: BudgetLimitStore = {
+    amount: total.toString(),
+    budget_id: billsBudget.id,
+    start: startDate,
+    end: endDate,
+    fire_webhooks: false,
+  }
 
   if (existingLimits.data.length === 0) {
     console.log("There are no limits for the bills budget, creating budget limit")
