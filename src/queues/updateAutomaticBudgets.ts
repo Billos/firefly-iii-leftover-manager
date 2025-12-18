@@ -48,8 +48,7 @@ async function job() {
 }
 
 async function init(queue: Queue<QueueArgs>) {
-  console.log(`___________ 5 Adding job ${id} to the queue`)
-  queue.add(id, { job: id, transactionId: null })
+  queue.add(id, { job: id, transactionId: null }, { removeOnComplete: true, removeOnFail: true })
 }
 
 export { job, init, id }

@@ -20,7 +20,7 @@ export async function webhook(req: Request, res: Response) {
   // Check unbudgeted transactions
   const queue = await getQueue()
   for (const { id } of queues) {
-    queue.add(id, { job: id, transactionId: `${body.content.id}` })
+    queue.add(id, { job: id, transactionId: `${body.content.id}` }, { removeOnComplete: true, removeOnFail: true })
   }
   res.send("<script>window.close()</script>")
 }
