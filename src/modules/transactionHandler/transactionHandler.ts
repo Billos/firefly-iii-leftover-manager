@@ -1,6 +1,6 @@
 import { TransactionSplit, TransactionsService } from "../../types"
 
-export type MessageType = "BudgetMessageId" | "CategoryMessageId"
+export type MessageType = "BudgetMessageId" | "CategoryMessageId" | "AlertMessage"
 
 export interface TransactionHandler {
   // Function about transactions
@@ -12,7 +12,7 @@ export interface TransactionHandler {
   deleteAllMessages: () => Promise<void>
   // Functions about messages, implemented by the child class
   notifyImpl: (title: string, message: string) => Promise<void>
-  sendMessageImpl: (title: string, message: string, transactionId: string) => Promise<string>
+  sendMessageImpl: (title: string, message: string) => Promise<string>
   deleteMessageImpl: (id: string, transactionId: string) => Promise<void>
   deleteAllMessagesImpl: () => Promise<void>
 }
@@ -77,7 +77,7 @@ export abstract class AbstractTransactionHandler implements TransactionHandler {
   }
 
   public async sendMessage(type: MessageType, content: string, transactionId: string): Promise<string> {
-    const messageId = await this.sendMessageImpl(this.getTitle(type), content, transactionId)
+    const messageId = await this.sendMessageImpl(this.getTitle(type), content)
     await this.setMessageId(type, transactionId, messageId)
     return messageId
   }
@@ -102,7 +102,7 @@ export abstract class AbstractTransactionHandler implements TransactionHandler {
 
   abstract notifyImpl(title: string, message: string): Promise<void>
 
-  abstract sendMessageImpl(title: string, content: string, transactionId: string): Promise<string>
+  abstract sendMessageImpl(title: string, content: string): Promise<string>
 
   abstract deleteMessageImpl(id: string, transactionId: string): Promise<void>
 
