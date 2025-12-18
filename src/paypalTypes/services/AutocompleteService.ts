@@ -412,6 +412,38 @@ export class AutocompleteService {
         });
     }
     /**
+     * Returns all subscriptions of the user returned in a basic auto-complete array.
+     * @param xTraceId Unique identifier associated with this request.
+     * @param query The autocomplete search query.
+     * @param limit The number of items returned.
+     * @returns AutocompleteBillArray A list of subscriptions with very basic information.
+     * @throws ApiError
+     */
+    public static getSubscriptionsAc(
+        xTraceId?: string,
+        query?: string,
+        limit?: number,
+    ): CancelablePromise<AutocompleteBillArray> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/v1/autocomplete/subscriptions',
+            headers: {
+                'X-Trace-Id': xTraceId,
+            },
+            query: {
+                'query': query,
+                'limit': limit,
+            },
+            errors: {
+                400: `Bad request`,
+                401: `Unauthenticated`,
+                404: `Page not found`,
+                422: `Validation error. The body will have the exact details.`,
+                500: `Internal exception`,
+            },
+        });
+    }
+    /**
      * Returns all tags of the user returned in a basic auto-complete array.
      * @param xTraceId Unique identifier associated with this request.
      * @param query The autocomplete search query.

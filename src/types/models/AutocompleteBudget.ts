@@ -8,5 +8,9 @@ export type AutocompleteBudget = {
      * Name of the budget found by an auto-complete search.
      */
     name: string;
+    /**
+     * Is the budget active or not?
+     */
+    active?: boolean;
 };
 

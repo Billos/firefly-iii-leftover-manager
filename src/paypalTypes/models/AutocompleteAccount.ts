@@ -13,6 +13,10 @@ export type AutocompleteAccount = {
      */
     name_with_balance: string;
     /**
+     * Is the bill active or not?
+     */
+    active?: boolean;
+    /**
      * Account type of the account found by the auto-complete search.
      */
     type: string;

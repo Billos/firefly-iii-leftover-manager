@@ -312,6 +312,7 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): C
                 };
 
                 catchErrorCodes(options, result);
+
                 const str = result.body
                 if (typeof str === "string") {
                   const obj: T = JSON.parse(str) as T

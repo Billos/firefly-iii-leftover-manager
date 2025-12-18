@@ -72,5 +72,9 @@ export type BudgetLimitUpdate = {
      * Some notes for this specific budget limit.
      */
     notes?: string | null;
+    /**
+     * Whether or not to fire the webhooks that are related to this event.
+     */
+    fire_webhooks?: boolean;
 };
 

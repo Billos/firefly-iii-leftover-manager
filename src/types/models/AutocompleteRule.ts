@@ -12,5 +12,9 @@ export type AutocompleteRule = {
      * Description of the rule found by auto-complete.
      */
     description?: string;
+    /**
+     * Is the bill active or not?
+     */
+    active?: boolean;
 };
 

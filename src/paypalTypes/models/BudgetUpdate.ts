@@ -9,6 +9,10 @@ export type BudgetUpdate = {
     active?: boolean;
     order?: number;
     notes?: string | null;
+    /**
+     * Whether or not to fire the webhooks that are related to this event.
+     */
+    fire_webhooks?: boolean;
     auto_budget_type?: AutoBudgetType;
     /**
      * Use either currency_id or currency_code. Defaults to the user's financial administration's currency.

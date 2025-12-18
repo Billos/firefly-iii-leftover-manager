@@ -4,6 +4,10 @@
 /* eslint-disable */
 export type CurrencyExchangeRateStore = {
     /**
+     * The date to which the exchange rate is applicable.
+     */
+    date: string;
+    /**
      * The base currency code.
      */
     from: string;

@@ -213,4 +213,42 @@ export class RecurrencesService {
             },
         });
     }
+    /**
+     * Trigger the creation of a transaction for a specific recurring transaction
+     * Trigger the creation of a transaction for a specific recurring transaction. All recurrences have a set of future occurrences. For those moments, you can trigger the creation of the transaction. That means the transaction will be created NOW, instead of on the indicated date. The transaction will be dated to _today_.
+     *
+     * So, if you recurring transaction that occurs every Monday, you can trigger the creation of a transaction for Monday in two weeks, today. On that Monday two weeks from now, no transaction will be created. Instead, the transaction is created right now, and dated _today_.
+     *
+     * @param id The ID of the recurring transaction.
+     * @param date A date formatted YYYY-MM-DD. This is the date for which you want the recurrence to fire. You can take the date from the list of occurrences in the recurring transaction.
+     *
+     * @param xTraceId Unique identifier associated with this request.
+     * @returns TransactionArray A list of transactions (always just 1) created by the recurrence, or a list of zero (0) when there is nothing to create for this date.
+     * @throws ApiError
+     */
+    public static triggerRecurrenceRecurrence(
+        id: string,
+        date: string,
+        xTraceId?: string,
+    ): CancelablePromise<TransactionArray> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/v1/recurrences/{id}/trigger',
+            path: {
+                'id': id,
+            },
+            headers: {
+                'X-Trace-Id': xTraceId,
+            },
+            query: {
+                'date': date,
+            },
+            errors: {
+                400: `Bad request`,
+                401: `Unauthenticated`,
+                404: `Page not found`,
+                500: `Internal exception`,
+            },
+        });
+    }
 }

@@ -12,5 +12,9 @@ export type AutocompleteRecurrence = {
      * Description of the recurrence found by auto-complete.
      */
     description?: string;
+    /**
+     * Is the recurring transaction active or not?
+     */
+    active?: boolean;
 };
 

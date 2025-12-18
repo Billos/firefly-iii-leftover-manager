@@ -146,6 +146,10 @@ export class AccountsService {
      * @param xTraceId Unique identifier associated with this request.
      * @param limit Number of items per page. The default pagination is per 50 items.
      * @param page Page number. The default pagination is per 50 items.
+     * @param start A date formatted YYYY-MM-DD. May be omitted.
+     *
+     * @param end A date formatted YYYY-MM-DD. Must be after "start". Can not be the same as "start". May be omitted.
+     *
      * @param date A date formatted YYYY-MM-DD. When added to the request, Firefly III will show the account's balance on that day.
      *
      * @param type Optional filter on the account type(s) returned
@@ -156,6 +160,8 @@ export class AccountsService {
         xTraceId?: string,
         limit?: number,
         page?: number,
+        start?: string,
+        end?: string,
         date?: string,
         type?: AccountTypeFilter,
     ): CancelablePromise<AccountArray> {
@@ -168,6 +174,8 @@ export class AccountsService {
             query: {
                 'limit': limit,
                 'page': page,
+                'start': start,
+                'end': end,
                 'date': date,
                 'type': type,
             },
@@ -214,6 +222,10 @@ export class AccountsService {
      *
      * @param id The ID of the account.
      * @param xTraceId Unique identifier associated with this request.
+     * @param start A date formatted YYYY-MM-DD. May be omitted.
+     *
+     * @param end A date formatted YYYY-MM-DD. Must be after "start". Can not be the same as "start". May be omitted.
+     *
      * @param date A date formatted YYYY-MM-DD. When added to the request, Firefly III will show the account's balance on that day.
      *
      * @returns AccountSingle The requested account
@@ -222,6 +234,8 @@ export class AccountsService {
     public static getAccount(
         id: string,
         xTraceId?: string,
+        start?: string,
+        end?: string,
         date?: string,
     ): CancelablePromise<AccountSingle> {
         return __request(OpenAPI, {
@@ -234,6 +248,8 @@ export class AccountsService {
                 'X-Trace-Id': xTraceId,
             },
             query: {
+                'start': start,
+                'end': end,
                 'date': date,
             },
             errors: {

@@ -12,5 +12,9 @@ export type AutocompleteRuleGroup = {
      * Description of the rule group found by auto-complete.
      */
     description?: string;
+    /**
+     * Is the bill active or not?
+     */
+    active?: boolean;
 };
 

@@ -24,4 +24,12 @@ export enum ConfigValueFilter {
     FIREFLY_CREDIT_CARD_TYPES = 'firefly.credit_card_types',
     FIREFLY_LANGUAGES = 'firefly.languages',
     FIREFLY_VALID_VIEW_RANGES = 'firefly.valid_view_ranges',
+    CER_ENABLED = 'cer.enabled',
+    FIREFLY_PRESELECTED_ACCOUNTS = 'firefly.preselected_accounts',
+    FIREFLY_RULE_ACTIONS = 'firefly.rule-actions',
+    FIREFLY_CONTEXT_RULE_ACTIONS = 'firefly.context-rule-actions',
+    SEARCH_OPERATORS = 'search.operators',
+    WEBHOOK_TRIGGERS = 'webhook.triggers',
+    WEBHOOK_RESPONSES = 'webhook.responses',
+    WEBHOOK_DELIVERIES = 'webhook.deliveries',
 }

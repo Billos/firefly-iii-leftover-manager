@@ -78,6 +78,14 @@ export type AccountProperties = {
      */
     readonly pc_current_balance?: string | null;
     /**
+     * If you submit a start AND end date, this will be the difference between those two moments.
+     */
+    readonly balance_difference?: string;
+    /**
+     * If you submit a start AND end date, this will be the difference in the currency of the account or the administration's primary currency between those two moments.
+     */
+    readonly pc_balance_difference?: string | null;
+    /**
      * Represents the opening balance, the initial amount this account holds in the currency of the account or the administration's primary currency if the account has no currency. Either way, the `currency_*` fields reflect the currency used.
      */
     opening_balance?: string;

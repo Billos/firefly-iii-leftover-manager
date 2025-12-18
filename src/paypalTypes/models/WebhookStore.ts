@@ -2,9 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { WebhookDelivery } from './WebhookDelivery';
-import type { WebhookResponse } from './WebhookResponse';
-import type { WebhookTrigger } from './WebhookTrigger';
+import type { WebhookDeliveryArray } from './WebhookDeliveryArray';
+import type { WebhookResponseArray } from './WebhookResponseArray';
+import type { WebhookTriggerArray } from './WebhookTriggerArray';
 export type WebhookStore = {
     /**
      * Boolean to indicate if the webhook is active
@@ -14,9 +14,9 @@ export type WebhookStore = {
      * A title for the webhook for easy recognition.
      */
     title: string;
-    trigger: WebhookTrigger;
-    response: WebhookResponse;
-    delivery: WebhookDelivery;
+    triggers?: WebhookTriggerArray;
+    responses?: WebhookResponseArray;
+    deliveries?: WebhookDeliveryArray;
     /**
      * The URL of the webhook. Has to start with `https`.
      */

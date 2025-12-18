@@ -3,14 +3,14 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { ObjectLink } from './ObjectLink';
-import type { Webhook } from './Webhook';
+import type { WebhookProperties } from './WebhookProperties';
 export type WebhookRead = {
     /**
      * Immutable value
      */
     type: string;
     id: string;
-    attributes: Webhook;
+    attributes: WebhookProperties;
     links: ObjectLink;
 };
 

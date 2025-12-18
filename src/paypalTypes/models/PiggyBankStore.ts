@@ -11,7 +11,7 @@ export type PiggyBankStore = {
     /**
      * The date you started with this piggy bank.
      */
-    start_date?: string;
+    start_date: string;
     /**
      * The date you intend to finish saving money.
      */

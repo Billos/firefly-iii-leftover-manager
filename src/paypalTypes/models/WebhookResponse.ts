@@ -8,5 +8,7 @@
 export enum WebhookResponse {
     TRANSACTIONS = 'TRANSACTIONS',
     ACCOUNTS = 'ACCOUNTS',
+    BUDGET = 'BUDGET',
+    RELEVANT = 'RELEVANT',
     NONE = 'NONE',
 }
