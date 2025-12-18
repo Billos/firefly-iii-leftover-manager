@@ -1,3 +1,12 @@
+## [1.16.3](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.16.2...1.16.3) (2025-12-18)
+
+
+### Bug Fixes
+
+* **queue:** add options to remove jobs on completion or failure ([5b1513d](https://github.com/Billos/firefly-iii-leftover-manager/commit/5b1513dbaf47c3ffe2a7f24428f1c000c96718cb))
+* **queue:** ensure obliteration of jobs is forced during queue initialization ([59f3206](https://github.com/Billos/firefly-iii-leftover-manager/commit/59f320667159369183ba977ea7f0f2dae44e88d5))
+* **transaction:** add alert message type and improve job failure handling ([0aed227](https://github.com/Billos/firefly-iii-leftover-manager/commit/0aed2277a2d3b7a9c92cd50bb8775cb45430d1cb))
+
 ## [1.16.2](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.16.1...1.16.2) (2025-12-18)
 
 
