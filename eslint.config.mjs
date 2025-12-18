@@ -13,7 +13,7 @@ export default [
       },
     },
     files: ["**/*.ts"],
-    ignores: ["./src/types/**/*.ts"],
+    ignores: ["./src/types/**/*.ts", "./src/paypalTypes/**/*.ts"],
     plugins: {
       "@typescript-eslint": typescriptPlugin,
       "@stylistic/js": stylisticJs,
