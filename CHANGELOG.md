@@ -1,3 +1,10 @@
+## [1.17.1](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.17.0...1.17.1) (2026-01-03)
+
+
+### Bug Fixes
+
+* Smaller docker size ([0a6cba0](https://github.com/Billos/firefly-iii-leftover-manager/commit/0a6cba0eb3b56d10191fb995788060f48228800c))
+
 # [1.17.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.16.3...1.17.0) (2026-01-03)
 
 
