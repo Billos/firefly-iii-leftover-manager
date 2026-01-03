@@ -1,3 +1,15 @@
+# [1.17.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.16.3...1.17.0) (2026-01-03)
+
+
+### Bug Fixes
+
+* npm install ([435c34b](https://github.com/Billos/firefly-iii-leftover-manager/commit/435c34b091d050b15a6bddd54a4a5a5a553ea9d4))
+
+
+### Features
+
+* Github Actions ([afd45f4](https://github.com/Billos/firefly-iii-leftover-manager/commit/afd45f4041e9d0be343bc351fd3012405ddf898f))
+
 ## [1.16.3](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.16.2...1.16.3) (2025-12-18)
 
 
