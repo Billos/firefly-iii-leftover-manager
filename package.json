@@ -5,35 +5,8 @@
     "type": "git",
     "url": "git+https://github.com/Billos/firefly-iii-leftover-manager.git"
   },
+  "license": "GPL-3.0-only",
   "author": "billos",
-  "dependencies": {
-    "axios": "^1.7.9",
-    "bullmq": "^5.56.0",
-    "express": "^5.1.0",
-    "luxon": "^3.5.0"
-  },
-  "devDependencies": {
-    "@codedependant/semantic-release-docker": "^5.0.3",
-    "@ianvs/prettier-plugin-sort-imports": "^4.4.0",
-    "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/exec": "^7.1.0",
-    "@semantic-release/git": "^10.0.1",
-    "@stylistic/eslint-plugin-js": "^4.4.1",
-    "@stylistic/eslint-plugin-ts": "^4.4.1",
-    "@types/express": "^5.0.3",
-    "@types/luxon": "^3.4.2",
-    "@typescript-eslint/eslint-plugin": "^8.16.0",
-    "@typescript-eslint/parser": "^8.16.0",
-    "eslint": "^9.15.0",
-    "openapi-typescript-codegen": "^0.29.0",
-    "prettier": "^3.6.0",
-    "prettier-plugin-multiline-arrays": "^4.0.3",
-    "prettier-plugin-organize-imports": "^4.1.0",
-    "prettier-plugin-packagejson": "^2.5.6",
-    "semantic-release": "^24.2.0",
-    "tsx": "^4.19.2",
-    "typescript": "^5.7.2"
-  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsx watch --clear-screen src/index.ts",
@@ -47,5 +20,31 @@
     "types:api:generate": "openapi --input https://api-docs.firefly-iii.org/firefly-iii-6.4.8-v1.yaml --output ./src/types",
     "types:paypal:api:generate": "openapi --input https://api-docs.firefly-iii.org/firefly-iii-6.4.8-v1.yaml --output ./src/paypalTypes"
   },
-  "license": "GPL-3.0-only"
+  "dependencies": {
+    "axios": "^1.7.9",
+    "bullmq": "^5.56.0",
+    "express": "^5.1.0",
+    "luxon": "^3.5.0"
+  },
+  "devDependencies": {
+    "@codedependant/semantic-release-docker": "^5.0.3",
+    "@ianvs/prettier-plugin-sort-imports": "^4.4.0",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/exec": "^7.1.0",
+    "@semantic-release/git": "^10.0.1",
+    "@stylistic/eslint-plugin": "^5.6.1",
+    "@types/express": "^5.0.3",
+    "@types/luxon": "^3.4.2",
+    "@typescript-eslint/eslint-plugin": "^8.16.0",
+    "@typescript-eslint/parser": "^8.16.0",
+    "eslint": "^9.15.0",
+    "openapi-typescript-codegen": "^0.29.0",
+    "prettier": "^3.6.0",
+    "prettier-plugin-multiline-arrays": "^4.0.3",
+    "prettier-plugin-organize-imports": "^4.1.0",
+    "prettier-plugin-packagejson": "^2.5.6",
+    "semantic-release": "^24.2.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
 }
