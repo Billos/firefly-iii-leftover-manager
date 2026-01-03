@@ -1,24 +1,13 @@
-import stylisticJs from "@stylistic/eslint-plugin-js"
-import stylisticTs from "@stylistic/eslint-plugin-ts"
+import stylistic from "@stylistic/eslint-plugin"
 import typescriptPlugin from "@typescript-eslint/eslint-plugin"
 import parser from "@typescript-eslint/parser"
 
 export default [
   {
-    languageOptions: {
-      parser,
-      parserOptions: {
-        ecmaVersion: 2022,
-        project: "./tsconfig.json",
-      },
-    },
+    languageOptions: { parser, parserOptions: { ecmaVersion: 2022, project: "./tsconfig.json" } },
     files: ["**/*.ts"],
     ignores: ["./src/types/**/*.ts", "./src/paypalTypes/**/*.ts"],
-    plugins: {
-      "@typescript-eslint": typescriptPlugin,
-      "@stylistic/js": stylisticJs,
-      "@stylistic/ts": stylisticTs,
-    },
+    plugins: { "@typescript-eslint": typescriptPlugin, "@stylistic/js": stylistic, "@stylistic/ts": stylistic },
     settings: {
       "import/resolver": {
         node: {
@@ -35,10 +24,7 @@ export default [
       "arrow-body-style": ["error", "as-needed"],
       "prefer-destructuring": [
         "error",
-        {
-          array: true,
-          object: true,
-        },
+        { array: true, object: true },
         {},
       ],
       "prefer-template": "error",
@@ -47,10 +33,7 @@ export default [
       "consistent-return": "off",
       "no-param-reassign": [
         "error",
-        {
-          props: true,
-          ignorePropertyModificationsForRegex: [".*"],
-        },
+        { props: true, ignorePropertyModificationsForRegex: [".*"] },
       ],
       "@stylistic/js/lines-between-class-members": ["error", "always"],
       "@stylistic/js/padding-line-between-statements": [
@@ -74,10 +57,7 @@ export default [
       // Linebreaks
       "no-underscore-dangle": [
         "error",
-        {
-          allowAfterThis: true,
-          allow: ["_id"],
-        },
+        { allowAfterThis: true, allow: ["_id"] },
       ],
     },
   },
