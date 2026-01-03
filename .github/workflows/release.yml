@@ -1,0 +1,59 @@
+name: Release
+
+# This workflow replaces the semantic-release configuration from .releaserc.json
+# It runs on every push to the main branch and performs:
+# - Commit analysis to determine the next version
+# - Version updates in docker-compose files
+# - Changelog generation
+# - GitHub release creation
+# - Docker image build and push to Docker Hub
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # Use GH_PAT for write access to push release commits
+          token: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Semantic Release
+        id: semantic
+        uses: cycjimmy/semantic-release-action@v4
+        with:
+          # Install plugins as defined in .releaserc.json
+          extra_plugins: |
+            @semantic-release/commit-analyzer
+            @semantic-release/exec
+            @semantic-release/release-notes-generator
+            @semantic-release/changelog
+            @semantic-release/git
+            @semantic-release/github
+            @codedependant/semantic-release-docker
+        env:
+          # Use GH_PAT for pushing commits, fallback to GITHUB_TOKEN
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          # Required for Docker Hub authentication
+          DOCKER_REGISTRY_USER: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_REGISTRY_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}

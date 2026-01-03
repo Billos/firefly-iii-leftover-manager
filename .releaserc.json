@@ -1,21 +1,36 @@
-{ "release": { "branches": ["main"] }, "plugins": [
+{
+  "release": {
+    "branches": ["main"]
+  },
+  "plugins": [
     "@semantic-release/commit-analyzer",
     [
       "@semantic-release/exec",
       {
         "prepareCmd": "sed -i 's/docker.io\\/billos\\/firefly-iii-leftover-manager:.*/docker.io\\/billos\\/firefly-iii-leftover-manager:${nextRelease.version}/g' docker-compose*.yml"
-      }],
+      }
+    ],
     "@semantic-release/release-notes-generator",
     "@semantic-release/changelog",
     [
       "@semantic-release/git",
-      { "assets": [
+      {
+        "assets": [
           "package.json",
           "CHANGELOG.md",
           "docker-compose.yml"
-        ], "message": "chore(release): Bump version to ${nextRelease.version} [skip ci]" }],
+        ],
+        "message": "chore(release): Bump version to ${nextRelease.version} [skip ci]"
+      }
+    ],
     "@semantic-release/github",
     [
       "@codedependant/semantic-release-docker",
-      { "dockerProject": "billos", "dockerTags": ["{{version}}", "latest"] }]
-  ], "tagFormat": "${version}" }
+      {
+        "dockerProject": "billos",
+        "dockerTags": ["{{version}}", "latest"]
+      }
+    ]
+  ],
+  "tagFormat": "${version}"
+}
