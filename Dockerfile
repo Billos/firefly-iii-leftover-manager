@@ -13,7 +13,7 @@ WORKDIR /app
 RUN apk add tzdata
 
 COPY ./package.json ./package.json
-RUN npm install --omit=dev
+RUN yarn install --frozen-lockfile --production && yarn cache clean
 COPY --from=builder /app/build ./build
 
 EXPOSE 3000
