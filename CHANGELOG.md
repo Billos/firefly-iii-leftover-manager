@@ -1,3 +1,11 @@
+## [1.17.2](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.17.1...1.17.2) (2026-01-06)
+
+
+### Bug Fixes
+
+* disable webhooks when setting transaction category ([8b14244](https://github.com/Billos/firefly-iii-leftover-manager/commit/8b142441ee9ae186dae11e0d67702fe4d85d6013))
+* prevent webhooks from firing when setting transaction category ([93dd994](https://github.com/Billos/firefly-iii-leftover-manager/commit/93dd994b93e8cb4193f5bebb3d4de1ee3e27cfb1))
+
 ## [1.17.1](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.17.0...1.17.1) (2026-01-03)
 
 
