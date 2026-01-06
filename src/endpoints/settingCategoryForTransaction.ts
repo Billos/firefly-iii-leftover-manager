@@ -20,7 +20,7 @@ export async function settingCategoryForTransaction(req: Request, res: Response)
   console.log("Update transaction")
   await TransactionsService.updateTransaction(transactionId, {
     apply_rules: true,
-    fire_webhooks: true,
+    fire_webhooks: false,
     transactions: [{ category_id }],
   })
   console.log("Transaction updated")
