@@ -14,7 +14,7 @@ type WebhookTransactionBody = {
 }
 
 export async function webhook(req: Request, res: Response) {
-  console.log("=================================== Transaction webhook ===================================")
+  console.log("=================================== Webhook handler ===================================")
   // Print raw request
   const body: WebhookTransactionBody = req.body as WebhookTransactionBody
   
@@ -25,7 +25,8 @@ export async function webhook(req: Request, res: Response) {
     WebhookTrigger.DESTROY_TRANSACTION,
   ]
   
-  if (!transactionTriggers.includes(body.trigger as WebhookTrigger)) {
+  const isSupportedTrigger = transactionTriggers.some(trigger => trigger === body.trigger)
+  if (!isSupportedTrigger) {
     console.log(`Ignoring non-transaction webhook trigger: ${body.trigger}`)
     res.send("<script>window.close()</script>")
     return
