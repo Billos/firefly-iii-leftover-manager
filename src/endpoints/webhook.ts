@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 
 import { getQueue, queues } from "../queues"
-import { Transaction } from "../types"
+import { Transaction, WebhookTrigger } from "../types"
 
 type WebhookTransactionBody = {
   uuid: string
@@ -17,6 +17,20 @@ export async function webhook(req: Request, res: Response) {
   console.log("=================================== Transaction webhook ===================================")
   // Print raw request
   const body: WebhookTransactionBody = req.body as WebhookTransactionBody
+  
+  // Only process transaction-related webhooks
+  const transactionTriggers = [
+    WebhookTrigger.STORE_TRANSACTION,
+    WebhookTrigger.UPDATE_TRANSACTION,
+    WebhookTrigger.DESTROY_TRANSACTION,
+  ]
+  
+  if (!transactionTriggers.includes(body.trigger as WebhookTrigger)) {
+    console.log(`Ignoring non-transaction webhook trigger: ${body.trigger}`)
+    res.send("<script>window.close()</script>")
+    return
+  }
+  
   // Check unbudgeted transactions
   const queue = await getQueue()
   for (const { id } of queues) {
