@@ -1,3 +1,10 @@
+## [1.17.3](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.17.2...1.17.3) (2026-01-08)
+
+
+### Bug Fixes
+
+* **webhook:** Corrects webhook job execution ([18c9c5d](https://github.com/Billos/firefly-iii-leftover-manager/commit/18c9c5d320bb39a5a0c03b542687a460dee6176b))
+
 ## [1.17.2](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.17.1...1.17.2) (2026-01-06)
 
 
