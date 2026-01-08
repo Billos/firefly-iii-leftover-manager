@@ -7,12 +7,20 @@ import * as UnbudgetedTransactions from "./unbudgetedTransactions"
 import * as UncategorizedTransactions from "./uncategorizedTransactions"
 import * as UpdateAutomaticBudgets from "./updateAutomaticBudgets"
 
-type JobDefinition = { id: string; job: (transactionId: string) => Promise<void>; init?: (queue: Queue<QueueArgs>) => Promise<void> }
+type TransactionJobDefinition = {
+  id: string
+  job: (transactionId: string) => Promise<void>
+  init?: (queue: Queue<QueueArgs>) => Promise<void>
+}
+type JobDefinition = { id: string; job: () => Promise<void>; init?: (queue: Queue<QueueArgs>) => Promise<void> }
 
 const jobDefinitions: JobDefinition[] = [
+  UpdateAutomaticBudgets,
+]
+
+const transactionJobDefinitions: TransactionJobDefinition[] = [
   UnbudgetedTransactions,
   UncategorizedTransactions,
-  UpdateAutomaticBudgets,
 ]
 
 let queue: Queue = null
@@ -59,4 +67,4 @@ async function processExit() {
 process.on("SIGTERM", processExit)
 process.on("SIGINT", processExit)
 
-export { getQueue, jobDefinitions as queues }
+export { getQueue, jobDefinitions, transactionJobDefinitions }
