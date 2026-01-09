@@ -1,3 +1,15 @@
+# [1.18.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.17.3...1.18.0) (2026-01-09)
+
+
+### Bug Fixes
+
+* **queue:** Forgot to handle the transaction jobs ([8fde8ab](https://github.com/Billos/firefly-iii-leftover-manager/commit/8fde8ab1569f18ba23e16b0b5dec859f3756eb0b))
+
+
+### Features
+
+* **webhook:** Adds ANY trigger as transaction jobs ([253e77b](https://github.com/Billos/firefly-iii-leftover-manager/commit/253e77b3c9fb2c2b63db9108078b004f7bf4cb5d))
+
 ## [1.17.3](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.17.2...1.17.3) (2026-01-08)
 
 
