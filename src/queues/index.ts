@@ -35,14 +35,20 @@ async function getQueue(): Promise<Queue> {
   await queue.pause()
   await queue.clean(200, 0, "active")
   await queue.obliterate({ force: true })
-  const jobs: Record<string, (transactionId: string) => Promise<void>> = {}
+  const jobs: Record<string, (transactionId?: string) => Promise<void>> = {}
 
-  const worker = new Worker<QueueArgs>("manager", async ({ data: { job, transactionId } }) => jobs[job](transactionId), {
-    connection: env.redisConnection,
-    concurrency: 1,
-    removeOnComplete: { count: 5000 },
-    removeOnFail: { count: 5000 },
-  })
+  const worker = new Worker<QueueArgs>(
+    "manager",
+    async ({ data: { job, transactionId } }) => {
+      jobs[job](transactionId)
+    },
+    {
+      connection: env.redisConnection,
+      concurrency: 1,
+      removeOnComplete: { count: 5000 },
+      removeOnFail: { count: 5000 },
+    },
+  )
 
   worker.on("failed", (job, err) => {
     console.error(`Job ${job.id} failed with error ${err.message}`)
@@ -50,6 +56,12 @@ async function getQueue(): Promise<Queue> {
   })
 
   for (const { job, id, init } of jobDefinitions) {
+    jobs[id] = job
+    if (init) {
+      await init(queue)
+    }
+  }
+  for (const { job, id, init } of transactionJobDefinitions) {
     jobs[id] = job
     if (init) {
       await init(queue)
