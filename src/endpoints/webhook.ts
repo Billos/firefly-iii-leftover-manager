@@ -14,6 +14,7 @@ type WebhookTransactionBody = {
 }
 
 const transactionTriggers = [
+  WebhookTrigger.ANY,
   WebhookTrigger.STORE_TRANSACTION,
   WebhookTrigger.UPDATE_TRANSACTION,
   WebhookTrigger.DESTROY_TRANSACTION,
