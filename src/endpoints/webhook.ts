@@ -27,9 +27,21 @@ export async function webhook(req: Request, res: Response) {
   const queue = await getQueue()
   if (isTransactionTrigger) {
     const transactionId = `${body.content.id}`
+    // Query existing jobs once to avoid multiple API calls
+    const existingJobs = await queue.getJobs(["waiting", "active", "delayed"])
+    
     for (const { id: job } of transactionJobDefinitions) {
-      console.log("Adding job to queue:", job, "for transactionId:", transactionId)
-      queue.add(job, { job, transactionId }, { removeOnComplete: true, removeOnFail: true })
+      // Check if job with the same [job, transactionId] tuple already exists in the queue
+      const isDuplicate = existingJobs.some(
+        (existingJob) => existingJob.data && existingJob.data.job === job && existingJob.data.transactionId === transactionId,
+      )
+      
+      if (isDuplicate) {
+        console.log("Job already exists in queue:", job, "for transactionId:", transactionId)
+      } else {
+        console.log("Adding job to queue:", job, "for transactionId:", transactionId)
+        queue.add(job, { job, transactionId }, { removeOnComplete: true, removeOnFail: true })
+      }
     }
   }
   for (const { id: job } of jobDefinitions) {
