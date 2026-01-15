@@ -1,3 +1,10 @@
+# [1.19.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.18.0...1.19.0) (2026-01-15)
+
+
+### Features
+
+* Prevent duplicate transactionJob entries in queue ([d245e4c](https://github.com/Billos/firefly-iii-leftover-manager/commit/d245e4c27f9c478a3aa10b8380f1162a989230dd))
+
 # [1.18.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.17.3...1.18.0) (2026-01-09)
 
 
