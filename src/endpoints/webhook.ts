@@ -33,7 +33,7 @@ export async function webhook(req: Request, res: Response) {
     for (const { id: job } of transactionJobDefinitions) {
       // Check if job with the same [job, transactionId] tuple already exists in the queue
       const isDuplicate = existingJobs.some(
-        (existingJob) => existingJob.data.job === job && existingJob.data.transactionId === transactionId,
+        (existingJob) => existingJob.data && existingJob.data.job === job && existingJob.data.transactionId === transactionId,
       )
       
       if (isDuplicate) {
