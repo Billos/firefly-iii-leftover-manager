@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 
-import { JOB_DELAYS } from "../queues/constants"
 import { getQueue, jobDefinitions, transactionJobDefinitions } from "../queues"
+import { JOB_DELAYS } from "../queues/constants"
 import { Transaction, WebhookTrigger } from "../types"
 
 type WebhookTransactionBody = {
@@ -30,13 +30,13 @@ export async function webhook(req: Request, res: Response) {
     const transactionId = `${body.content.id}`
     // Query existing jobs once to avoid multiple API calls
     const existingJobs = await queue.getJobs(["waiting", "active", "delayed"])
-    
+
     for (const { id: job } of transactionJobDefinitions) {
       // Check if job with the same [job, transactionId] tuple already exists in the queue
       const isDuplicate = existingJobs.some(
         (existingJob) => existingJob.data && existingJob.data.job === job && existingJob.data.transactionId === transactionId,
       )
-      
+
       if (isDuplicate) {
         console.log("Job already exists in queue:", job, "for transactionId:", transactionId)
       } else {

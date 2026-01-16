@@ -62,7 +62,11 @@ async function init(queue: Queue<QueueArgs>) {
     const { data } = await BudgetsService.listTransactionWithoutBudget(null, 50, 1)
     for (const { id: transactionId } of data) {
       console.log(`Adding unbudgeted transaction with id ${transactionId}`)
-      queue.add(transactionId, { job: id, transactionId }, { removeOnComplete: true, removeOnFail: true, delay: UNBUDGETED_TRANSACTIONS_DELAY_MS })
+      queue.add(
+        transactionId,
+        { job: id, transactionId },
+        { removeOnComplete: true, removeOnFail: true, delay: UNBUDGETED_TRANSACTIONS_DELAY_MS },
+      )
     }
   }
 }
