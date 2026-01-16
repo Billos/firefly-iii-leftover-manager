@@ -1,3 +1,15 @@
+# [1.20.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.19.0...1.20.0) (2026-01-16)
+
+
+### Bug Fixes
+
+* Avoid double Unbudgeted message for a transaction ([64083ba](https://github.com/Billos/firefly-iii-leftover-manager/commit/64083bad4825f9d3968bd4f62c31253f1e69496c))
+
+
+### Features
+
+* Delay job executions ([495d7a4](https://github.com/Billos/firefly-iii-leftover-manager/commit/495d7a4bff8bcfa5b44b1dfa4e903d967e1313e0))
+
 # [1.19.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.18.0...1.19.0) (2026-01-15)
 
 
