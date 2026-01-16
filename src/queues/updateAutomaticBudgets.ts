@@ -7,7 +7,7 @@ import { updateBillsBudgetLimit } from "../controllers/updateBillsBudgetLimit"
 import { updateLeftoversBudget } from "../controllers/updateLeftoversBudget"
 import { BudgetsService } from "../types"
 import { getDateNow } from "../utils/date"
-import { JOB_DELAY_MS } from "./constants"
+import { UPDATE_AUTOMATIC_BUDGETS_DELAY_MS } from "./constants"
 import { QueueArgs } from "./queueArgs"
 
 const id = "update-automatic-budgets"
@@ -49,7 +49,7 @@ async function job() {
 }
 
 async function init(queue: Queue<QueueArgs>) {
-  queue.add(id, { job: id, transactionId: null }, { removeOnComplete: true, removeOnFail: true, delay: JOB_DELAY_MS })
+  queue.add(id, { job: id, transactionId: null }, { removeOnComplete: true, removeOnFail: true, delay: UPDATE_AUTOMATIC_BUDGETS_DELAY_MS })
 }
 
 export { job, init, id }
