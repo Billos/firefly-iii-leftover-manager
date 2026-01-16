@@ -7,6 +7,8 @@ import * as UnbudgetedTransactions from "./unbudgetedTransactions"
 import * as UncategorizedTransactions from "./uncategorizedTransactions"
 import * as UpdateAutomaticBudgets from "./updateAutomaticBudgets"
 
+const JOB_CREATION_DELAY_MS = 15000
+
 type TransactionJobDefinition = {
   id: string
   job: (transactionId: string) => Promise<void>
@@ -58,19 +60,25 @@ async function getQueue(): Promise<Queue> {
   for (const { job, id, init } of jobDefinitions) {
     jobs[id] = job
     if (init) {
-      console.log(`Delaying job creation for ${id} by 15 seconds`)
+      console.log(`Delaying job creation for ${id} by ${JOB_CREATION_DELAY_MS / 1000} seconds`)
       setTimeout(() => {
-        init(queue)
-      }, 15000)
+        init(queue).catch((err) => {
+          console.error(`Error creating job ${id}:`, err)
+          transactionHandler.sendMessageImpl("Job Creation Failed", `Failed to create job ${id}: ${err.message}`)
+        })
+      }, JOB_CREATION_DELAY_MS)
     }
   }
   for (const { job, id, init } of transactionJobDefinitions) {
     jobs[id] = job
     if (init) {
-      console.log(`Delaying job creation for ${id} by 15 seconds`)
+      console.log(`Delaying job creation for ${id} by ${JOB_CREATION_DELAY_MS / 1000} seconds`)
       setTimeout(() => {
-        init(queue)
-      }, 15000)
+        init(queue).catch((err) => {
+          console.error(`Error creating job ${id}:`, err)
+          transactionHandler.sendMessageImpl("Job Creation Failed", `Failed to create job ${id}: ${err.message}`)
+        })
+      }, JOB_CREATION_DELAY_MS)
     }
   }
   return queue
