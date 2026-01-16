@@ -4,6 +4,7 @@ import { env } from "../config"
 import { transactionHandler } from "../modules/transactionHandler"
 import { BudgetRead, BudgetsService, TransactionsService, TransactionTypeProperty } from "../types"
 import { getTransactionShowLink } from "../utils/getTransactionShowLink"
+import { JOB_DELAY_MS } from "./constants"
 import { QueueArgs } from "./queueArgs"
 
 const id = "unbudgeted-transactions"
@@ -61,10 +62,10 @@ async function init(queue: Queue<QueueArgs>) {
     const { data } = await BudgetsService.listTransactionWithoutBudget(null, 50, 1)
     for (const { id: transactionId } of data) {
       console.log(`Adding unbudgeted transaction with id ${transactionId}`)
-      queue.add(transactionId, { job: id, transactionId }, { removeOnComplete: true, removeOnFail: true })
+      queue.add(transactionId, { job: id, transactionId }, { removeOnComplete: true, removeOnFail: true, delay: JOB_DELAY_MS })
 
       setTimeout(async () => {
-        queue.add(transactionId, { job: id, transactionId }, { removeOnComplete: true, removeOnFail: true })
+        queue.add(transactionId, { job: id, transactionId }, { removeOnComplete: true, removeOnFail: true, delay: JOB_DELAY_MS })
       }, 8000)
     }
   }

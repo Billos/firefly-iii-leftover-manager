@@ -1,5 +1,6 @@
 import { Request, Response } from "express"
 
+import { JOB_DELAY_MS } from "../queues/constants"
 import { getQueue, jobDefinitions, transactionJobDefinitions } from "../queues"
 import { Transaction, WebhookTrigger } from "../types"
 
@@ -40,13 +41,13 @@ export async function webhook(req: Request, res: Response) {
         console.log("Job already exists in queue:", job, "for transactionId:", transactionId)
       } else {
         console.log("Adding job to queue:", job, "for transactionId:", transactionId)
-        queue.add(job, { job, transactionId }, { removeOnComplete: true, removeOnFail: true })
+        queue.add(job, { job, transactionId }, { removeOnComplete: true, removeOnFail: true, delay: JOB_DELAY_MS })
       }
     }
   }
   for (const { id: job } of jobDefinitions) {
     console.log("Adding job to queue:", job)
-    queue.add(job, { job }, { removeOnComplete: true, removeOnFail: true })
+    queue.add(job, { job }, { removeOnComplete: true, removeOnFail: true, delay: JOB_DELAY_MS })
   }
   res.send("<script>window.close()</script>")
 }

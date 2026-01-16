@@ -5,6 +5,7 @@ import { transactionHandler } from "../modules/transactionHandler"
 import { CategoriesService, CategoryRead, TransactionRead, TransactionsService, TransactionTypeProperty } from "../types"
 import { getDateNow } from "../utils/date"
 import { getTransactionShowLink } from "../utils/getTransactionShowLink"
+import { JOB_DELAY_MS } from "./constants"
 import { QueueArgs } from "./queueArgs"
 
 const id = "uncategorized-transactions"
@@ -84,7 +85,7 @@ async function init(queue: Queue<QueueArgs>) {
     const uncategorizedTransactionsList = await getUncategorizedTransactions(startDate, endDate)
     for (const { id: transactionId } of uncategorizedTransactionsList) {
       console.log(`Adding uncategorized transaction with id ${transactionId}`)
-      queue.add(transactionId, { job: id, transactionId: transactionId }, { removeOnComplete: true, removeOnFail: true })
+      queue.add(transactionId, { job: id, transactionId: transactionId }, { removeOnComplete: true, removeOnFail: true, delay: JOB_DELAY_MS })
     }
   }
 }
