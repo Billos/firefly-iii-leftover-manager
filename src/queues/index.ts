@@ -58,13 +58,19 @@ async function getQueue(): Promise<Queue> {
   for (const { job, id, init } of jobDefinitions) {
     jobs[id] = job
     if (init) {
-      await init(queue)
+      console.log(`Delaying job creation for ${id} by 15 seconds`)
+      setTimeout(() => {
+        init(queue)
+      }, 15000)
     }
   }
   for (const { job, id, init } of transactionJobDefinitions) {
     jobs[id] = job
     if (init) {
-      await init(queue)
+      console.log(`Delaying job creation for ${id} by 15 seconds`)
+      setTimeout(() => {
+        init(queue)
+      }, 15000)
     }
   }
   return queue
