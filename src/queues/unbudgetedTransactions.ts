@@ -63,10 +63,7 @@ async function init(queue: Queue<QueueArgs>) {
     for (const { id: transactionId } of data) {
       console.log(`Adding unbudgeted transaction with id ${transactionId}`)
       queue.add(transactionId, { job: id, transactionId }, { removeOnComplete: true, removeOnFail: true, delay: JOB_DELAY_MS })
-
-      setTimeout(async () => {
-        queue.add(transactionId, { job: id, transactionId }, { removeOnComplete: true, removeOnFail: true, delay: JOB_DELAY_MS })
-      }, 8000)
+      queue.add(transactionId, { job: id, transactionId }, { removeOnComplete: true, removeOnFail: true, delay: JOB_DELAY_MS + 8000 })
     }
   }
 }
