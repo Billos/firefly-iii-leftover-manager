@@ -1,3 +1,12 @@
+## [1.20.1](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.20.0...1.20.1) (2026-01-17)
+
+
+### Bug Fixes
+
+* Adjusts delays for queue processing ([7b383a0](https://github.com/Billos/firefly-iii-leftover-manager/commit/7b383a0f102768898714daa2273651aad693121c))
+* Log delay before adding a job ([53c05cb](https://github.com/Billos/firefly-iii-leftover-manager/commit/53c05cbae78fbe9f082cd77b5bdfe863f361b37d))
+* Logs job delay when adding to queue ([7917228](https://github.com/Billos/firefly-iii-leftover-manager/commit/79172282927db12939e373e86a37dd5c3b788d98))
+
 # [1.20.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.19.0...1.20.0) (2026-01-16)
 
 
