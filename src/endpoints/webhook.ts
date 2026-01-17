@@ -40,15 +40,15 @@ export async function webhook(req: Request, res: Response) {
       if (isDuplicate) {
         console.log("Job already exists in queue:", job, "for transactionId:", transactionId)
       } else {
-        console.log("Adding job to queue:", job, "for transactionId:", transactionId)
         const delay = JOB_DELAYS[job] || 15000
+        console.log("Adding job to queue:", job, "for transactionId:", transactionId, "with delay:", delay)
         queue.add(job, { job, transactionId }, { removeOnComplete: true, removeOnFail: true, delay })
       }
     }
   }
   for (const { id: job } of jobDefinitions) {
-    console.log("Adding job to queue:", job)
     const delay = JOB_DELAYS[job] || 15000
+    console.log("Adding job to queue:", job, "with delay:", delay)
     queue.add(job, { job }, { removeOnComplete: true, removeOnFail: true, delay })
   }
   res.send("<script>window.close()</script>")

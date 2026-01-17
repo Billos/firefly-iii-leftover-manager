@@ -1,8 +1,8 @@
-export const UPDATE_AUTOMATIC_BUDGETS_DELAY_MS = 15000
+export const UPDATE_AUTOMATIC_BUDGETS_DELAY_MS = 20 * 1000
 
-export const UNBUDGETED_TRANSACTIONS_DELAY_MS = 15000
+export const UNBUDGETED_TRANSACTIONS_DELAY_MS = 15 * 1000
 
-export const UNCATEGORIZED_TRANSACTIONS_DELAY_MS = 15000
+export const UNCATEGORIZED_TRANSACTIONS_DELAY_MS = 10 * 1000
 
 // Mapping of job IDs to their respective delays
 export const JOB_DELAYS: Record<string, number> = {
