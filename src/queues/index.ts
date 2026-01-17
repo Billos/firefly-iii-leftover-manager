@@ -2,17 +2,18 @@ import { Queue, Worker } from "bullmq"
 
 import { env } from "../config"
 import { transactionHandler } from "../modules/transactionHandler"
+import { JobIds } from "./constants"
 import { QueueArgs } from "./queueArgs"
 import * as UnbudgetedTransactions from "./unbudgetedTransactions"
 import * as UncategorizedTransactions from "./uncategorizedTransactions"
 import * as UpdateAutomaticBudgets from "./updateAutomaticBudgets"
 
 type TransactionJobDefinition = {
-  id: string
+  id: JobIds
   job: (transactionId: string) => Promise<void>
   init?: (queue: Queue<QueueArgs>) => Promise<void>
 }
-type JobDefinition = { id: string; job: () => Promise<void>; init?: (queue: Queue<QueueArgs>) => Promise<void> }
+type JobDefinition = { id: JobIds; job: () => Promise<void>; init?: (queue: Queue<QueueArgs>) => Promise<void> }
 
 const jobDefinitions: JobDefinition[] = [
   UpdateAutomaticBudgets,

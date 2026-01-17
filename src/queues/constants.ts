@@ -1,12 +1,18 @@
-export const UPDATE_AUTOMATIC_BUDGETS_DELAY_MS = 20 * 1000
+export enum JobIds {
+  UPDATE_AUTOMATIC_BUDGETS = "update-automatic-budgets",
+  UNBUDGETED_TRANSACTIONS = "unbudgeted-transactions",
+  UNCATEGORIZED_TRANSACTIONS = "uncategorized-transactions",
+}
 
-export const UNBUDGETED_TRANSACTIONS_DELAY_MS = 15 * 1000
+const JOB_DELAYS: Record<JobIds, number> = {
+  [JobIds.UPDATE_AUTOMATIC_BUDGETS]: 20,
+  [JobIds.UNBUDGETED_TRANSACTIONS]: 15,
+  [JobIds.UNCATEGORIZED_TRANSACTIONS]: 10,
+}
 
-export const UNCATEGORIZED_TRANSACTIONS_DELAY_MS = 10 * 1000
-
-// Mapping of job IDs to their respective delays
-export const JOB_DELAYS: Record<string, number> = {
-  "update-automatic-budgets": UPDATE_AUTOMATIC_BUDGETS_DELAY_MS,
-  "unbudgeted-transactions": UNBUDGETED_TRANSACTIONS_DELAY_MS,
-  "uncategorized-transactions": UNCATEGORIZED_TRANSACTIONS_DELAY_MS,
+export function getJobDelay(jobId: JobIds, withDelta: boolean = true): number {
+  const delay = JOB_DELAYS[jobId] * 1000
+  // Random delay between 0 and 30 seconds
+  const delta = withDelta ? Math.floor(Math.random() * 30 * 1000) : 0
+  return delay + delta
 }

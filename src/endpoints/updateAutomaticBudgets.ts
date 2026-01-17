@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 
 import { getQueue } from "../queues"
-import { UPDATE_AUTOMATIC_BUDGETS_DELAY_MS } from "../queues/constants"
+import { getJobDelay } from "../queues/constants"
 import { id } from "../queues/updateAutomaticBudgets"
 
 export async function updateAutomaticBudgets(_req: Request, res: Response) {
@@ -13,7 +13,7 @@ export async function updateAutomaticBudgets(_req: Request, res: Response) {
     {
       removeOnComplete: true,
       removeOnFail: true,
-      delay: UPDATE_AUTOMATIC_BUDGETS_DELAY_MS,
+      delay: getJobDelay(id, false),
     },
   )
   if (res) {

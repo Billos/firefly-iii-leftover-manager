@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 
 import { getQueue, jobDefinitions, transactionJobDefinitions } from "../queues"
-import { JOB_DELAYS } from "../queues/constants"
+import { getJobDelay } from "../queues/constants"
 import { Transaction, WebhookTrigger } from "../types"
 
 type WebhookTransactionBody = {
@@ -40,14 +40,14 @@ export async function webhook(req: Request, res: Response) {
       if (isDuplicate) {
         console.log("Job already exists in queue:", job, "for transactionId:", transactionId)
       } else {
-        const delay = JOB_DELAYS[job] || 15000
+        const delay = getJobDelay(job) || 15000
         console.log("Adding job to queue:", job, "for transactionId:", transactionId, "with delay:", delay)
         queue.add(job, { job, transactionId }, { removeOnComplete: true, removeOnFail: true, delay })
       }
     }
   }
   for (const { id: job } of jobDefinitions) {
-    const delay = JOB_DELAYS[job] || 15000
+    const delay = getJobDelay(job) || 15000
     console.log("Adding job to queue:", job, "with delay:", delay)
     queue.add(job, { job }, { removeOnComplete: true, removeOnFail: true, delay })
   }

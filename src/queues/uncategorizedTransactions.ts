@@ -5,10 +5,10 @@ import { transactionHandler } from "../modules/transactionHandler"
 import { CategoriesService, CategoryRead, TransactionRead, TransactionsService, TransactionTypeProperty } from "../types"
 import { getDateNow } from "../utils/date"
 import { getTransactionShowLink } from "../utils/getTransactionShowLink"
-import { UNCATEGORIZED_TRANSACTIONS_DELAY_MS } from "./constants"
+import { getJobDelay, JobIds } from "./constants"
 import { QueueArgs } from "./queueArgs"
 
-const id = "uncategorized-transactions"
+const id = JobIds.UNCATEGORIZED_TRANSACTIONS
 
 async function getUncategorizedTransactions(startDate?: string, endDate?: string): Promise<TransactionRead[]> {
   const transactions: TransactionRead[] = []
@@ -88,7 +88,7 @@ async function init(queue: Queue<QueueArgs>) {
       queue.add(
         transactionId,
         { job: id, transactionId: transactionId },
-        { removeOnComplete: true, removeOnFail: true, delay: UNCATEGORIZED_TRANSACTIONS_DELAY_MS },
+        { removeOnComplete: true, removeOnFail: true, delay: getJobDelay(id, false) },
       )
     }
   }

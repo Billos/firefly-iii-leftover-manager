@@ -4,10 +4,10 @@ import { env } from "../config"
 import { transactionHandler } from "../modules/transactionHandler"
 import { BudgetRead, BudgetsService, TransactionsService, TransactionTypeProperty } from "../types"
 import { getTransactionShowLink } from "../utils/getTransactionShowLink"
-import { UNBUDGETED_TRANSACTIONS_DELAY_MS } from "./constants"
+import { getJobDelay, JobIds } from "./constants"
 import { QueueArgs } from "./queueArgs"
 
-const id = "unbudgeted-transactions"
+const id = JobIds.UNBUDGETED_TRANSACTIONS
 
 function generateMarkdownApiCalls(budgets: BudgetRead[], transactionId: string): String[] {
   const ret = []
@@ -62,11 +62,7 @@ async function init(queue: Queue<QueueArgs>) {
     const { data } = await BudgetsService.listTransactionWithoutBudget(null, 50, 1)
     for (const { id: transactionId } of data) {
       console.log(`Adding unbudgeted transaction with id ${transactionId}`)
-      queue.add(
-        transactionId,
-        { job: id, transactionId },
-        { removeOnComplete: true, removeOnFail: true, delay: UNBUDGETED_TRANSACTIONS_DELAY_MS },
-      )
+      queue.add(transactionId, { job: id, transactionId }, { removeOnComplete: true, removeOnFail: true, delay: getJobDelay(id, false) })
     }
   }
 }
