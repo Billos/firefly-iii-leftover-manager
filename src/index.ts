@@ -19,17 +19,22 @@ app.get("/transaction/:transactionId/category/:category_id", settingCategoryForT
 app.post("/transaction", webhook)
 
 async function start() {
-  // Delete all messages at startup
-  transactionHandler.deleteAllMessages()
+  try {
+    // Delete all messages at startup
+    transactionHandler.deleteAllMessages()
 
-  // Start worker
-  await initializeWorker()
-  console.log("Worker is running and waiting for jobs")
+    // Start worker
+    await initializeWorker()
+    console.log("Worker is running and waiting for jobs")
 
-  // Start server
-  app.listen(env.port, () => {
-    console.log(`Server is running on http://localhost:${env.port}`)
-  })
+    // Start server
+    app.listen(env.port, () => {
+      console.log(`Server is running on http://localhost:${env.port}`)
+    })
+  } catch (error) {
+    console.error("Failed to start application:", error)
+    process.exit(1)
+  }
 }
 
 start()

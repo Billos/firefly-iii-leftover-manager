@@ -42,10 +42,13 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
   }
 
   const queue = await getQueue()
+
+  // Clean up any stale jobs from previous runs
   queue.setGlobalConcurrency(1)
   await queue.pause()
   await queue.clean(200, 0, "active")
   await queue.obliterate({ force: true })
+  await queue.resume()
 
   const jobs: Record<string, (transactionId?: string) => Promise<void>> = {}
 
