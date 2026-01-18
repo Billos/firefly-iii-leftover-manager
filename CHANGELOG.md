@@ -1,3 +1,10 @@
+## [1.21.1](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.21.0...1.21.1) (2026-01-18)
+
+
+### Bug Fixes
+
+* Removes debugging logs ([85a53cb](https://github.com/Billos/firefly-iii-leftover-manager/commit/85a53cb4c3ad6fe479039d755a71925818d198fe))
+
 # [1.21.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.20.2...1.21.0) (2026-01-18)
 
 
