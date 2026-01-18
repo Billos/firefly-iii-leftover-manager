@@ -50,9 +50,6 @@ export function verifyWebhookMiddleware(req: Request & { rawBody?: string }, res
     return
   }
 
-  logger.info("Raw body: %s", req.rawBody)
-  logger.info("Body: %o", req.body)
-
   const isValid = verifyWebhookSignature(req.headers["signature"] as string, req.rawBody, env.fireflyWebhookSecret)
   if (isValid) {
     logger.debug("Webhook signature verified")
