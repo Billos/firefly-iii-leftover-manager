@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 
 import { getQueue } from "../queues"
-import { getJobDelay } from "../queues/constants"
+import { getJobDelay } from "../queues/delay"
 import { id } from "../queues/updateAutomaticBudgets"
 
 export async function updateAutomaticBudgets(_req: Request, res: Response) {

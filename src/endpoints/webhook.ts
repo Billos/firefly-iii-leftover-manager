@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 
 import { getQueue, jobDefinitions, transactionJobDefinitions } from "../queues"
-import { getJobDelay } from "../queues/constants"
+import { getJobDelay } from "../queues/delay"
 import { Transaction, WebhookTrigger } from "../types"
 
 type WebhookTransactionBody = {
@@ -32,6 +32,8 @@ export async function webhook(req: Request, res: Response) {
     const existingJobs = await queue.getJobs(["waiting", "active", "delayed"])
 
     for (const { id: job } of transactionJobDefinitions) {
+      console.log("Checking job %s", job)
+
       // Check if job with the same [job, transactionId] tuple already exists in the queue
       const isDuplicate = existingJobs.some(
         (existingJob) => existingJob.data && existingJob.data.job === job && existingJob.data.transactionId === transactionId,
@@ -40,15 +42,15 @@ export async function webhook(req: Request, res: Response) {
       if (isDuplicate) {
         console.log("Job already exists in queue:", job, "for transactionId:", transactionId)
       } else {
-        const delay = getJobDelay(job) || 15000
-        console.log("Adding job to queue:", job, "for transactionId:", transactionId, "with delay:", delay)
+        const delay = getJobDelay(job, false)
+        console.log("Adding job to queue:", job, "for transactionId:", transactionId, "with delay:", delay / 1000, "seconds")
         queue.add(job, { job, transactionId }, { removeOnComplete: true, removeOnFail: true, delay })
       }
     }
   }
   for (const { id: job } of jobDefinitions) {
-    const delay = getJobDelay(job) || 15000
-    console.log("Adding job to queue:", job, "with delay:", delay)
+    const delay = getJobDelay(job, false)
+    console.log("Adding job to queue:", job, "with delay:", delay / 1000, "seconds")
     queue.add(job, { job }, { removeOnComplete: true, removeOnFail: true, delay })
   }
   res.send("<script>window.close()</script>")

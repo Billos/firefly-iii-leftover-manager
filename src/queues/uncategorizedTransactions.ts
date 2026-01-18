@@ -5,7 +5,8 @@ import { transactionHandler } from "../modules/transactionHandler"
 import { CategoriesService, CategoryRead, TransactionRead, TransactionsService, TransactionTypeProperty } from "../types"
 import { getDateNow } from "../utils/date"
 import { getTransactionShowLink } from "../utils/getTransactionShowLink"
-import { getJobDelay, JobIds } from "./constants"
+import { JobIds } from "./constants"
+import { getJobDelay } from "./delay"
 import { QueueArgs } from "./queueArgs"
 
 const id = JobIds.UNCATEGORIZED_TRANSACTIONS

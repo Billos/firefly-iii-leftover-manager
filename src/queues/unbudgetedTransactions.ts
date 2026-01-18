@@ -4,7 +4,8 @@ import { env } from "../config"
 import { transactionHandler } from "../modules/transactionHandler"
 import { BudgetRead, BudgetsService, TransactionsService, TransactionTypeProperty } from "../types"
 import { getTransactionShowLink } from "../utils/getTransactionShowLink"
-import { getJobDelay, JobIds } from "./constants"
+import { JobIds } from "./constants"
+import { getJobDelay } from "./delay"
 import { QueueArgs } from "./queueArgs"
 
 const id = JobIds.UNBUDGETED_TRANSACTIONS
