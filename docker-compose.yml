@@ -1,9 +1,24 @@
 services:
-  manager:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+
+  server:
     image: docker.io/billos/firefly-iii-leftover-manager:1.20.2
+    command: ["start:server"]
     env_file:
       - .env
-    environment:
-      NODE_ENV: development
-      LOG_LEVEL: 2
+    ports:
+      - "3000:3000"
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+  worker:
+    image: docker.io/billos/firefly-iii-leftover-manager:1.20.2
+    command: ["start:worker"]
+    env_file:
+      - .env
+    depends_on:
+      - redis
     restart: unless-stopped

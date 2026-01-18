@@ -19,4 +19,6 @@ COPY --from=builder /app/build ./build
 EXPOSE 3000
 
 ENTRYPOINT [ "npm", "run" ]
+# Default to running both server and worker (backward compatible)
+# Can be overridden with: docker run ... start:server or start:worker
 CMD [ "start" ]

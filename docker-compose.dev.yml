@@ -1,16 +1,27 @@
 services:
-  manager:
+  server:
     build:
       context: .
       dockerfile: Dockerfile
-    command: ["dev"]
+    command: ["dev:server"]
     volumes:
       - .:/app
     env_file:
       - .env
     ports:
       - "0.0.0.0:3000:3000"
-    environment:
-      NODE_ENV: development
-      LOG_LEVEL: 2
     restart: unless-stopped
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["dev:worker"]
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    restart: unless-stopped
+
+volumes:
+  redis-data:

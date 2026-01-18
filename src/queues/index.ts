@@ -24,7 +24,8 @@ const transactionJobDefinitions: TransactionJobDefinition[] = [
   UncategorizedTransactions,
 ]
 
-let queue: Queue = null
+let queue: Queue<QueueArgs> | null = null
+let worker: Worker<QueueArgs> | null = null
 
 async function getQueue(): Promise<Queue> {
   if (queue) {
@@ -32,13 +33,26 @@ async function getQueue(): Promise<Queue> {
   }
 
   queue = new Queue("manager", { connection: env.redisConnection })
+  return queue
+}
+
+async function initializeWorker(): Promise<Worker<QueueArgs>> {
+  if (worker) {
+    return worker
+  }
+
+  const queue = await getQueue()
+
+  // Clean up any stale jobs from previous runs
   queue.setGlobalConcurrency(1)
   await queue.pause()
   await queue.clean(200, 0, "active")
   await queue.obliterate({ force: true })
+  await queue.resume()
+
   const jobs: Record<string, (transactionId?: string) => Promise<void>> = {}
 
-  const worker = new Worker<QueueArgs>(
+  worker = new Worker<QueueArgs>(
     "manager",
     async ({ data: { job, transactionId } }) => {
       jobs[job](transactionId)
@@ -68,16 +82,20 @@ async function getQueue(): Promise<Queue> {
       await init(queue)
     }
   }
-  return queue
+
+  return worker
 }
 
 async function processExit() {
   if (queue) {
     await queue.clean(200, 0, "active")
   }
+  if (worker) {
+    await worker.close()
+  }
 }
 
 process.on("SIGTERM", processExit)
 process.on("SIGINT", processExit)
 
-export { getQueue, jobDefinitions, transactionJobDefinitions }
+export { getQueue, initializeWorker, jobDefinitions, transactionJobDefinitions }

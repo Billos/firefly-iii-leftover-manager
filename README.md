@@ -11,7 +11,16 @@ Names of the budget are defined in the environment variables, so you can use any
 
 ## Running
 
-Easist way to run the project is to use the provided `docker-compose.yml` file.
+### Docker Compose (Recommended)
+
+The easiest way to run the project is to use the provided `docker-compose.yml` file, which sets up separate server and worker services along with Redis.
+
+The architecture is now split into:
+
+- **Server**: Handles HTTP endpoints and job creation
+- **Worker**: Processes jobs from the queue
+- **Redis**: Message queue broker
+
 Provide the following environment variables in a `.env` file, in the stack.env in portainer, or in the docker-compose file itself.
 
 ```shell
@@ -41,7 +50,7 @@ FIREFLY_III_PAYPAL_ACCOUNT_TOKEN=
 ASSET_ACCOUNT_ID=
 # The URL of the service, used to generate the links in the notification message
 SERVICE_URL=
-# The URL of the Redis instance, used to cache the budgets (localhost by default)
+# The URL of the Redis instance, used to manage the job queue (defaults to localhost, use 'redis' for docker-compose)
 REDIS_HOST=
 # The port of the Redis instance (6379 by default)
 REDIS_PORT=
@@ -49,6 +58,52 @@ REDIS_PORT=
 REDIS_DB=
 # The password to use to authenticate to the Redis instance, if any
 REDIS_PASSWORD=
+```
+
+### Running Services
+
+**With Docker Compose (Production):**
+
+```bash
+docker-compose up -d
+```
+
+This will start three services:
+
+- `redis`: Message queue broker
+- `server`: HTTP API server (port 3000)
+- `worker`: Background job processor
+
+**With Docker Compose (Development):**
+
+```bash
+docker-compose -f docker-compose.dev.yml up
+```
+
+This enables hot-reload for both server and worker services during development.
+
+**Standalone Mode (Backward Compatible):**
+
+To run both server and worker in a single process (legacy mode):
+
+```bash
+# With Docker
+docker run -e FIREFLY_III_URL=... billos/firefly-iii-leftover-manager:latest
+
+# With Node.js
+npm run start
+```
+
+**Separate Server and Worker:**
+
+To run services separately:
+
+```bash
+# Server only
+npm run start:server
+
+# Worker only
+npm run start:worker
 ```
 
 The budgets should already exist in the firefly iii, with a basic limit set.
