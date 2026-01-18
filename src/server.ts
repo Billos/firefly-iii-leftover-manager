@@ -8,6 +8,7 @@ import { updateAutomaticBudgets } from "./endpoints/updateAutomaticBudgets"
 import { webhook } from "./endpoints/webhook"
 import { transactionHandler } from "./modules/transactionHandler"
 import { ParseBodyMiddleware } from "./utils/middleware"
+import { verifyWebhookMiddleware } from "./utils/webhookSecret"
 
 const logger = pino()
 const app = express()
@@ -18,7 +19,7 @@ app.get("/", updateAutomaticBudgets)
 app.post("/", updateAutomaticBudgets)
 app.get("/transaction/:transactionId/budget/:budget_id", settingBudgetForTransaction)
 app.get("/transaction/:transactionId/category/:category_id", settingCategoryForTransaction)
-app.post("/transaction", webhook)
+app.post("/transaction", verifyWebhookMiddleware, webhook)
 
 async function startServer() {
   try {
