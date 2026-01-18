@@ -20,7 +20,7 @@ app.post("/transaction", webhook)
 async function startServer() {
   // Delete all messages at startup
   transactionHandler.deleteAllMessages()
-  
+
   app.listen(env.port, () => {
     console.log(`Server is running on http://localhost:${env.port}`)
   })

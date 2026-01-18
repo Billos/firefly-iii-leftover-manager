@@ -46,7 +46,7 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
   await queue.pause()
   await queue.clean(200, 0, "active")
   await queue.obliterate({ force: true })
-  
+
   const jobs: Record<string, (transactionId?: string) => Promise<void>> = {}
 
   worker = new Worker<QueueArgs>(
@@ -79,7 +79,7 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
       await init(queue)
     }
   }
-  
+
   return worker
 }
 
