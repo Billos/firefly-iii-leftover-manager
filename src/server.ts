@@ -7,6 +7,7 @@ import { settingCategoryForTransaction } from "./endpoints/settingCategoryForTra
 import { webhook } from "./endpoints/webhook"
 import { transactionHandler } from "./modules/transactionHandler"
 import { ParseBodyMiddleware } from "./utils/middleware"
+import { TokenMiddleware } from "./utils/tokenMiddleware"
 import { verifyWebhookMiddleware } from "./utils/webhookSecret"
 
 const logger = pino()
@@ -14,8 +15,8 @@ const app = express()
 
 app.use(ParseBodyMiddleware)
 
-app.get("/transaction/:transactionId/budget/:budget_id", settingBudgetForTransaction)
-app.get("/transaction/:transactionId/category/:category_id", settingCategoryForTransaction)
+app.get("/transaction/:transactionId/budget/:budget_id", TokenMiddleware, settingBudgetForTransaction)
+app.get("/transaction/:transactionId/category/:category_id", TokenMiddleware, settingCategoryForTransaction)
 app.post("/webhook", verifyWebhookMiddleware, webhook)
 
 async function startServer() {

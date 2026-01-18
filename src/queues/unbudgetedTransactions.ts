@@ -15,7 +15,9 @@ const logger = pino()
 function generateMarkdownApiCalls(budgets: BudgetRead[], transactionId: string): String[] {
   const ret = []
   for (const { id, attributes } of budgets) {
-    ret.push(`[\`${attributes.name}\`](<${env.serviceUrl}transaction/${transactionId}/budget/${id}>)`)
+    const url = new URL(`/transaction/${transactionId}/budget/${id}`, env.serviceUrl)
+    url.searchParams.append("api_token", env.apiToken)
+    ret.push(`[\`${attributes.name}\`](<${url.toString()}>)`)
   }
   return ret
 }

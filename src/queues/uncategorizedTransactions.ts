@@ -37,7 +37,9 @@ async function getUncategorizedTransactions(startDate?: string, endDate?: string
 function generateMarkdownApiCalls(categories: CategoryRead[], transactionId: string): String[] {
   const ret = []
   for (const { id, attributes } of categories) {
-    ret.push(`[\`${attributes.name}\`](<${env.serviceUrl}transaction/${transactionId}/category/${id}>)`)
+    const url = new URL(`/transaction/${transactionId}/category/${id}`, env.serviceUrl)
+    url.searchParams.append("api_token", env.apiToken)
+    ret.push(`[\`${attributes.name}\`](<${url.toString()}>)`)
   }
   return ret
 }
