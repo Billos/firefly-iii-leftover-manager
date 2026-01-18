@@ -1,4 +1,5 @@
 import { Queue } from "bullmq"
+import pino from "pino"
 
 import { env } from "../config"
 import { transactionHandler } from "../modules/transactionHandler"
@@ -10,6 +11,7 @@ import { QueueArgs } from "./queueArgs"
 
 const id = JobIds.UNBUDGETED_TRANSACTIONS
 
+const logger = pino()
 function generateMarkdownApiCalls(budgets: BudgetRead[], transactionId: string): String[] {
   const ret = []
   for (const { id, attributes } of budgets) {
@@ -19,7 +21,7 @@ function generateMarkdownApiCalls(budgets: BudgetRead[], transactionId: string):
 }
 
 async function job(transactionId: string) {
-  console.log(`Creating a new message for unbudgeted transaction with key ${transactionId}`)
+  logger.info("Creating a new message for unbudgeted transaction with key %s", transactionId)
   const {
     data: {
       attributes: {
@@ -31,16 +33,16 @@ async function job(transactionId: string) {
   // Ensure the transaction is a withdrawal
   const { type, amount, currency_decimal_places, currency_symbol, description } = transaction
   if (type !== TransactionTypeProperty.WITHDRAWAL) {
-    console.log(`Transaction ${transactionId} is not a withdrawal`)
+    logger.info("Transaction %s is not a withdrawal", transactionId)
     return
   }
   if (!transaction) {
-    console.log(`Transaction ${transactionId} not found`)
+    logger.info("Transaction %s not found", transactionId)
     return
   }
 
   if (transaction.budget_id) {
-    console.log(`Transaction ${transactionId} already budgeted`)
+    logger.info("Transaction %s already budgeted", transactionId)
     return
   }
 
@@ -62,7 +64,7 @@ async function init(queue: Queue<QueueArgs>) {
   if (transactionHandler) {
     const { data } = await BudgetsService.listTransactionWithoutBudget(null, 50, 1)
     for (const { id: transactionId } of data) {
-      console.log(`Adding unbudgeted transaction with id ${transactionId}`)
+      logger.info("Adding unbudgeted transaction with id %s", transactionId)
       queue.add(transactionId, { job: id, transactionId }, { removeOnComplete: true, removeOnFail: true, delay: getJobDelay(id, false) })
     }
   }

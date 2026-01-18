@@ -1,4 +1,5 @@
 import express from "express"
+import pino from "pino"
 
 import { env } from "./config"
 import { settingBudgetForTransaction } from "./endpoints/settingBudgetForTransaction"
@@ -7,6 +8,7 @@ import { updateAutomaticBudgets } from "./endpoints/updateAutomaticBudgets"
 import { webhook } from "./endpoints/webhook"
 import { transactionHandler } from "./modules/transactionHandler"
 
+const logger = pino()
 const app = express()
 
 app.use(express.json())
@@ -23,10 +25,10 @@ async function startServer() {
     transactionHandler.deleteAllMessages()
 
     app.listen(env.port, () => {
-      console.log(`Server is running on http://localhost:${env.port}`)
+      logger.info("Server is running on http://localhost:%s", env.port)
     })
-  } catch (error) {
-    console.error("Failed to start server:", error)
+  } catch (err) {
+    logger.error({ err }, "Failed to start server:")
     process.exit(1)
   }
 }

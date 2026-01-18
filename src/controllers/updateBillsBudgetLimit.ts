@@ -1,4 +1,8 @@
+import pino from "pino"
+
 import { BillsService, BudgetLimitStore, BudgetRead, BudgetsService } from "../types"
+
+const logger = pino()
 
 async function getTotalAmountOfBills(startDate: string, endDate: string): Promise<number> {
   const allBills = await BillsService.listBill(null, 50, 1, startDate, endDate)
@@ -20,14 +24,14 @@ async function getTotalAmountOfBills(startDate: string, endDate: string): Promis
     }
   }
   const total = paidBillsValue + maximumUnpaidBill
-  console.log("You have paid", paidBillsValue, "in bills")
-  console.log("You have at most", maximumUnpaidBill, "in unpaid bills")
-  console.log("Total bills value is at most", total)
+  logger.info("You have paid %d in bills", paidBillsValue)
+  logger.info("You have at most %d in unpaid bills", maximumUnpaidBill)
+  logger.info("Total bills value is at most %d", total)
   return total
 }
 
 export async function updateBillsBudgetLimit(billsBudget: BudgetRead, startDate: string, endDate: string) {
-  console.log("================ Updating Bills Budget Limit ================")
+  logger.info("================ Updating Bills Budget Limit ================")
   const total = await getTotalAmountOfBills(startDate, endDate)
 
   const existingLimits = await BudgetsService.listBudgetLimitByBudget(billsBudget.id, null, startDate, endDate)
@@ -45,21 +49,21 @@ export async function updateBillsBudgetLimit(billsBudget: BudgetRead, startDate:
   }
 
   if (existingLimits.data.length === 0) {
-    console.log("There are no limits for the bills budget, creating budget limit")
+    logger.info("There are no limits for the bills budget, creating budget limit")
     await BudgetsService.storeBudgetLimit(billsBudget.id, params)
     return
   }
 
   if (existingLimits.data[0].attributes.amount === params.amount) {
-    console.log("The bills budget limit is already up to date, no changes needed")
+    logger.info("The bills budget limit is already up to date, no changes needed")
     return
   }
 
   const [limit] = existingLimits.data
   try {
     await BudgetsService.updateBudgetLimit(billsBudget.id, limit.id, params)
-  } catch (error) {
-    console.error("Error updating bills budget limit:", error)
+  } catch (err) {
+    logger.error({ err }, "Error updating bills budget limit:")
   }
-  console.log("Bills budget limit updated")
+  logger.info("Bills budget limit updated")
 }

@@ -1,4 +1,5 @@
 import { Queue, Worker } from "bullmq"
+import pino from "pino"
 
 import { env } from "../config"
 import { transactionHandler } from "../modules/transactionHandler"
@@ -8,6 +9,7 @@ import * as UnbudgetedTransactions from "./unbudgetedTransactions"
 import * as UncategorizedTransactions from "./uncategorizedTransactions"
 import * as UpdateAutomaticBudgets from "./updateAutomaticBudgets"
 
+const logger = pino()
 type TransactionJobDefinition = {
   id: JobIds
   job: (transactionId: string) => Promise<void>
@@ -66,7 +68,7 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
   )
 
   worker.on("failed", (job, err) => {
-    console.error(`Job ${job.id} failed with error ${err.message}`)
+    logger.error({ err }, "Job %s failed with error %s", job.id, err.message)
     transactionHandler.sendMessageImpl("Job Failed", `Job ${job.id} failed with error ${err.message} and data ${JSON.stringify(job.data)}`)
   })
 

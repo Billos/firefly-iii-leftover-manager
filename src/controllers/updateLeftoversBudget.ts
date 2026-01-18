@@ -1,5 +1,9 @@
+import pino from "pino"
+
 import { env } from "../config"
 import { AccountsService, BudgetLimitStore, BudgetRead, BudgetsService, InsightGroupEntry, InsightService } from "../types"
+
+const logger = pino()
 
 async function getSumWithoutLeftovers(leftoversBudget: BudgetRead, startDate: string, endDate: string): Promise<number> {
   const assetAccount = await AccountsService.getAccount(env.assetAccountId)
@@ -7,7 +11,7 @@ async function getSumWithoutLeftovers(leftoversBudget: BudgetRead, startDate: st
     throw new Error("Asset account not found")
   }
   let leftoverAmount = Number.parseFloat(assetAccount.data.attributes.current_balance)
-  console.log("Current balance", leftoverAmount)
+  logger.info("Current balance %d", leftoverAmount)
 
   const allLimits = await BudgetsService.listBudgetLimit(startDate, endDate)
   const limitsWithoutLeftovers = allLimits.data.filter(({ attributes: { budget_id } }) => budget_id !== leftoversBudget.id)
@@ -36,7 +40,7 @@ async function getSumWithoutLeftovers(leftoversBudget: BudgetRead, startDate: st
     // const spentValue = spent[0].sum || "0"
     // const name = budget.attributes.name
     const budgetLeftover = parseFloat(amount) + parseFloat(spentValue)
-    console.log(`Subtracting ${name} - limit of ${amount} - spent ${spentValue} - Budget leftover ${budgetLeftover}`)
+    logger.info("Subtracting %s - limit of %s - spent %s - Budget leftover %d", name, amount, spentValue, budgetLeftover)
     // A budget leftover might be negative, if the budget is overspent, this means it will be added to the leftover amount
     leftoverAmount -= Math.abs(budgetLeftover)
   }
@@ -44,14 +48,14 @@ async function getSumWithoutLeftovers(leftoversBudget: BudgetRead, startDate: st
 }
 
 export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDate: string, endDate: string) {
-  console.log("================ Updating Leftovers Budget Limit =================")
+  logger.info("================ Updating Leftovers Budget Limit =================")
   const allLimits = await BudgetsService.listBudgetLimit(startDate, endDate)
   const leftOverLimit = allLimits.data.find(({ attributes: { budget_id } }) => budget_id === leftoversBudget.id)
 
   let leftoverAmount = await getSumWithoutLeftovers(leftoversBudget, startDate, endDate)
 
   if (leftoverAmount < 0) {
-    console.log("Leftover amount is negative, setting to 0.1")
+    logger.info("Leftover amount is negative, setting to 0.1")
     leftoverAmount = 0.1
   }
 
@@ -59,34 +63,34 @@ export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDa
   const [spent] = currentLeftOverBudget.data.attributes.spent
 
   if (!spent) {
-    console.log("No spent amount found, setting it to 0")
+    logger.info("No spent amount found, setting it to 0")
   }
   const sum = spent?.sum || "0"
 
-  const amount = `${-parseFloat(sum) + leftoverAmount}`
+  const amount = String(-parseFloat(sum) + leftoverAmount)
 
-  console.log("Leftover amount", leftoverAmount)
-  console.log("Leftover spent", sum)
-  console.log("Budget limit should be", amount)
+  logger.info("Leftover amount %d", leftoverAmount)
+  logger.info("Leftover spent %s", sum)
+  logger.info("Budget limit should be %s", amount)
 
   if (parseFloat(amount) < 0) {
-    console.log("Amount is negative, stopping")
+    logger.info("Amount is negative, stopping")
     return
   }
 
   if (amount === leftOverLimit?.attributes.amount) {
-    console.log("Amount is the same as the current limit, stopping")
+    logger.info("Amount is the same as the current limit, stopping")
     return
   }
 
   const params: BudgetLimitStore = { amount, budget_id: leftoversBudget.id, start: startDate, end: endDate, fire_webhooks: false }
 
   if (!leftOverLimit) {
-    console.log("No leftovers budget limit found, creating budget limit")
+    logger.info("No leftovers budget limit found, creating budget limit")
     await BudgetsService.storeBudgetLimit(leftoversBudget.id, params)
     return
   }
 
   await BudgetsService.updateBudgetLimit(leftoversBudget.id, leftOverLimit.id, params)
-  console.log("Leftovers budget limit updated")
+  logger.info("Leftovers budget limit updated")
 }

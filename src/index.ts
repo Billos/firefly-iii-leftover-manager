@@ -1,4 +1,5 @@
 import express from "express"
+import pino from "pino"
 
 import { env } from "./config"
 import { settingBudgetForTransaction } from "./endpoints/settingBudgetForTransaction"
@@ -7,6 +8,8 @@ import { updateAutomaticBudgets } from "./endpoints/updateAutomaticBudgets"
 import { webhook } from "./endpoints/webhook"
 import { transactionHandler } from "./modules/transactionHandler"
 import { initializeWorker } from "./queues"
+
+const logger = pino()
 
 const app = express()
 
@@ -25,14 +28,14 @@ async function start() {
 
     // Start worker
     await initializeWorker()
-    console.log("Worker is running and waiting for jobs")
+    logger.info("Worker is running and waiting for jobs")
 
     // Start server
     app.listen(env.port, () => {
-      console.log(`Server is running on http://localhost:${env.port}`)
+      logger.info("Server is running on http://localhost:%s", env.port)
     })
-  } catch (error) {
-    console.error("Failed to start application:", error)
+  } catch (err) {
+    logger.error({ err }, "Failed to start application:")
     process.exit(1)
   }
 }

@@ -1,12 +1,15 @@
+import pino from "pino"
+
 import { initializeWorker } from "./queues"
 
+const logger = pino()
 async function startWorker() {
   try {
-    console.log("Starting worker...")
+    logger.info("Starting worker...")
     await initializeWorker()
-    console.log("Worker is running and waiting for jobs")
-  } catch (error) {
-    console.error("Failed to start worker:", error)
+    logger.info("Worker is running and waiting for jobs")
+  } catch (err) {
+    logger.error({ err: err }, "Failed to start worker:")
     process.exit(1)
   }
 }

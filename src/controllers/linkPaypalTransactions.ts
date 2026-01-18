@@ -1,11 +1,14 @@
 import { DateTime } from "luxon"
+import pino from "pino"
 
 import { TransactionsService as PaypalTransactionsService, TransactionTypeProperty } from "../paypalTypes"
 import { TransactionsService } from "../types"
 import { getDateNow } from "../utils/date"
 
+const logger = pino()
+
 export async function linkPaypalTransactions() {
-  console.log("================ Link Paypal Transactions =================")
+  logger.info("================ Link Paypal Transactions =================")
 
   // StartDate and EndDate are today - 20 days to today
   const startDate = getDateNow().minus({ days: 20 }).toISODate()
@@ -24,8 +27,8 @@ export async function linkPaypalTransactions() {
     ({ attributes: { transactions } }) => !transactions[0].tags.includes("Linked") && transactions[0].description.includes("PAYPAL"),
   )
 
-  console.log("Found Unlinked Paypal transactions", unlinkedPaypalTransactions.length)
-  console.log("Found Unlinked Firefly III transactions", unlinkedFFTransactions.length)
+  logger.info("Found %d Unlinked Paypal transactions", unlinkedPaypalTransactions.length)
+  logger.info("Found %d Unlinked Firefly III transactions", unlinkedFFTransactions.length)
 
   for (const paypalTransaction of unlinkedPaypalTransactions) {
     const [transaction] = paypalTransaction.attributes.transactions
@@ -33,7 +36,7 @@ export async function linkPaypalTransactions() {
     if (transaction.tags.includes("Linked")) {
       continue
     }
-    console.log(`Checking unlinked Paypal transaction ${paypalTransaction.id} - type: ${transaction.type} - ${transaction.amount}`)
+    logger.info("Checking unlinked Paypal transaction %s - type: %s - %s", paypalTransaction.id, transaction.type, transaction.amount)
     // Getting the transactions from Firefly III each time to avoid having outdated data
     // Then it will try to find match the transaction with the Paypal transaction
     for (const {
@@ -56,7 +59,7 @@ export async function linkPaypalTransactions() {
 
       // Add Linked tag to both transactions
       // Add the destination_name of the Paypal transaction to the Firefly III transaction Notes
-      console.log(`Linking paypal ${transaction.destination_name} to Firefly III ${ffTransaction.description}`)
+      logger.info("Linking paypal %s to Firefly III %s", transaction.destination_name, ffTransaction.description)
       await PaypalTransactionsService.updateTransaction(paypalTransaction.id, {
         apply_rules: false,
         fire_webhooks: false,

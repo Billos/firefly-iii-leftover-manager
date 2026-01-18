@@ -1,4 +1,5 @@
 import { Queue } from "bullmq"
+import pino from "pino"
 
 import { env } from "../config"
 import { transactionHandler } from "../modules/transactionHandler"
@@ -10,6 +11,8 @@ import { getJobDelay } from "./delay"
 import { QueueArgs } from "./queueArgs"
 
 const id = JobIds.UNCATEGORIZED_TRANSACTIONS
+
+const logger = pino()
 
 async function getUncategorizedTransactions(startDate?: string, endDate?: string): Promise<TransactionRead[]> {
   const transactions: TransactionRead[] = []
@@ -40,7 +43,7 @@ function generateMarkdownApiCalls(categories: CategoryRead[], transactionId: str
 }
 
 async function job(transactionId: string) {
-  console.log(`Creating a new message for uncategorized transaction with key ${transactionId}`)
+  logger.info("Creating a new message for uncategorized transaction with key %s", transactionId)
   const {
     data: {
       attributes: {
@@ -52,16 +55,16 @@ async function job(transactionId: string) {
   // Ensure the transaction is a withdrawal
   const { type, amount, currency_decimal_places, currency_symbol, description } = transaction
   if (type !== TransactionTypeProperty.WITHDRAWAL) {
-    console.log(`Transaction ${transactionId} is not a withdrawal`)
+    logger.info("Transaction %s is not a withdrawal", transactionId)
     return
   }
   if (!transaction) {
-    console.log(`Transaction ${transactionId} not found`)
+    logger.info("Transaction %s not found", transactionId)
     return
   }
 
   if (transaction.category_id) {
-    console.log(`Transaction ${transactionId} already categorized`)
+    logger.info("Transaction %s already categorized", transactionId)
     return
   }
 
@@ -85,7 +88,7 @@ async function init(queue: Queue<QueueArgs>) {
     const endDate = getDateNow().toISODate()
     const uncategorizedTransactionsList = await getUncategorizedTransactions(startDate, endDate)
     for (const { id: transactionId } of uncategorizedTransactionsList) {
-      console.log(`Adding uncategorized transaction with id ${transactionId}`)
+      logger.info("Adding uncategorized transaction with id %s", transactionId)
       queue.add(
         transactionId,
         { job: id, transactionId: transactionId },
