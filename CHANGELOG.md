@@ -1,3 +1,15 @@
+# [2.0.0](https://github.com/Billos/Sparkleft/compare/1.21.1...2.0.0) (2026-01-18)
+
+
+### Features
+
+* Renames project to Sparkleft ([0651df4](https://github.com/Billos/Sparkleft/commit/0651df4d7fce37f56462d28547e7c23a914a6917))
+
+
+### BREAKING CHANGES
+
+* Renames the project from Firefly iii Leftover Manager to Sparkleft.
+
 ## [1.21.1](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.21.0...1.21.1) (2026-01-18)
 
 
