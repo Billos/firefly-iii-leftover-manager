@@ -1,3 +1,19 @@
+# [1.21.0](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.20.2...1.21.0) (2026-01-18)
+
+
+### Bug Fixes
+
+* Enforces no console statements ([9201e04](https://github.com/Billos/firefly-iii-leftover-manager/commit/9201e04aa41625583335bc7a3ad3c9d6006b9564))
+
+
+### Features
+
+* Adds API token authentication ([1109e3d](https://github.com/Billos/firefly-iii-leftover-manager/commit/1109e3d511e18f53dfabbacd79ab6ec4cb665a20))
+* Adds pino logging for improved debugging ([f0c066c](https://github.com/Billos/firefly-iii-leftover-manager/commit/f0c066c0a53ccf39d9974e3b86d3c56e3c861f02))
+* Adds webhook verification ([9d67b8f](https://github.com/Billos/firefly-iii-leftover-manager/commit/9d67b8f667dc2147c4fc7c64401225bb80debeff))
+* Server Worker architecture ([361c0c0](https://github.com/Billos/firefly-iii-leftover-manager/commit/361c0c0c755c44749fcc2418beae8cc4e1d93714))
+* Updates webhook route ([7859932](https://github.com/Billos/firefly-iii-leftover-manager/commit/78599322653dec2d093b4c8d1dbf4c41e040c099))
+
 ## [1.20.2](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.20.1...1.20.2) (2026-01-18)
 
 
