@@ -1,4 +1,4 @@
-# Firefly iii Leftover Manager
+# Sparkleft
 
 /!\ Read the state of the project section before using this project /!\
 
@@ -88,7 +88,7 @@ To run both server and worker in a single process (legacy mode):
 
 ```bash
 # With Docker
-docker run -e FIREFLY_III_URL=... billos/firefly-iii-leftover-manager:latest
+docker run -e FIREFLY_III_URL=... billos/sparkleft:latest
 
 # With Node.js
 npm run start
