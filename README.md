@@ -1,4 +1,4 @@
-# Firefly iii Leftover Manager
+# Sparkleft
 
 /!\ Read the state of the project section before using this project /!\
 
@@ -81,18 +81,6 @@ docker-compose -f docker-compose.dev.yml up
 ```
 
 This enables hot-reload for both server and worker services during development.
-
-**Standalone Mode (Backward Compatible):**
-
-To run both server and worker in a single process (legacy mode):
-
-```bash
-# With Docker
-docker run -e FIREFLY_III_URL=... billos/firefly-iii-leftover-manager:latest
-
-# With Node.js
-npm run start
-```
 
 **Separate Server and Worker:**
 
