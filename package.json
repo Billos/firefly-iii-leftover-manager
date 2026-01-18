@@ -1,9 +1,9 @@
 {
-  "name": "firefly-iii-leftover-manager",
+  "name": "sparkleft",
   "version": "0.0.1",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Billos/firefly-iii-leftover-manager.git"
+    "url": "git+https://github.com/Billos/Sparkleft.git"
   },
   "license": "GPL-3.0-only",
   "author": "billos",
@@ -13,7 +13,7 @@
     "dev:server:raw": "tsx watch --clear-screen=false src/server.ts",
     "dev:worker": "yarn dev:worker:raw | pino-pretty -c",
     "dev:worker:raw": "tsx watch --clear-screen=false src/worker.ts",
-    "docker:build": "docker build --no-cache . -t billos/firefly-iii-leftover-manager:latest",
+    "docker:build": "docker build --no-cache . -t billos/sparkleft:latest",
     "format": "prettier . --write",
     "format-check": "prettier . --check",
     "lint": "eslint src",
