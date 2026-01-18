@@ -5,7 +5,6 @@ import { env } from "./config"
 import { settingBudgetForTransaction } from "./endpoints/settingBudgetForTransaction"
 import { settingCategoryForTransaction } from "./endpoints/settingCategoryForTransaction"
 import { webhook } from "./endpoints/webhook"
-import { transactionHandler } from "./modules/transactionHandler"
 import { ParseBodyMiddleware } from "./utils/middleware"
 import { TokenMiddleware } from "./utils/tokenMiddleware"
 import { verifyWebhookMiddleware } from "./utils/webhookSecret"
@@ -21,9 +20,6 @@ app.post("/webhook", verifyWebhookMiddleware, webhook)
 
 async function startServer() {
   try {
-    // Delete all messages at startup
-    transactionHandler.deleteAllMessages()
-
     app.listen(env.port, () => {
       logger.info("Server is running on http://localhost:%s", env.port)
     })
