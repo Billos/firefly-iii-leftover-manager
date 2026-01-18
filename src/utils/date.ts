@@ -1,5 +1,9 @@
 import { DateTime } from "luxon"
 
+// import pino from "pino"
+
+// const logger = pino()
+
 export function getDateNow(): DateTime {
   // Returns the current date in ISO format without time
   const date = DateTime.now()
@@ -8,6 +12,6 @@ export function getDateNow(): DateTime {
     date.setZone(process.env.TZ)
   }
 
-  console.log("Current time is ", date.toISO())
+  // logger.info("Current time is %s", date.toISO())
   return date
 }

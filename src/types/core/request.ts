@@ -242,8 +242,8 @@ export const getResponseBody = async (response: Response): Promise<any> => {
                     return await response.text();
                 }
             }
-        } catch (error) {
-            console.error(error);
+        } catch (err) {
+            console.error(err);
         }
     }
     return undefined;

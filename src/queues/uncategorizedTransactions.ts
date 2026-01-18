@@ -1,14 +1,18 @@
 import { Queue } from "bullmq"
+import pino from "pino"
 
 import { env } from "../config"
 import { transactionHandler } from "../modules/transactionHandler"
 import { CategoriesService, CategoryRead, TransactionRead, TransactionsService, TransactionTypeProperty } from "../types"
 import { getDateNow } from "../utils/date"
 import { getTransactionShowLink } from "../utils/getTransactionShowLink"
-import { getJobDelay, JobIds } from "./constants"
+import { JobIds } from "./constants"
+import { getJobDelay } from "./delay"
 import { QueueArgs } from "./queueArgs"
 
 const id = JobIds.UNCATEGORIZED_TRANSACTIONS
+
+const logger = pino()
 
 async function getUncategorizedTransactions(startDate?: string, endDate?: string): Promise<TransactionRead[]> {
   const transactions: TransactionRead[] = []
@@ -33,13 +37,15 @@ async function getUncategorizedTransactions(startDate?: string, endDate?: string
 function generateMarkdownApiCalls(categories: CategoryRead[], transactionId: string): String[] {
   const ret = []
   for (const { id, attributes } of categories) {
-    ret.push(`[\`${attributes.name}\`](<${env.serviceUrl}transaction/${transactionId}/category/${id}>)`)
+    const url = new URL(`/transaction/${transactionId}/category/${id}`, env.serviceUrl)
+    url.searchParams.append("api_token", env.apiToken)
+    ret.push(`[\`${attributes.name}\`](<${url.toString()}>)`)
   }
   return ret
 }
 
 async function job(transactionId: string) {
-  console.log(`Creating a new message for uncategorized transaction with key ${transactionId}`)
+  logger.info("Creating a new message for uncategorized transaction with key %s", transactionId)
   const {
     data: {
       attributes: {
@@ -51,16 +57,16 @@ async function job(transactionId: string) {
   // Ensure the transaction is a withdrawal
   const { type, amount, currency_decimal_places, currency_symbol, description } = transaction
   if (type !== TransactionTypeProperty.WITHDRAWAL) {
-    console.log(`Transaction ${transactionId} is not a withdrawal`)
+    logger.info("Transaction %s is not a withdrawal", transactionId)
     return
   }
   if (!transaction) {
-    console.log(`Transaction ${transactionId} not found`)
+    logger.info("Transaction %s not found", transactionId)
     return
   }
 
   if (transaction.category_id) {
-    console.log(`Transaction ${transactionId} already categorized`)
+    logger.info("Transaction %s already categorized", transactionId)
     return
   }
 
@@ -71,11 +77,13 @@ async function job(transactionId: string) {
   const link = `[Link](<${getTransactionShowLink(transactionId)}>)`
   const msg = `\`${parseFloat(amount).toFixed(currency_decimal_places)} ${currency_symbol}\` ${description} \n${apis.join(" | ")} - ${link}`
   const messageId = await transactionHandler.getMessageId("CategoryMessageId", transactionId)
-  if (!messageId) {
-    await transactionHandler.sendMessage("CategoryMessageId", msg, transactionId)
+  if (messageId) {
+    logger.info("Message already exists for transaction %s", transactionId)
     // Trying not to delete the message here, as it might be needed for future reference
     // await transactionHandler.deleteMessage("CategoryMessageId", messageId, transactionId)
+    return
   }
+  await transactionHandler.sendMessage("CategoryMessageId", msg, transactionId)
 }
 
 async function init(queue: Queue<QueueArgs>) {
@@ -84,7 +92,7 @@ async function init(queue: Queue<QueueArgs>) {
     const endDate = getDateNow().toISODate()
     const uncategorizedTransactionsList = await getUncategorizedTransactions(startDate, endDate)
     for (const { id: transactionId } of uncategorizedTransactionsList) {
-      console.log(`Adding uncategorized transaction with id ${transactionId}`)
+      logger.info("Adding uncategorized transaction with id %s", transactionId)
       queue.add(
         transactionId,
         { job: id, transactionId: transactionId },

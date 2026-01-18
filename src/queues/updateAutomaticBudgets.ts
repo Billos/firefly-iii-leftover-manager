@@ -1,4 +1,5 @@
 import { Queue } from "bullmq"
+import pino from "pino"
 
 import { env } from "../config"
 import { linkPaypalTransactions } from "../controllers/linkPaypalTransactions"
@@ -7,13 +8,15 @@ import { updateBillsBudgetLimit } from "../controllers/updateBillsBudgetLimit"
 import { updateLeftoversBudget } from "../controllers/updateLeftoversBudget"
 import { BudgetsService } from "../types"
 import { getDateNow } from "../utils/date"
-import { getJobDelay, JobIds } from "./constants"
+import { JobIds } from "./constants"
+import { getJobDelay } from "./delay"
 import { QueueArgs } from "./queueArgs"
 
 const id = JobIds.UPDATE_AUTOMATIC_BUDGETS
 
+const logger = pino()
 async function job() {
-  console.log("Running updateAutomaticBudgets job")
+  logger.info("Running updateAutomaticBudgets job")
   // Get all budgets
   const startDate = getDateNow().startOf("month").toISODate()
   const endDate = getDateNow().endOf("month").toISODate()

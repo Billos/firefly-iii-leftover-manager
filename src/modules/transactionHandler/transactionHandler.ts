@@ -1,5 +1,8 @@
+import pino from "pino"
+
 import { TransactionSplit, TransactionsService } from "../../types"
 
+const logger = pino()
 export type MessageType = "BudgetMessageId" | "CategoryMessageId" | "AlertMessage"
 
 export interface TransactionHandler {
@@ -85,14 +88,14 @@ export abstract class AbstractTransactionHandler implements TransactionHandler {
   public async deleteMessage(type: MessageType, id: string, transactionId: string): Promise<void> {
     try {
       await this.unsetMessageId(type, transactionId)
-    } catch (error) {
-      console.log(`Could not unset message ID for type ${type} and transaction ${transactionId}:`, error.message)
+    } catch (err) {
+      logger.error({ err }, "Could not unset message ID for type %s and transaction %s:", type, transactionId)
       return
     }
     try {
       await this.deleteMessageImpl(id, transactionId)
-    } catch (error) {
-      console.log(`Could not delete message for type ${type} and transaction ${transactionId}:`, error.message)
+    } catch (err) {
+      logger.error({ err }, "Could not delete message for type %s and transaction %s:", type, transactionId)
     }
   }
 

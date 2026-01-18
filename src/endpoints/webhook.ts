@@ -1,7 +1,8 @@
 import { Request, Response } from "express"
+import pino from "pino"
 
 import { getQueue, jobDefinitions, transactionJobDefinitions } from "../queues"
-import { getJobDelay } from "../queues/constants"
+import { getJobDelay } from "../queues/delay"
 import { Transaction, WebhookTrigger } from "../types"
 
 type WebhookTransactionBody = {
@@ -21,34 +22,38 @@ const transactionTriggers = [
   WebhookTrigger.DESTROY_TRANSACTION,
 ]
 
+const logger = pino()
+
 export async function webhook(req: Request, res: Response) {
-  console.log("=================================== Transaction webhook ===================================")
+  logger.info("=================================== Transaction webhook ===================================")
   const body: WebhookTransactionBody = req.body as WebhookTransactionBody
   const isTransactionTrigger = transactionTriggers.includes(body.trigger)
   const queue = await getQueue()
   if (isTransactionTrigger) {
-    const transactionId = `${body.content.id}`
+    const transactionId = String(body.content.id)
     // Query existing jobs once to avoid multiple API calls
     const existingJobs = await queue.getJobs(["waiting", "active", "delayed"])
 
     for (const { id: job } of transactionJobDefinitions) {
+      logger.info("Checking job %s", job)
+
       // Check if job with the same [job, transactionId] tuple already exists in the queue
       const isDuplicate = existingJobs.some(
         (existingJob) => existingJob.data && existingJob.data.job === job && existingJob.data.transactionId === transactionId,
       )
 
       if (isDuplicate) {
-        console.log("Job already exists in queue:", job, "for transactionId:", transactionId)
+        logger.info("Job already exists in queue: %s for transactionId: %s", job, transactionId)
       } else {
-        const delay = getJobDelay(job) || 15000
-        console.log("Adding job to queue:", job, "for transactionId:", transactionId, "with delay:", delay)
+        const delay = getJobDelay(job, false)
+        logger.info("Adding job to queue: %s for transactionId: %s with delay: %d seconds", job, transactionId, delay / 1000)
         queue.add(job, { job, transactionId }, { removeOnComplete: true, removeOnFail: true, delay })
       }
     }
   }
   for (const { id: job } of jobDefinitions) {
-    const delay = getJobDelay(job) || 15000
-    console.log("Adding job to queue:", job, "with delay:", delay)
+    const delay = getJobDelay(job, false)
+    logger.info("Adding job to queue: %s with delay: %d seconds", job, delay / 1000)
     queue.add(job, { job }, { removeOnComplete: true, removeOnFail: true, delay })
   }
   res.send("<script>window.close()</script>")

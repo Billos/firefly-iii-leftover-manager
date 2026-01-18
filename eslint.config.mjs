@@ -31,6 +31,7 @@ export default [
       "no-useless-concat": "error",
       "@stylistic/js/quotes": ["error", "double"],
       "consistent-return": "off",
+      "no-console": "error",
       "no-param-reassign": [
         "error",
         { props: true, ignorePropertyModificationsForRegex: [".*"] },
