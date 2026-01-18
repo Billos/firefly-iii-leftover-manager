@@ -7,11 +7,12 @@ import { settingCategoryForTransaction } from "./endpoints/settingCategoryForTra
 import { updateAutomaticBudgets } from "./endpoints/updateAutomaticBudgets"
 import { webhook } from "./endpoints/webhook"
 import { transactionHandler } from "./modules/transactionHandler"
+import { ParseBodyMiddleware } from "./utils/middleware"
 
 const logger = pino()
 const app = express()
 
-app.use(express.json())
+app.use(ParseBodyMiddleware)
 
 app.get("/", updateAutomaticBudgets)
 app.post("/", updateAutomaticBudgets)
