@@ -6,7 +6,6 @@ import { settingCategoryForTransaction } from "./endpoints/settingCategoryForTra
 import { updateAutomaticBudgets } from "./endpoints/updateAutomaticBudgets"
 import { webhook } from "./endpoints/webhook"
 import { transactionHandler } from "./modules/transactionHandler"
-import { initializeWorker } from "./queues"
 
 const app = express()
 
@@ -18,18 +17,13 @@ app.get("/transaction/:transactionId/budget/:budget_id", settingBudgetForTransac
 app.get("/transaction/:transactionId/category/:category_id", settingCategoryForTransaction)
 app.post("/transaction", webhook)
 
-async function start() {
+async function startServer() {
   // Delete all messages at startup
   transactionHandler.deleteAllMessages()
   
-  // Start worker
-  await initializeWorker()
-  console.log("Worker is running and waiting for jobs")
-  
-  // Start server
   app.listen(env.port, () => {
     console.log(`Server is running on http://localhost:${env.port}`)
   })
 }
 
-start()
+startServer()

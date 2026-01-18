@@ -1,11 +1,20 @@
 services:
-  manager:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+  server:
     build:
       context: .
       dockerfile: Dockerfile
-    command: ["dev"]
+    command: ["dev:server"]
     volumes:
       - .:/app
+      - /app/node_modules
     env_file:
       - .env
     ports:
@@ -13,4 +22,28 @@ services:
     environment:
       NODE_ENV: development
       LOG_LEVEL: 2
+      REDIS_HOST: redis
+    depends_on:
+      - redis
     restart: unless-stopped
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["dev:worker"]
+    volumes:
+      - .:/app
+      - /app/node_modules
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: development
+      LOG_LEVEL: 2
+      REDIS_HOST: redis
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+volumes:
+  redis-data:
