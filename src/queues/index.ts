@@ -24,8 +24,8 @@ const transactionJobDefinitions: TransactionJobDefinition[] = [
   UncategorizedTransactions,
 ]
 
-let queue: Queue = null
-let worker: Worker<QueueArgs> = null
+let queue: Queue<QueueArgs> | null = null
+let worker: Worker<QueueArgs> | null = null
 
 async function getQueue(): Promise<Queue> {
   if (queue) {
