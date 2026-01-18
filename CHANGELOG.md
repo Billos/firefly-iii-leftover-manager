@@ -1,3 +1,10 @@
+## [1.20.2](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.20.1...1.20.2) (2026-01-18)
+
+
+### Bug Fixes
+
+* Centralizes job delay logic ([d7a9518](https://github.com/Billos/firefly-iii-leftover-manager/commit/d7a9518f8e093b11983bcf0ed3fbc7e862984e35))
+
 ## [1.20.1](https://github.com/Billos/firefly-iii-leftover-manager/compare/1.20.0...1.20.1) (2026-01-17)
 
 
