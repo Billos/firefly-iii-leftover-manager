@@ -16,7 +16,7 @@ app.use(ParseBodyMiddleware)
 
 app.get("/transaction/:transactionId/budget/:budget_id", settingBudgetForTransaction)
 app.get("/transaction/:transactionId/category/:category_id", settingCategoryForTransaction)
-app.post("/transaction", verifyWebhookMiddleware, webhook)
+app.post("/webhook", verifyWebhookMiddleware, webhook)
 
 async function startServer() {
   try {
