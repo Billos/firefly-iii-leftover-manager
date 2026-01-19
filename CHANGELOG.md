@@ -1,3 +1,10 @@
+# [2.2.0](https://github.com/Billos/Sparkleft/compare/2.1.0...2.2.0) (2026-01-19)
+
+
+### Features
+
+* Logs job duration ([8787a90](https://github.com/Billos/Sparkleft/commit/8787a90b412b5c470d3b537516ddc217fc936ac7))
+
 # [2.1.0](https://github.com/Billos/Sparkleft/compare/2.0.0...2.1.0) (2026-01-19)
 
 
