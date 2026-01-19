@@ -73,7 +73,7 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
   worker = new Worker<QueueArgs>(
     "manager",
     async ({ data: { job, transactionId } }) => {
-      jobs[job](transactionId)
+      await jobs[job](transactionId)
     },
     {
       connection: env.redisConnection,
