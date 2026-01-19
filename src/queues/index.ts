@@ -1,4 +1,5 @@
 import { Queue, Worker } from "bullmq"
+import { DateTime } from "luxon"
 import pino from "pino"
 
 import { env } from "../config"
@@ -16,6 +17,8 @@ type TransactionJobDefinition = {
   init?: (queue: Queue<QueueArgs>) => Promise<void>
 }
 type JobDefinition = { id: JobIds; job: () => Promise<void>; init?: (queue: Queue<QueueArgs>) => Promise<void> }
+
+const startedAt = new Map<string, DateTime>()
 
 const jobDefinitions: JobDefinition[] = [
   UpdateAutomaticBudgets,
@@ -36,6 +39,19 @@ async function getQueue(): Promise<Queue> {
 
   queue = new Queue("manager", { connection: env.redisConnection })
   return queue
+}
+
+function logJobDuration(success: boolean, jobId: string, name: string) {
+  const startTime = startedAt.get(jobId)
+  const successStr = success ? "completed" : "failed"
+  const endTime = DateTime.now()
+  if (startTime) {
+    const duration = endTime.diff(startTime, "seconds").seconds
+    logger.info("Job(%s) %s %s in %d seconds", jobId, name, successStr, duration)
+    startedAt.delete(jobId)
+  } else {
+    logger.info("Job(%s) %s %s", jobId, name, successStr)
+  }
 }
 
 async function initializeWorker(): Promise<Worker<QueueArgs>> {
@@ -67,9 +83,19 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
     },
   )
 
+  worker.on("active", ({ id, name }) => {
+    logger.info("Job(%s) %s started", id, name)
+    startedAt.set(id, DateTime.now())
+  })
+  worker.on("completed", ({ id, name }) => {
+    logJobDuration(true, id, name)
+  })
+
   worker.on("failed", (job, err) => {
     logger.error({ err }, "Job %s failed with error %s", job.id, err.message)
     transactionHandler.sendMessageImpl("Job Failed", `Job ${job.id} failed with error ${err.message} and data ${JSON.stringify(job.data)}`)
+
+    logJobDuration(false, job.id, job.name)
   })
 
   for (const { job, id, init } of jobDefinitions) {
