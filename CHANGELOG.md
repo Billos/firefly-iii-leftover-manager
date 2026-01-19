@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/Billos/Sparkleft/compare/2.0.0...2.1.0) (2026-01-19)
+
+
+### Features
+
+* Adds asap option to delay ([81f735c](https://github.com/Billos/Sparkleft/commit/81f735c014796deea782d72a3b2dbfdf15685076))
+
 # [2.0.0](https://github.com/Billos/Sparkleft/compare/1.21.1...2.0.0) (2026-01-18)
 
 
