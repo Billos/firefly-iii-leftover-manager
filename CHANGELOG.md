@@ -1,3 +1,10 @@
+## [2.2.1](https://github.com/Billos/Sparkleft/compare/2.2.0...2.2.1) (2026-01-19)
+
+
+### Bug Fixes
+
+* Awaits job execution in worker ([f4f9dee](https://github.com/Billos/Sparkleft/commit/f4f9deefc757f99fccadb7ef0a18c8330d8260f6))
+
 # [2.2.0](https://github.com/Billos/Sparkleft/compare/2.1.0...2.2.0) (2026-01-19)
 
 
