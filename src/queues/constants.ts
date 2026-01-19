@@ -9,3 +9,5 @@ export const JOB_DELAYS: Record<JobIds, number> = {
   [JobIds.UNBUDGETED_TRANSACTIONS]: 20,
   [JobIds.UNCATEGORIZED_TRANSACTIONS]: 10,
 }
+
+export const ASAP_JOB_DELAY = 2000 // 2 seconds
