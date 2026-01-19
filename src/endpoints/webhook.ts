@@ -52,7 +52,7 @@ export async function webhook(req: Request, res: Response) {
     }
   }
   for (const { id: job } of jobDefinitions) {
-    const delay = getJobDelay(job, false)
+    const delay = getJobDelay(job, false, !isTransactionTrigger)
     logger.info("Adding job to queue: %s with delay: %d seconds", job, delay / 1000)
     queue.add(job, { job }, { removeOnComplete: true, removeOnFail: true, delay })
   }
