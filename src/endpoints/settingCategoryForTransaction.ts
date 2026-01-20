@@ -6,7 +6,7 @@ import { TransactionsService } from "../types"
 import { getTransactionShowLink } from "../utils/getTransactionShowLink"
 
 const logger = pino()
-export async function settingCategoryForTransaction(req: Request, res: Response) {
+export async function settingCategoryForTransaction(req: Request<{ transactionId: string; category_id: string }>, res: Response) {
   logger.info("=================================== Setting category for transaction ===================================")
   const { transactionId, category_id } = req.params
   try {
