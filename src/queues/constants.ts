@@ -9,7 +9,7 @@ export const JOB_DELAYS: Record<JobIds, number> = {
   [JobIds.UPDATE_AUTOMATIC_BUDGETS]: 30,
   [JobIds.UNBUDGETED_TRANSACTIONS]: 20,
   [JobIds.UNCATEGORIZED_TRANSACTIONS]: 10,
-  [JobIds.LINK_PAYPAL_TRANSACTIONS]: 25,
+  [JobIds.LINK_PAYPAL_TRANSACTIONS]: 40,
 }
 
 export const ASAP_JOB_DELAY = 2000 // 2 seconds
