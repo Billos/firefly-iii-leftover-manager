@@ -99,6 +99,7 @@ async function init(queue: Queue<QueueArgs>) {
           deduplication: {
             id: jobId,
             ttl: delay + 60000, // Debounce window: delay + 1 minute
+            extend: true, // Extend TTL on duplicate attempts (debounce behavior)
           }
         },
       )

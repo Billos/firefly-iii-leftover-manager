@@ -44,6 +44,7 @@ export async function webhook(req: Request, res: Response) {
         deduplication: {
           id: jobId,
           ttl: delay + 60000, // Debounce window: delay + 1 minute
+          extend: true, // Extend TTL on duplicate attempts (debounce behavior)
         }
       })
     }
