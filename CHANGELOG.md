@@ -1,3 +1,10 @@
+## [2.2.2](https://github.com/Billos/Sparkleft/compare/2.2.1...2.2.2) (2026-01-20)
+
+
+### Bug Fixes
+
+* Update LINK_PAYPAL_TRANSACTIONS delay to 40 seconds ([7de0236](https://github.com/Billos/Sparkleft/commit/7de02364bf0cf131ef196d4524456a98e928fd3c))
+
 ## [2.2.1](https://github.com/Billos/Sparkleft/compare/2.2.0...2.2.1) (2026-01-19)
 
 
