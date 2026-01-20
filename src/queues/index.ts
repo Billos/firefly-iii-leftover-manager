@@ -5,6 +5,7 @@ import pino from "pino"
 import { env } from "../config"
 import { transactionHandler } from "../modules/transactionHandler"
 import { JobIds } from "./constants"
+import * as LinkPaypalTransactions from "./linkPaypalTransactions"
 import { QueueArgs } from "./queueArgs"
 import * as UnbudgetedTransactions from "./unbudgetedTransactions"
 import * as UncategorizedTransactions from "./uncategorizedTransactions"
@@ -22,6 +23,7 @@ const startedAt = new Map<string, DateTime>()
 
 const jobDefinitions: JobDefinition[] = [
   UpdateAutomaticBudgets,
+  LinkPaypalTransactions,
 ]
 
 const transactionJobDefinitions: TransactionJobDefinition[] = [

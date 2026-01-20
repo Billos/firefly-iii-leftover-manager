@@ -2,7 +2,6 @@ import { Queue } from "bullmq"
 import pino from "pino"
 
 import { env } from "../config"
-import { linkPaypalTransactions } from "../controllers/linkPaypalTransactions"
 import { reviewBudgetLimit } from "../controllers/reviewBudgetLimit"
 import { updateBillsBudgetLimit } from "../controllers/updateBillsBudgetLimit"
 import { updateLeftoversBudget } from "../controllers/updateLeftoversBudget"
@@ -44,10 +43,6 @@ async function job() {
   // If leftovers budget is found
   if (leftoversBudget) {
     await updateLeftoversBudget(leftoversBudget, startDate, endDate)
-  }
-
-  if (env.fireflyPaypalAccountToken) {
-    await linkPaypalTransactions()
   }
 }
 
