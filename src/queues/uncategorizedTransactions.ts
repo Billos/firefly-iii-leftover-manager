@@ -76,13 +76,6 @@ async function job(transactionId: string) {
   const apis = generateMarkdownApiCalls(categories, transactionId)
   const link = `[Link](<${getTransactionShowLink(transactionId)}>)`
   const msg = `\`${parseFloat(amount).toFixed(currency_decimal_places)} ${currency_symbol}\` ${description} \n${apis.join(" | ")} - ${link}`
-  const messageId = await transactionHandler.getMessageId("CategoryMessageId", transactionId)
-  if (messageId) {
-    logger.info("Message already exists for transaction %s", transactionId)
-    // Trying not to delete the message here, as it might be needed for future reference
-    // await transactionHandler.deleteMessage("CategoryMessageId", messageId, transactionId)
-    return
-  }
   await transactionHandler.sendMessage("CategoryMessageId", msg, transactionId)
 }
 
@@ -93,10 +86,21 @@ async function init(queue: Queue<QueueArgs>) {
     const uncategorizedTransactionsList = await getUncategorizedTransactions(startDate, endDate)
     for (const { id: transactionId } of uncategorizedTransactionsList) {
       logger.info("Adding uncategorized transaction with id %s", transactionId)
+      const jobId = `${id}-${transactionId}`
+      const delay = getJobDelay(id, false)
       queue.add(
         transactionId,
         { job: id, transactionId: transactionId },
-        { removeOnComplete: true, removeOnFail: true, delay: getJobDelay(id, false) },
+        { 
+          jobId,
+          removeOnComplete: true, 
+          removeOnFail: true, 
+          delay,
+          deduplication: {
+            id: jobId,
+            ttl: delay + 60000, // Debounce window: delay + 1 minute
+          }
+        },
       )
     }
   }
