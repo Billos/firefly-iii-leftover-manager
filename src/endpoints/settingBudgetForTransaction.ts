@@ -7,7 +7,7 @@ import { getTransactionShowLink } from "../utils/getTransactionShowLink"
 
 const logger = pino()
 
-export async function settingBudgetForTransaction(req: Request, res: Response) {
+export async function settingBudgetForTransaction(req: Request<{ transactionId: string; budget_id: string }>, res: Response) {
   logger.info("=================================== Setting budget for transaction ===================================")
   const { transactionId, budget_id } = req.params
   try {
