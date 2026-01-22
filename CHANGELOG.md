@@ -1,3 +1,10 @@
+## [2.3.1](https://github.com/Billos/Sparkleft/compare/2.3.0...2.3.1) (2026-01-22)
+
+
+### Bug Fixes
+
+* Keeping the jobs in Redis, for analytics purpose ([eb1f5c7](https://github.com/Billos/Sparkleft/commit/eb1f5c7c0aa39ae8a8249d429abfb6cca73cbb7e))
+
 # [2.3.0](https://github.com/Billos/Sparkleft/compare/2.2.2...2.3.0) (2026-01-22)
 
 
