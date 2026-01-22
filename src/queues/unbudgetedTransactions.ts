@@ -1,4 +1,3 @@
-import { Queue } from "bullmq"
 import pino from "pino"
 
 import { env } from "../config"
@@ -6,8 +5,7 @@ import { transactionHandler } from "../modules/transactionHandler"
 import { BudgetRead, BudgetsService, TransactionsService, TransactionTypeProperty } from "../types"
 import { getTransactionShowLink } from "../utils/getTransactionShowLink"
 import { JobIds } from "./constants"
-import { getJobDelay } from "./delay"
-import { QueueArgs } from "./queueArgs"
+import { addTransactionJobToQueue } from "./jobs"
 
 const id = JobIds.UNBUDGETED_TRANSACTIONS
 
@@ -64,12 +62,11 @@ async function job(transactionId: string) {
   await transactionHandler.sendMessage("BudgetMessageId", msg, transactionId)
 }
 
-async function init(queue: Queue<QueueArgs>) {
+async function init() {
   if (transactionHandler) {
     const { data } = await BudgetsService.listTransactionWithoutBudget(null, 50, 1)
     for (const { id: transactionId } of data) {
-      logger.info("Adding unbudgeted transaction with id %s", transactionId)
-      queue.add(transactionId, { job: id, transactionId }, { removeOnComplete: true, removeOnFail: true, delay: getJobDelay(id, false) })
+      await addTransactionJobToQueue(id, transactionId)
     }
   }
 }

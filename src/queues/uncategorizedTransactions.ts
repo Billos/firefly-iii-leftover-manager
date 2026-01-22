@@ -1,4 +1,3 @@
-import { Queue } from "bullmq"
 import pino from "pino"
 
 import { env } from "../config"
@@ -7,8 +6,7 @@ import { CategoriesService, CategoryRead, TransactionRead, TransactionsService, 
 import { getDateNow } from "../utils/date"
 import { getTransactionShowLink } from "../utils/getTransactionShowLink"
 import { JobIds } from "./constants"
-import { getJobDelay } from "./delay"
-import { QueueArgs } from "./queueArgs"
+import { addTransactionJobToQueue } from "./jobs"
 
 const id = JobIds.UNCATEGORIZED_TRANSACTIONS
 
@@ -86,18 +84,13 @@ async function job(transactionId: string) {
   await transactionHandler.sendMessage("CategoryMessageId", msg, transactionId)
 }
 
-async function init(queue: Queue<QueueArgs>) {
+async function init() {
   if (transactionHandler) {
     const startDate = getDateNow().startOf("month").toISODate()
     const endDate = getDateNow().toISODate()
     const uncategorizedTransactionsList = await getUncategorizedTransactions(startDate, endDate)
     for (const { id: transactionId } of uncategorizedTransactionsList) {
-      logger.info("Adding uncategorized transaction with id %s", transactionId)
-      queue.add(
-        transactionId,
-        { job: id, transactionId: transactionId },
-        { removeOnComplete: true, removeOnFail: true, delay: getJobDelay(id, false) },
-      )
+      await addTransactionJobToQueue(id, transactionId)
     }
   }
 }

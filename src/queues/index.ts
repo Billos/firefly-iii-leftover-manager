@@ -15,9 +15,9 @@ const logger = pino()
 type TransactionJobDefinition = {
   id: JobIds
   job: (transactionId: string) => Promise<void>
-  init?: (queue: Queue<QueueArgs>) => Promise<void>
+  init?: () => Promise<void>
 }
-type JobDefinition = { id: JobIds; job: () => Promise<void>; init?: (queue: Queue<QueueArgs>) => Promise<void> }
+type JobDefinition = { id: JobIds; job: () => Promise<void>; init?: () => Promise<void> }
 
 const startedAt = new Map<string, DateTime>()
 
@@ -34,7 +34,7 @@ const transactionJobDefinitions: TransactionJobDefinition[] = [
 let queue: Queue<QueueArgs> | null = null
 let worker: Worker<QueueArgs> | null = null
 
-async function getQueue(): Promise<Queue> {
+async function getQueue(): Promise<Queue<QueueArgs>> {
   if (queue) {
     return queue
   }
@@ -103,13 +103,13 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
   for (const { job, id, init } of jobDefinitions) {
     jobs[id] = job
     if (init) {
-      await init(queue)
+      await init()
     }
   }
   for (const { job, id, init } of transactionJobDefinitions) {
     jobs[id] = job
     if (init) {
-      await init(queue)
+      await init()
     }
   }
 

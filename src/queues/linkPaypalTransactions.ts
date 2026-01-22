@@ -1,11 +1,9 @@
-import { Queue } from "bullmq"
 import pino from "pino"
 
 import { env } from "../config"
 import { linkPaypalTransactions } from "../controllers/linkPaypalTransactions"
 import { JobIds } from "./constants"
-import { getJobDelay } from "./delay"
-import { QueueArgs } from "./queueArgs"
+import { addJobToQueue } from "./jobs"
 
 const id = JobIds.LINK_PAYPAL_TRANSACTIONS
 
@@ -16,9 +14,9 @@ async function job() {
   await linkPaypalTransactions()
 }
 
-async function init(queue: Queue<QueueArgs>) {
+async function init() {
   if (env.fireflyPaypalAccountToken) {
-    queue.add(id, { job: id, transactionId: null }, { removeOnComplete: true, removeOnFail: true, delay: getJobDelay(id, false) })
+    await addJobToQueue(id)
   }
 }
 
