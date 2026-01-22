@@ -1,11 +1,25 @@
 import pino from "pino"
 
 import { env } from "../config"
-import { AccountsService, BudgetLimitStore, BudgetRead, BudgetsService, InsightGroupEntry, InsightService } from "../types"
+import {
+  AccountsService,
+  BudgetLimitArray,
+  BudgetLimitStore,
+  BudgetRead,
+  BudgetsService,
+  InsightGroupEntry,
+  InsightService,
+} from "../types"
 
 const logger = pino()
 
-async function getSumWithoutLeftovers(leftoversBudget: BudgetRead, startDate: string, endDate: string): Promise<number> {
+async function getSumWithoutLeftovers(
+  allBudgets: BudgetRead[],
+  leftoversBudget: BudgetRead,
+  allLimits: BudgetLimitArray,
+  startDate: string,
+  endDate: string,
+): Promise<number> {
   const assetAccount = await AccountsService.getAccount(env.assetAccountId)
   if (!assetAccount) {
     throw new Error("Asset account not found")
@@ -13,15 +27,14 @@ async function getSumWithoutLeftovers(leftoversBudget: BudgetRead, startDate: st
   let leftoverAmount = Number.parseFloat(assetAccount.data.attributes.current_balance)
   logger.info("Current balance %d", leftoverAmount)
 
-  const allLimits = await BudgetsService.listBudgetLimit(startDate, endDate)
   const limitsWithoutLeftovers = allLimits.data.filter(({ attributes: { budget_id } }) => budget_id !== leftoversBudget.id)
   const budgetsIds = allLimits.data.map(({ attributes: { budget_id } }) => Number(budget_id))
 
   const insightsRaw = await InsightService.insightExpenseBudget(startDate, endDate, null, budgetsIds)
-  const insights: Record<string, InsightGroupEntry> = insightsRaw.reduce(
-    (acc, insight) => ({ ...acc, [insight.id]: insight }),
-    {} as Record<string, InsightGroupEntry>,
-  )
+  const insights: Record<string, InsightGroupEntry> = {}
+  for (const insight of insightsRaw) {
+    insights[insight.id] = insight
+  }
   for (const limit of limitsWithoutLeftovers) {
     const {
       // attributes: { spent, budget_id, amount },
@@ -30,8 +43,8 @@ async function getSumWithoutLeftovers(leftoversBudget: BudgetRead, startDate: st
     const insight = insights[budget_id]
 
     let spentValue = "0"
-    const budget = await BudgetsService.getBudget(budget_id)
-    const { name } = budget.data.attributes
+    const budget = allBudgets.find((b) => b.id === budget_id)!
+    const { name } = budget.attributes
     if (insight) {
       spentValue = insight.difference
     }
@@ -49,19 +62,23 @@ async function getSumWithoutLeftovers(leftoversBudget: BudgetRead, startDate: st
 
 export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDate: string, endDate: string) {
   logger.info("================ Updating Leftovers Budget Limit =================")
-  const allLimits = await BudgetsService.listBudgetLimit(startDate, endDate)
+  const [
+    allBudgets,
+    allLimits,
+  ] = await Promise.all([
+    BudgetsService.listBudget(null, 50, 1, startDate, endDate),
+    BudgetsService.listBudgetLimit(startDate, endDate),
+  ])
   const leftOverLimit = allLimits.data.find(({ attributes: { budget_id } }) => budget_id === leftoversBudget.id)
 
-  let leftoverAmount = await getSumWithoutLeftovers(leftoversBudget, startDate, endDate)
-
+  let leftoverAmount = await getSumWithoutLeftovers(allBudgets.data, leftoversBudget, allLimits, startDate, endDate)
   if (leftoverAmount < 0) {
     logger.info("Leftover amount is negative, setting to 0.1")
     leftoverAmount = 0.1
   }
 
-  const currentLeftOverBudget = await BudgetsService.getBudget(leftoversBudget.id, null, startDate, endDate)
-  const [spent] = currentLeftOverBudget.data.attributes.spent
-
+  const currentLeftOverBudget = allBudgets.data.find(({ id }) => id === leftoversBudget.id)!
+  const [spent] = currentLeftOverBudget.attributes.spent
   if (!spent) {
     logger.info("No spent amount found, setting it to 0")
   }
