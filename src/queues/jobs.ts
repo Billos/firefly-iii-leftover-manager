@@ -18,7 +18,7 @@ function getDebounce(id: JobIds, transactionId?: string): DeduplicationOptions {
 
 function queueConfig(job: JobIds, transactionId?: string): JobsOptions {
   return {
-    removeOnComplete: true,
+    removeOnComplete: false,
     removeOnFail: true,
     delay: getJobDelay(job, false),
     deduplication: getDebounce(job, transactionId),
