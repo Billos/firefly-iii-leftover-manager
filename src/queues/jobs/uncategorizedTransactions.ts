@@ -1,14 +1,12 @@
-import { Queue } from "bullmq"
 import pino from "pino"
 
-import { env } from "../config"
-import { transactionHandler } from "../modules/transactionHandler"
-import { CategoriesService, CategoryRead, TransactionRead, TransactionsService, TransactionTypeProperty } from "../types"
-import { getDateNow } from "../utils/date"
-import { getTransactionShowLink } from "../utils/getTransactionShowLink"
-import { JobIds } from "./constants"
-import { getJobDelay } from "./delay"
-import { QueueArgs } from "./queueArgs"
+import { env } from "../../config"
+import { transactionHandler } from "../../modules/transactionHandler"
+import { CategoriesService, CategoryRead, TransactionRead, TransactionsService, TransactionTypeProperty } from "../../types"
+import { getDateNow } from "../../utils/date"
+import { getTransactionShowLink } from "../../utils/getTransactionShowLink"
+import { JobIds } from "../constants"
+import { addTransactionJobToQueue } from "../jobs"
 
 const id = JobIds.UNCATEGORIZED_TRANSACTIONS
 
@@ -78,26 +76,23 @@ async function job(transactionId: string) {
   const msg = `\`${parseFloat(amount).toFixed(currency_decimal_places)} ${currency_symbol}\` ${description} \n${apis.join(" | ")} - ${link}`
   const messageId = await transactionHandler.getMessageId("CategoryMessageId", transactionId)
   if (messageId) {
-    logger.info("Message already exists for transaction %s", transactionId)
-    // Trying not to delete the message here, as it might be needed for future reference
-    // await transactionHandler.deleteMessage("CategoryMessageId", messageId, transactionId)
-    return
+    const messageExists = await transactionHandler.hasMessageId(messageId)
+    if (messageExists) {
+      logger.info("Category message already exists for transaction %s", transactionId)
+      return
+    }
+    logger.info("Category message defined but not found in transactionHandler for transaction %s", transactionId)
   }
   await transactionHandler.sendMessage("CategoryMessageId", msg, transactionId)
 }
 
-async function init(queue: Queue<QueueArgs>) {
+async function init() {
   if (transactionHandler) {
     const startDate = getDateNow().startOf("month").toISODate()
     const endDate = getDateNow().toISODate()
     const uncategorizedTransactionsList = await getUncategorizedTransactions(startDate, endDate)
     for (const { id: transactionId } of uncategorizedTransactionsList) {
-      logger.info("Adding uncategorized transaction with id %s", transactionId)
-      queue.add(
-        transactionId,
-        { job: id, transactionId: transactionId },
-        { removeOnComplete: true, removeOnFail: true, delay: getJobDelay(id, false) },
-      )
+      await addTransactionJobToQueue(id, transactionId)
     }
   }
 }

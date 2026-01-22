@@ -1,15 +1,13 @@
-import { Queue } from "bullmq"
 import pino from "pino"
 
-import { env } from "../config"
-import { reviewBudgetLimit } from "../controllers/reviewBudgetLimit"
-import { updateBillsBudgetLimit } from "../controllers/updateBillsBudgetLimit"
-import { updateLeftoversBudget } from "../controllers/updateLeftoversBudget"
-import { BudgetsService } from "../types"
-import { getDateNow } from "../utils/date"
-import { JobIds } from "./constants"
-import { getJobDelay } from "./delay"
-import { QueueArgs } from "./queueArgs"
+import { env } from "../../config"
+import { reviewBudgetLimit } from "../../controllers/reviewBudgetLimit"
+import { updateBillsBudgetLimit } from "../../controllers/updateBillsBudgetLimit"
+import { updateLeftoversBudget } from "../../controllers/updateLeftoversBudget"
+import { BudgetsService } from "../../types"
+import { getDateNow } from "../../utils/date"
+import { JobIds } from "../constants"
+import { addJobToQueue } from "../jobs"
 
 const id = JobIds.UPDATE_AUTOMATIC_BUDGETS
 
@@ -46,8 +44,8 @@ async function job() {
   }
 }
 
-async function init(queue: Queue<QueueArgs>) {
-  queue.add(id, { job: id, transactionId: null }, { removeOnComplete: true, removeOnFail: true, delay: getJobDelay(id, false) })
+async function init() {
+  await addJobToQueue(id)
 }
 
 export { job, init, id }

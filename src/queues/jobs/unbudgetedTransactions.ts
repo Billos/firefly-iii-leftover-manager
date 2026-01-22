@@ -1,13 +1,11 @@
-import { Queue } from "bullmq"
 import pino from "pino"
 
-import { env } from "../config"
-import { transactionHandler } from "../modules/transactionHandler"
-import { BudgetRead, BudgetsService, TransactionsService, TransactionTypeProperty } from "../types"
-import { getTransactionShowLink } from "../utils/getTransactionShowLink"
-import { JobIds } from "./constants"
-import { getJobDelay } from "./delay"
-import { QueueArgs } from "./queueArgs"
+import { env } from "../../config"
+import { transactionHandler } from "../../modules/transactionHandler"
+import { BudgetRead, BudgetsService, TransactionsService, TransactionTypeProperty } from "../../types"
+import { getTransactionShowLink } from "../../utils/getTransactionShowLink"
+import { JobIds } from "../constants"
+import { addTransactionJobToQueue } from "../jobs"
 
 const id = JobIds.UNBUDGETED_TRANSACTIONS
 
@@ -56,20 +54,21 @@ async function job(transactionId: string) {
   const msg = `\`${parseFloat(amount).toFixed(currency_decimal_places)} ${currency_symbol}\` ${description} \n${apis.join(" | ")} - ${link}`
   const messageId = await transactionHandler.getMessageId("BudgetMessageId", transactionId)
   if (messageId) {
-    logger.info("Message already exists for transaction %s", transactionId)
-    // Trying not to delete the message here, as it might be needed for future reference
-    // await transactionHandler.deleteMessage("BudgetMessageId", messageId, transactionId)
-    return
+    const messageExists = await transactionHandler.hasMessageId(messageId)
+    if (messageExists) {
+      logger.info("Budget message already exists for transaction %s", transactionId)
+      return
+    }
+    logger.info("Budget message defined but not found in transactionHandler for transaction %s", transactionId)
   }
   await transactionHandler.sendMessage("BudgetMessageId", msg, transactionId)
 }
 
-async function init(queue: Queue<QueueArgs>) {
+async function init() {
   if (transactionHandler) {
     const { data } = await BudgetsService.listTransactionWithoutBudget(null, 50, 1)
     for (const { id: transactionId } of data) {
-      logger.info("Adding unbudgeted transaction with id %s", transactionId)
-      queue.add(transactionId, { job: id, transactionId }, { removeOnComplete: true, removeOnFail: true, delay: getJobDelay(id, false) })
+      await addTransactionJobToQueue(id, transactionId)
     }
   }
 }

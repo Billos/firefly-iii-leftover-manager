@@ -26,4 +26,8 @@ export class DiscordTransactionHandler extends AbstractTransactionHandler {
   override async deleteAllMessagesImpl(): Promise<void> {
     throw new Error("Bulk deletion of messages is not supported by Discord webhooks.")
   }
+
+  override async hasMessageIdImpl(_messageId: string): Promise<boolean> {
+    throw new Error("Checking message existence is not supported by Discord webhooks.")
+  }
 }

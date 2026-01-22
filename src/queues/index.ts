@@ -5,19 +5,19 @@ import pino from "pino"
 import { env } from "../config"
 import { transactionHandler } from "../modules/transactionHandler"
 import { JobIds } from "./constants"
-import * as LinkPaypalTransactions from "./linkPaypalTransactions"
+import * as LinkPaypalTransactions from "./jobs/linkPaypalTransactions"
+import * as UnbudgetedTransactions from "./jobs/unbudgetedTransactions"
+import * as UncategorizedTransactions from "./jobs/uncategorizedTransactions"
+import * as UpdateAutomaticBudgets from "./jobs/updateAutomaticBudgets"
 import { QueueArgs } from "./queueArgs"
-import * as UnbudgetedTransactions from "./unbudgetedTransactions"
-import * as UncategorizedTransactions from "./uncategorizedTransactions"
-import * as UpdateAutomaticBudgets from "./updateAutomaticBudgets"
 
 const logger = pino()
 type TransactionJobDefinition = {
   id: JobIds
   job: (transactionId: string) => Promise<void>
-  init?: (queue: Queue<QueueArgs>) => Promise<void>
+  init?: () => Promise<void>
 }
-type JobDefinition = { id: JobIds; job: () => Promise<void>; init?: (queue: Queue<QueueArgs>) => Promise<void> }
+type JobDefinition = { id: JobIds; job: () => Promise<void>; init?: () => Promise<void> }
 
 const startedAt = new Map<string, DateTime>()
 
@@ -34,7 +34,7 @@ const transactionJobDefinitions: TransactionJobDefinition[] = [
 let queue: Queue<QueueArgs> | null = null
 let worker: Worker<QueueArgs> | null = null
 
-async function getQueue(): Promise<Queue> {
+async function getQueue(): Promise<Queue<QueueArgs>> {
   if (queue) {
     return queue
   }
@@ -54,6 +54,7 @@ function logJobDuration(success: boolean, jobId: string, name: string) {
   } else {
     logger.info("Job(%s) %s %s", jobId, name, successStr)
   }
+  logger.info("**********************************************************************")
 }
 
 async function initializeWorker(): Promise<Worker<QueueArgs>> {
@@ -86,6 +87,7 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
   )
 
   worker.on("active", ({ id, name }) => {
+    logger.info("**********************************************************************")
     logger.info("Job(%s) %s started", id, name)
     startedAt.set(id, DateTime.now())
   })
@@ -103,13 +105,13 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
   for (const { job, id, init } of jobDefinitions) {
     jobs[id] = job
     if (init) {
-      await init(queue)
+      await init()
     }
   }
   for (const { job, id, init } of transactionJobDefinitions) {
     jobs[id] = job
     if (init) {
-      await init(queue)
+      await init()
     }
   }
 

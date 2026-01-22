@@ -13,11 +13,13 @@ export interface TransactionHandler {
   sendMessage: (type: MessageType, content: string, transactionId: string) => Promise<string>
   deleteMessage: (type: MessageType, id: string, transactionId: string) => Promise<void>
   deleteAllMessages: () => Promise<void>
+  hasMessageId: (messageId: string) => Promise<boolean>
   // Functions about messages, implemented by the child class
   notifyImpl: (title: string, message: string) => Promise<void>
   sendMessageImpl: (title: string, message: string) => Promise<string>
   deleteMessageImpl: (id: string, transactionId: string) => Promise<void>
   deleteAllMessagesImpl: () => Promise<void>
+  hasMessageIdImpl: (messageId: string) => Promise<boolean>
 }
 
 export abstract class AbstractTransactionHandler implements TransactionHandler {
@@ -99,6 +101,10 @@ export abstract class AbstractTransactionHandler implements TransactionHandler {
     }
   }
 
+  public async hasMessageId(messageId: string): Promise<boolean> {
+    return this.hasMessageIdImpl(messageId)
+  }
+
   public async deleteAllMessages(): Promise<void> {
     await this.deleteAllMessagesImpl()
   }
@@ -110,4 +116,6 @@ export abstract class AbstractTransactionHandler implements TransactionHandler {
   abstract deleteMessageImpl(id: string, transactionId: string): Promise<void>
 
   abstract deleteAllMessagesImpl(): Promise<void>
+
+  abstract hasMessageIdImpl(messageId: string): Promise<boolean>
 }
