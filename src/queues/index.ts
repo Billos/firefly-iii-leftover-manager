@@ -54,6 +54,7 @@ function logJobDuration(success: boolean, jobId: string, name: string) {
   } else {
     logger.info("Job(%s) %s %s", jobId, name, successStr)
   }
+  logger.info("**********************************************************************")
 }
 
 async function initializeWorker(): Promise<Worker<QueueArgs>> {
@@ -86,6 +87,7 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
   )
 
   worker.on("active", ({ id, name }) => {
+    logger.info("**********************************************************************")
     logger.info("Job(%s) %s started", id, name)
     startedAt.set(id, DateTime.now())
   })
