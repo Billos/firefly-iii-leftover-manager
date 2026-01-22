@@ -1,1 +1,1 @@
-export type QueueArgs = { job: string; transactionId: string }
+export type QueueArgs = { job: string; transactionId?: string }
