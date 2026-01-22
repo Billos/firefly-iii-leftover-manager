@@ -30,7 +30,7 @@ function verifyWebhookSignature(signatureHeader: string, rawBody: string, secret
 }
 
 export function verifyWebhookMiddleware(req: Request & { rawBody?: string }, res: Response, next: NextFunction) {
-  logger.info("Verifying webhook signature")
+  logger.debug("Verifying webhook signature")
 
   if (!req.headers["signature"]) {
     logger.error("No signature header found")
