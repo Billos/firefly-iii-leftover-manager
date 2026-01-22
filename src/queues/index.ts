@@ -67,8 +67,6 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
   // Clean up any stale jobs from previous runs
   queue.setGlobalConcurrency(1)
   await queue.pause()
-  await queue.clean(200, 0, "active")
-  await queue.obliterate({ force: true })
   await queue.resume()
 
   const jobs: Record<string, (transactionId?: string) => Promise<void>> = {}
@@ -119,9 +117,6 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
 }
 
 async function processExit() {
-  if (queue) {
-    await queue.clean(200, 0, "active")
-  }
   if (worker) {
     await worker.close()
   }

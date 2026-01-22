@@ -20,6 +20,12 @@ export async function linkPaypalTransactions() {
     ({ attributes: { transactions } }) =>
       !transactions[0].tags.includes("Linked") && transactions[0].type === TransactionTypeProperty.WITHDRAWAL,
   )
+  logger.info("Found %d Unlinked Paypal transactions", unlinkedPaypalTransactions.length)
+
+  if (unlinkedPaypalTransactions.length === 0) {
+    logger.info("No unlinked Paypal transactions found, exiting job")
+    return
+  }
 
   const { data: ffData } = await TransactionsService.listTransaction(null, 50, 1, startDate, endDate)
   // Filtering Firefly III transactions to only include those that do not have the tag "Linked" and have "PayPal" in the description
@@ -27,8 +33,12 @@ export async function linkPaypalTransactions() {
     ({ attributes: { transactions } }) => !transactions[0].tags.includes("Linked") && transactions[0].description.includes("PAYPAL"),
   )
 
-  logger.info("Found %d Unlinked Paypal transactions", unlinkedPaypalTransactions.length)
   logger.info("Found %d Unlinked Firefly III transactions", unlinkedFFTransactions.length)
+
+  if (unlinkedFFTransactions.length === 0) {
+    logger.info("No unlinked Firefly III transactions found, exiting job")
+    return
+  }
 
   for (const paypalTransaction of unlinkedPaypalTransactions) {
     const [transaction] = paypalTransaction.attributes.transactions
