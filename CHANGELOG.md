@@ -1,3 +1,20 @@
+# [2.3.0](https://github.com/Billos/Sparkleft/compare/2.2.2...2.3.0) (2026-01-22)
+
+
+### Bug Fixes
+
+* improve perfs of updateLeftoversBudget ([34e8f93](https://github.com/Billos/Sparkleft/commit/34e8f93c85d41cb9d0a143873c1fda75d2b9998f))
+* transactionId is an optionnal parameter of the jobs ([4bcea41](https://github.com/Billos/Sparkleft/commit/4bcea416852f57862a02f8827a16dce25b2ee74f))
+
+
+### Features
+
+* Allow to check is a message exists in a transactionHandler ([84511c6](https://github.com/Billos/Sparkleft/commit/84511c66f222d45008d5792036fdc3e75a81f28e))
+* Create a new message if the transactionHandler does not have the defined id ([a7b208c](https://github.com/Billos/Sparkleft/commit/a7b208c6be6550f92ec24214804b41110a8097d4))
+* improve logging of start and end of jobs ([82fdbae](https://github.com/Billos/Sparkleft/commit/82fdbaec04e10e660b5baa8b495fb930b413064b))
+* Review delays of jobs ([d2c1c72](https://github.com/Billos/Sparkleft/commit/d2c1c7201bf6e7cc638a647823efc751c0547457))
+* Use a proper debounce when trying to start twice the same job ([862676c](https://github.com/Billos/Sparkleft/commit/862676c083d9226c1e8349ab032095553aa423fc))
+
 ## [2.2.2](https://github.com/Billos/Sparkleft/compare/2.2.1...2.2.2) (2026-01-20)
 
 
