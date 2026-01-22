@@ -3,6 +3,12 @@ import axios, { AxiosInstance } from "axios"
 import { env } from "../../config"
 import { AbstractTransactionHandler } from "./transactionHandler"
 
+interface GetMessage {
+  messages: {
+    id: number
+  }[]
+}
+
 export class GotifyTransactionHandler extends AbstractTransactionHandler {
   private request: AxiosInstance = axios.create({ baseURL: env.gotifyUrl, headers: { "X-Gotify-Key": env.gotifyToken } })
 
@@ -29,5 +35,15 @@ export class GotifyTransactionHandler extends AbstractTransactionHandler {
 
   override async deleteAllMessagesImpl(): Promise<void> {
     await this.request.delete(`/application/${env.gotifyApplicationId}/message?token=${env.gotifyUserToken}`)
+  }
+
+  override async hasMessageIdImpl(messageId: string): Promise<boolean> {
+    try {
+      const messages = await this.request.get<GetMessage>(`/application/${env.gotifyApplicationId}/message?token=${env.gotifyUserToken}`)
+      const ids = messages.data.messages.map((msg) => msg.id.toString())
+      return ids.includes(messageId)
+    } catch {
+      return false
+    }
   }
 }
