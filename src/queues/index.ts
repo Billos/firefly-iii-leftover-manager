@@ -5,11 +5,11 @@ import pino from "pino"
 import { env } from "../config"
 import { transactionHandler } from "../modules/transactionHandler"
 import { JobIds } from "./constants"
-import * as LinkPaypalTransactions from "./linkPaypalTransactions"
+import * as LinkPaypalTransactions from "./jobs/linkPaypalTransactions"
+import * as UnbudgetedTransactions from "./jobs/unbudgetedTransactions"
+import * as UncategorizedTransactions from "./jobs/uncategorizedTransactions"
+import * as UpdateAutomaticBudgets from "./jobs/updateAutomaticBudgets"
 import { QueueArgs } from "./queueArgs"
-import * as UnbudgetedTransactions from "./unbudgetedTransactions"
-import * as UncategorizedTransactions from "./uncategorizedTransactions"
-import * as UpdateAutomaticBudgets from "./updateAutomaticBudgets"
 
 const logger = pino()
 type TransactionJobDefinition = {

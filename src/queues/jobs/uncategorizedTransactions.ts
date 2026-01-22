@@ -1,12 +1,12 @@
 import pino from "pino"
 
-import { env } from "../config"
-import { transactionHandler } from "../modules/transactionHandler"
-import { CategoriesService, CategoryRead, TransactionRead, TransactionsService, TransactionTypeProperty } from "../types"
-import { getDateNow } from "../utils/date"
-import { getTransactionShowLink } from "../utils/getTransactionShowLink"
-import { JobIds } from "./constants"
-import { addTransactionJobToQueue } from "./jobs"
+import { env } from "../../config"
+import { transactionHandler } from "../../modules/transactionHandler"
+import { CategoriesService, CategoryRead, TransactionRead, TransactionsService, TransactionTypeProperty } from "../../types"
+import { getDateNow } from "../../utils/date"
+import { getTransactionShowLink } from "../../utils/getTransactionShowLink"
+import { JobIds } from "../constants"
+import { addTransactionJobToQueue } from "../jobs"
 
 const id = JobIds.UNCATEGORIZED_TRANSACTIONS
 

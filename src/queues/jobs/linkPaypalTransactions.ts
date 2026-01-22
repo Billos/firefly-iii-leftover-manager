@@ -1,9 +1,9 @@
 import pino from "pino"
 
-import { env } from "../config"
-import { linkPaypalTransactions } from "../controllers/linkPaypalTransactions"
-import { JobIds } from "./constants"
-import { addJobToQueue } from "./jobs"
+import { env } from "../../config"
+import { linkPaypalTransactions } from "../../controllers/linkPaypalTransactions"
+import { JobIds } from "../constants"
+import { addJobToQueue } from "../jobs"
 
 const id = JobIds.LINK_PAYPAL_TRANSACTIONS
 
