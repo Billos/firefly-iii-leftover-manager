@@ -1,3 +1,15 @@
+# [2.4.0](https://github.com/Billos/Sparkleft/compare/2.3.1...2.4.0) (2026-01-22)
+
+
+### Bug Fixes
+
+* fast return when not needed in paypal linking ([35a489d](https://github.com/Billos/Sparkleft/commit/35a489dee4af5a8609091b9a92d6345d7bf71801))
+
+
+### Features
+
+* Do not clean the queue at process start and exit as we have deduplication ([11980b5](https://github.com/Billos/Sparkleft/commit/11980b50af18974ffe618ec627953e5d29f68886))
+
 ## [2.3.1](https://github.com/Billos/Sparkleft/compare/2.3.0...2.3.1) (2026-01-22)
 
 
