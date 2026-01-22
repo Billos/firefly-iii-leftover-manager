@@ -1,0 +1,9 @@
+services:
+  stats:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["start:stats"]
+    env_file:
+      - .env
+    restart: "no"

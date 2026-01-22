@@ -74,6 +74,22 @@ This will start three services:
 - `server`: HTTP API server (port 3000)
 - `worker`: Background job processor
 
+**Running the Stats Service:**
+
+To view job statistics from Redis:
+
+```bash
+docker-compose --profile stats up stats
+```
+
+This will run the stats service once and display statistics about completed jobs including:
+
+- Number of completed and failed jobs per job type
+- Average, minimum, and maximum execution times
+- Total execution time per job type
+
+The stats service will exit after displaying the statistics.
+
 **With Docker Compose (Development):**
 
 ```bash
