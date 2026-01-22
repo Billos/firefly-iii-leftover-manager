@@ -76,10 +76,12 @@ async function job(transactionId: string) {
   const msg = `\`${parseFloat(amount).toFixed(currency_decimal_places)} ${currency_symbol}\` ${description} \n${apis.join(" | ")} - ${link}`
   const messageId = await transactionHandler.getMessageId("CategoryMessageId", transactionId)
   if (messageId) {
-    logger.info("Message already exists for transaction %s", transactionId)
-    // Trying not to delete the message here, as it might be needed for future reference
-    // await transactionHandler.deleteMessage("CategoryMessageId", messageId, transactionId)
-    return
+    const messageExists = await transactionHandler.hasMessageId(messageId)
+    if (messageExists) {
+      logger.info("Category message already exists for transaction %s", transactionId)
+      return
+    }
+    logger.info("Category message defined but not found in transactionHandler for transaction %s", transactionId)
   }
   await transactionHandler.sendMessage("CategoryMessageId", msg, transactionId)
 }
