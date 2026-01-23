@@ -3,6 +3,7 @@ import pino from "pino"
 import { env } from "../../config"
 import { transactionHandler } from "../../modules/transactionHandler"
 import { BudgetRead, BudgetsService, TransactionsService, TransactionTypeProperty } from "../../types"
+import { getBudgetName } from "../../utils/budgetName"
 import { getTransactionShowLink } from "../../utils/getTransactionShowLink"
 import { JobIds } from "../constants"
 import { addTransactionJobToQueue } from "../jobs"
@@ -46,8 +47,9 @@ async function job(transactionId: string) {
     return
   }
 
+  const billsBudgetName = await getBudgetName(env.billsBudgetId)
   const { data: allBudgets } = await BudgetsService.listBudget(null, 50, 1)
-  const budgets = allBudgets.filter(({ attributes: { name } }) => !(env.billsBudget && name === env.billsBudget))
+  const budgets = allBudgets.filter(({ attributes: { name } }) => name !== billsBudgetName)
 
   const apis = generateMarkdownApiCalls(budgets, transactionId)
   const link = `[Link](<${getTransactionShowLink(transactionId)}>)`
