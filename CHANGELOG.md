@@ -1,3 +1,10 @@
+## [2.5.1](https://github.com/Billos/Sparkleft/compare/2.5.0...2.5.1) (2026-01-23)
+
+
+### Bug Fixes
+
+* Quick improvment for logs ([82a2a58](https://github.com/Billos/Sparkleft/commit/82a2a580745cc3f9051a704036657e8fd9d0d9cc))
+
 # [2.5.0](https://github.com/Billos/Sparkleft/compare/2.4.0...2.5.0) (2026-01-23)
 
 
