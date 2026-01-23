@@ -1,0 +1,73 @@
+import pino from "pino"
+
+import { env } from "../../config"
+import { transactionHandler } from "../../modules/transactionHandler"
+import { BudgetLimitStore, BudgetSingle, BudgetsService } from "../../types"
+import { getDateNow } from "../../utils/date"
+import { JobIds } from "../constants"
+import { addBudgetJobToQueue } from "../jobs"
+
+const id = JobIds.CHECK_BUDGET_LIMIT
+
+const logger = pino()
+async function job(budgetId: string) {
+  const { data: budget }: BudgetSingle = await BudgetsService.getBudget(budgetId)
+  if (budget.id === env.billsBudgetId) {
+    logger.debug("Budget is Bills budget, skipping review of budget limit")
+    return
+  }
+  if (budget.id === env.leftoversBudgetId) {
+    logger.debug("Budget is Leftovers budget, skipping review of budget limit")
+
+    return
+  }
+
+  logger.info("Reviewing budget limit for %s with id %s", budget.attributes.name, budget.id)
+
+  const start = getDateNow().startOf("month").toISODate()
+  const end = getDateNow().endOf("month").toISODate()
+  const {
+    data: [existingLimits],
+  } = await BudgetsService.listBudgetLimitByBudget(budget.id, null, start, end)
+
+  const currencySymbol = budget.attributes.currency_code === "EUR" ? "€" : "$"
+  const spent = -parseFloat(existingLimits?.attributes.spent[0]?.sum || "0")
+  const limit = parseFloat(existingLimits?.attributes.amount) || 0
+
+  if (spent <= limit) {
+    logger.info("Budget is within limit. Spent: %d, Limit: %d", spent, limit)
+    return
+  }
+
+  logger.info("Budget is overspent! Spent: %d, Limit: %d", spent, limit)
+  // Setting the limit to spent and sending a notification
+  const params: BudgetLimitStore = { amount: spent.toString(), budget_id: budget.id, start, end, fire_webhooks: true }
+
+  if (!existingLimits) {
+    logger.info("No existing limits found, creating a new one")
+    await BudgetsService.storeBudgetLimit(budget.id, params)
+  } else {
+    await BudgetsService.updateBudgetLimit(budget.id, existingLimits.id, params)
+  }
+
+  const title = "Warning"
+  const message = `Budget **${budget.attributes.name}** is overspent!
+  \nSpent: \`${spent} ${currencySymbol}\` 
+  \nLimit: \`${limit} ${currencySymbol}\` 
+  \nNew limit set to \`${spent} ${currencySymbol}\``
+  await transactionHandler.notify(title, message)
+  return
+}
+
+async function init() {
+  const startDate = getDateNow().startOf("month").toISODate()
+  const endDate = getDateNow().endOf("month").toISODate()
+  const { data: budgets } = await BudgetsService.listBudget(null, 50, 1, startDate, endDate)
+  for (const budget of budgets) {
+    if (budget.id !== env.billsBudgetId && budget.id !== env.leftoversBudgetId) {
+      await addBudgetJobToQueue(id, budget.id)
+    }
+  }
+}
+
+export { job, init, id }

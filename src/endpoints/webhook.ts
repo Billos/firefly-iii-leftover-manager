@@ -1,9 +1,12 @@
 import { Request, Response } from "express"
 import pino from "pino"
 
-import { jobDefinitions, transactionJobDefinitions } from "../queues"
-import { addJobToQueue, addTransactionJobToQueue } from "../queues/jobs"
-import { Transaction, WebhookTrigger } from "../types"
+import { budgetJobDefinitions, jobDefinitions, transactionJobDefinitions } from "../queues"
+import { addBudgetJobToQueue, addJobToQueue, addTransactionJobToQueue } from "../queues/jobs"
+import { BudgetLimitProperties, Transaction, WebhookTrigger } from "../types"
+
+// type BudgetTriggers = WebhookTrigger.STORE_BUDGET | WebhookTrigger.UPDATE_BUDGET | WebhookTrigger.DESTROY_BUDGET | WebhookTrigger.STORE_UPDATE_BUDGET_LIMIT
+// type TransactionTriggers = WebhookTrigger.STORE_TRANSACTION | WebhookTrigger.UPDATE_TRANSACTION | WebhookTrigger.DESTROY_TRANSACTION
 
 type WebhookTransactionBody = {
   uuid: string
@@ -12,7 +15,7 @@ type WebhookTransactionBody = {
   response: string
   url: string
   version: string
-  content: Transaction & { id: number }
+  content: (Transaction | BudgetLimitProperties) & { id: number }
 }
 
 const transactionTriggers = [
@@ -22,21 +25,39 @@ const transactionTriggers = [
   WebhookTrigger.DESTROY_TRANSACTION,
 ]
 
+const budgetTriggers = [
+  WebhookTrigger.STORE_BUDGET,
+  WebhookTrigger.UPDATE_BUDGET,
+  WebhookTrigger.DESTROY_BUDGET,
+  WebhookTrigger.STORE_UPDATE_BUDGET_LIMIT,
+]
+
 const logger = pino()
 
 export async function webhook(req: Request, res: Response) {
   logger.info("=================================== Transaction webhook ===================================")
   const body: WebhookTransactionBody = req.body as WebhookTransactionBody
+
   const isTransactionTrigger = transactionTriggers.includes(body.trigger)
+  const isBudgetTrigger = budgetTriggers.includes(body.trigger)
+
   if (isTransactionTrigger) {
     const transactionId = String(body.content.id)
 
-    for (const { id: job } of transactionJobDefinitions) {
-      await addTransactionJobToQueue(job, transactionId)
+    for (const { id } of transactionJobDefinitions) {
+      await addTransactionJobToQueue(id, transactionId)
     }
   }
+
+  if (isBudgetTrigger) {
+    const budgetId = (body.content as BudgetLimitProperties).budget_id
+    for (const { id } of budgetJobDefinitions) {
+      await addBudgetJobToQueue(id, budgetId)
+    }
+  }
+
   for (const { id: job } of jobDefinitions) {
-    await addJobToQueue(job, !isTransactionTrigger)
+    await addJobToQueue(job, false)
   }
   res.send("<script>window.close()</script>")
 }

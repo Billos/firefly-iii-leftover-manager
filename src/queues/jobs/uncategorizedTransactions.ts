@@ -3,6 +3,7 @@ import pino from "pino"
 import { env } from "../../config"
 import { transactionHandler } from "../../modules/transactionHandler"
 import { CategoriesService, CategoryRead, TransactionRead, TransactionsService, TransactionTypeProperty } from "../../types"
+import { getBudgetName } from "../../utils/budgetName"
 import { getDateNow } from "../../utils/date"
 import { getTransactionShowLink } from "../../utils/getTransactionShowLink"
 import { JobIds } from "../constants"
@@ -68,8 +69,9 @@ async function job(transactionId: string) {
     return
   }
 
+  const billsBudgetName = await getBudgetName(env.billsBudgetId)
   const { data: allCategories } = await CategoriesService.listCategory(null, 50, 1)
-  const categories = allCategories.filter(({ attributes: { name } }) => !(env.billsBudget && name === env.billsBudget))
+  const categories = allCategories.filter(({ attributes: { name } }) => name !== billsBudgetName)
 
   const apis = generateMarkdownApiCalls(categories, transactionId)
   const link = `[Link](<${getTransactionShowLink(transactionId)}>)`

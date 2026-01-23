@@ -1,6 +1,6 @@
 import pino from "pino"
 
-import { env } from "../config"
+import { env } from "../../config"
 import {
   AccountsService,
   BudgetLimitArray,
@@ -9,7 +9,12 @@ import {
   BudgetsService,
   InsightGroupEntry,
   InsightService,
-} from "../types"
+} from "../../types"
+import { getDateNow } from "../../utils/date"
+import { JobIds } from "../constants"
+import { addJobToQueue } from "../jobs"
+
+const id = JobIds.UPDATE_LEFTOVERS_BUDGET_LIMIT
 
 const logger = pino()
 
@@ -60,8 +65,10 @@ async function getSumWithoutLeftovers(
   return leftoverAmount
 }
 
-export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDate: string, endDate: string) {
-  logger.info("================ Updating Leftovers Budget Limit =================")
+async function job() {
+  const startDate = getDateNow().startOf("month").toISODate()
+  const endDate = getDateNow().endOf("month").toISODate()
+
   const [
     allBudgets,
     allLimits,
@@ -69,7 +76,8 @@ export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDa
     BudgetsService.listBudget(null, 50, 1, startDate, endDate),
     BudgetsService.listBudgetLimit(startDate, endDate),
   ])
-  const leftOverLimit = allLimits.data.find(({ attributes: { budget_id } }) => budget_id === leftoversBudget.id)
+  const leftoversBudget = allBudgets.data.find(({ id }) => id === env.leftoversBudgetId)
+  const leftOverLimit = allLimits.data.find(({ attributes: { budget_id } }) => budget_id === env.leftoversBudgetId)
 
   let leftoverAmount = await getSumWithoutLeftovers(allBudgets.data, leftoversBudget, allLimits, startDate, endDate)
   if (leftoverAmount < 0) {
@@ -111,3 +119,9 @@ export async function updateLeftoversBudget(leftoversBudget: BudgetRead, startDa
   await BudgetsService.updateBudgetLimit(leftoversBudget.id, leftOverLimit.id, params)
   logger.info("Leftovers budget limit updated")
 }
+
+async function init() {
+  await addJobToQueue(id)
+}
+
+export { job, init, id }

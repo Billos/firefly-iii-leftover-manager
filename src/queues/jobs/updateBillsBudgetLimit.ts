@@ -1,6 +1,12 @@
 import pino from "pino"
 
-import { BillsService, BudgetLimitStore, BudgetRead, BudgetsService } from "../types"
+import { env } from "../../config"
+import { BillsService, BudgetLimitStore, BudgetsService } from "../../types"
+import { getDateNow } from "../../utils/date"
+import { JobIds } from "../constants"
+import { addJobToQueue } from "../jobs"
+
+const id = JobIds.UPDATE_BILLS_BUDGET_LIMIT
 
 const logger = pino()
 
@@ -30,11 +36,19 @@ async function getTotalAmountOfBills(startDate: string, endDate: string): Promis
   return total
 }
 
-export async function updateBillsBudgetLimit(billsBudget: BudgetRead, startDate: string, endDate: string) {
-  logger.info("================ Updating Bills Budget Limit ================")
+async function job() {
+  if (!env.billsBudgetId) {
+    logger.warn("Bills budget name is not set in environment variables, skipping updateBillsBudgetLimit job")
+    return
+  }
+
+  // Get all budgets
+  const startDate = getDateNow().startOf("month").toISODate()
+  const endDate = getDateNow().endOf("month").toISODate()
+
   const total = await getTotalAmountOfBills(startDate, endDate)
 
-  const existingLimits = await BudgetsService.listBudgetLimitByBudget(billsBudget.id, null, startDate, endDate)
+  const existingLimits = await BudgetsService.listBudgetLimitByBudget(env.billsBudgetId, null, startDate, endDate)
 
   if (existingLimits.data.length > 1) {
     throw new Error("There are more than one limit for the bills budget")
@@ -42,7 +56,7 @@ export async function updateBillsBudgetLimit(billsBudget: BudgetRead, startDate:
 
   const params: BudgetLimitStore = {
     amount: total.toString(),
-    budget_id: billsBudget.id,
+    budget_id: env.billsBudgetId,
     start: startDate,
     end: endDate,
     fire_webhooks: false,
@@ -50,7 +64,7 @@ export async function updateBillsBudgetLimit(billsBudget: BudgetRead, startDate:
 
   if (existingLimits.data.length === 0) {
     logger.info("There are no limits for the bills budget, creating budget limit")
-    await BudgetsService.storeBudgetLimit(billsBudget.id, params)
+    await BudgetsService.storeBudgetLimit(env.billsBudgetId, params)
     return
   }
 
@@ -61,9 +75,15 @@ export async function updateBillsBudgetLimit(billsBudget: BudgetRead, startDate:
 
   const [limit] = existingLimits.data
   try {
-    await BudgetsService.updateBudgetLimit(billsBudget.id, limit.id, params)
+    await BudgetsService.updateBudgetLimit(env.billsBudgetId, limit.id, params)
   } catch (err) {
     logger.error({ err }, "Error updating bills budget limit:")
   }
   logger.info("Bills budget limit updated")
 }
+
+async function init() {
+  await addJobToQueue(id)
+}
+
+export { id, init, job }
