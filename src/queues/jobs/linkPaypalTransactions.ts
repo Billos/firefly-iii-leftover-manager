@@ -13,9 +13,6 @@ const id = JobIds.LINK_PAYPAL_TRANSACTIONS
 const logger = pino()
 
 async function job() {
-  logger.info("Running linkPaypalTransactions job")
-  logger.info("================ Link Paypal Transactions =================")
-
   // StartDate and EndDate are today - 20 days to today
   const startDate = getDateNow().minus({ days: 20 }).toISODate()
   const endDate = getDateNow().toISODate()

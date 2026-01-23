@@ -64,7 +64,7 @@ function logJobDuration(success: boolean, jobId: string, name: string) {
   if (startTime) {
     const duration = endTime.diff(startTime, "seconds").seconds
     logger.info(
-      "********************************************************************** Job(%s) %s %s in %d seconds",
+      "******************************************************************************** Job(%s) %s %s in %d seconds",
       jobId,
       name,
       successStr,
