@@ -1,3 +1,15 @@
+# [2.5.0](https://github.com/Billos/Sparkleft/compare/2.4.0...2.5.0) (2026-01-23)
+
+
+### Features
+
+* Check Budget Limit is a Job & not done by Update Automatic Budgets ([e9aef3b](https://github.com/Billos/Sparkleft/commit/e9aef3bfa190505b13b80afa3c7d5adfd5094816))
+* Move update Bills budget limit to its own job ([88767a7](https://github.com/Billos/Sparkleft/commit/88767a7d270a2b61f4b99941d65b329c6f5e9582))
+* Move Update Leftovers Budget limit to its own job ([9af508d](https://github.com/Billos/Sparkleft/commit/9af508d9f835076795b3773cfbe32b1f39022d9e))
+* Prepare Budget Jobs ([2317e90](https://github.com/Billos/Sparkleft/commit/2317e9032c9fbca26dd4e1fb7cfdeb8adbfcb77f))
+* use budget id rather than name to define Bills Budget ([ddfd20b](https://github.com/Billos/Sparkleft/commit/ddfd20b69a536f6a3b9a0161f38a12328a1fb3d5))
+* use leftovers id rather than name to define Leftovers Budget ([9d72cd2](https://github.com/Billos/Sparkleft/commit/9d72cd29ba27fa9c3e9487c03481994fee33cd22))
+
 # [2.4.0](https://github.com/Billos/Sparkleft/compare/2.3.1...2.4.0) (2026-01-22)
 
 
