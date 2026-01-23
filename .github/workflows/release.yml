@@ -6,7 +6,7 @@ name: Release
 # - Version updates in docker-compose files
 # - Changelog generation
 # - GitHub release creation
-# - Docker image build and push to Docker Hub
+# - Docker image build and push to GitHub Container Registry
 
 on:
   push:
@@ -54,6 +54,6 @@ jobs:
         env:
           # Use GH_PAT for pushing commits, fallback to GITHUB_TOKEN
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-          # Required for Docker Hub authentication
-          DOCKER_REGISTRY_USER: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_REGISTRY_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          # Required for GitHub Container Registry authentication
+          DOCKER_REGISTRY_USER: ${{ github.actor }}
+          DOCKER_REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
