@@ -63,12 +63,17 @@ function logJobDuration(success: boolean, jobId: string, name: string) {
   const endTime = DateTime.now()
   if (startTime) {
     const duration = endTime.diff(startTime, "seconds").seconds
-    logger.info("Job(%s) %s %s in %d seconds", jobId, name, successStr, duration)
+    logger.info(
+      "********************************************************************** Job(%s) %s %s in %d seconds",
+      jobId,
+      name,
+      successStr,
+      duration,
+    )
     startedAt.delete(jobId)
   } else {
-    logger.info("Job(%s) %s %s", jobId, name, successStr)
+    logger.info("******************************************************************************** Job(%s) %s %s", jobId, name, successStr)
   }
-  logger.info("**********************************************************************")
 }
 
 async function initializeWorker(): Promise<Worker<QueueArgs>> {
@@ -105,8 +110,7 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
   )
 
   worker.on("active", ({ id, name }) => {
-    logger.info("**********************************************************************")
-    logger.info("Job(%s) %s started", id, name)
+    logger.info("******************************************************************************** Job(%s) %s started", id, name)
     startedAt.set(id, DateTime.now())
   })
   worker.on("completed", ({ id, name }) => {
