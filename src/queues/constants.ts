@@ -1,4 +1,5 @@
 export enum JobIds {
+  CHECK_BUDGET_LIMIT = "check-budget-limit",
   UPDATE_AUTOMATIC_BUDGETS = "update-automatic-budgets",
   UNBUDGETED_TRANSACTIONS = "unbudgeted-transactions",
   UNCATEGORIZED_TRANSACTIONS = "uncategorized-transactions",
@@ -6,6 +7,7 @@ export enum JobIds {
 }
 
 export const JOB_DELAYS: Record<JobIds, number> = {
+  [JobIds.CHECK_BUDGET_LIMIT]: 5,
   [JobIds.UPDATE_AUTOMATIC_BUDGETS]: 25,
   [JobIds.UNBUDGETED_TRANSACTIONS]: 8,
   [JobIds.UNCATEGORIZED_TRANSACTIONS]: 15,

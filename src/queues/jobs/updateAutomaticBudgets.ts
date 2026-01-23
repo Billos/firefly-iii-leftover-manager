@@ -1,7 +1,6 @@
 import pino from "pino"
 
 import { env } from "../../config"
-import { reviewBudgetLimit } from "../../controllers/reviewBudgetLimit"
 import { updateBillsBudgetLimit } from "../../controllers/updateBillsBudgetLimit"
 import { updateLeftoversBudget } from "../../controllers/updateLeftoversBudget"
 import { BudgetsService } from "../../types"
@@ -23,15 +22,6 @@ async function job() {
   const billsBudget = budgets.find(({ attributes: { name } }) => name === env.billsBudget)
   // Get Leftovers Budget
   const leftoversBudget = budgets.find(({ attributes: { name } }) => name === env.leftoversBudget)
-
-  // Get all other budgets
-  const otherBudgets = budgets.filter(({ attributes: { name } }) => name !== env.billsBudget && name !== env.leftoversBudget)
-
-  // Check if the budgets aren't underbudgeted
-  // Not checking billsBudget, nor leftoversBudget
-  for (const budget of otherBudgets) {
-    await reviewBudgetLimit(budget, startDate, endDate)
-  }
 
   // If bills budget is found
   if (billsBudget) {

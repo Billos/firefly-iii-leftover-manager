@@ -5,6 +5,7 @@ import pino from "pino"
 import { env } from "../config"
 import { transactionHandler } from "../modules/transactionHandler"
 import { JobIds } from "./constants"
+import * as CheckBudgetLimit from "./jobs/checkBudgetLimit"
 import * as LinkPaypalTransactions from "./jobs/linkPaypalTransactions"
 import * as UnbudgetedTransactions from "./jobs/unbudgetedTransactions"
 import * as UncategorizedTransactions from "./jobs/uncategorizedTransactions"
@@ -38,7 +39,9 @@ const transactionJobDefinitions: TransactionJobDefinition[] = [
   UncategorizedTransactions,
 ]
 
-const budgetJobDefinitions: BudgetJobDefinition[] = []
+const budgetJobDefinitions: BudgetJobDefinition[] = [
+  CheckBudgetLimit,
+]
 
 let queue: Queue<QueueArgs> | null = null
 let worker: Worker<QueueArgs> | null = null
