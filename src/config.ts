@@ -7,6 +7,7 @@ const env = {
   apiToken: process.env.API_TOKEN,
   assetAccountId: process.env.ASSET_ACCOUNT_ID,
   billsBudget: process.env.BILLS_BUDGET,
+  billsBudgetId: process.env.BILLS_BUDGET_ID,
   leftoversBudget: process.env.LEFTOVERS_BUDGET,
   discordWebhook: process.env.DISCORD_WEBHOOK,
   gotifyUrl: process.env.GOTIFY_URL,
