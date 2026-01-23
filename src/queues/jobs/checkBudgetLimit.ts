@@ -16,7 +16,7 @@ async function job(budgetId: string) {
     logger.debug("Budget is Bills budget, skipping review of budget limit")
     return
   }
-  if (budget.attributes.name === env.leftoversBudget) {
+  if (budget.id === env.leftoversBudgetId) {
     logger.debug("Budget is Leftovers budget, skipping review of budget limit")
 
     return
@@ -64,7 +64,7 @@ async function init() {
   const endDate = getDateNow().endOf("month").toISODate()
   const { data: budgets } = await BudgetsService.listBudget(null, 50, 1, startDate, endDate)
   for (const budget of budgets) {
-    if (budget.id !== env.billsBudgetId && budget.attributes.name !== env.leftoversBudget) {
+    if (budget.id !== env.billsBudgetId && budget.id !== env.leftoversBudgetId) {
       await addBudgetJobToQueue(id, budget.id)
     }
   }
