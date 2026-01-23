@@ -9,15 +9,22 @@ import * as LinkPaypalTransactions from "./jobs/linkPaypalTransactions"
 import * as UnbudgetedTransactions from "./jobs/unbudgetedTransactions"
 import * as UncategorizedTransactions from "./jobs/uncategorizedTransactions"
 import * as UpdateAutomaticBudgets from "./jobs/updateAutomaticBudgets"
-import { QueueArgs } from "./queueArgs"
+import { isBudgetJobArgs, isTransactionJobArgs, QueueArgs } from "./queueArgs"
 
 const logger = pino()
-type TransactionJobDefinition = {
+type AbstractJobDefinition = {
   id: JobIds
-  job: (transactionId: string) => Promise<void>
   init?: () => Promise<void>
 }
-type JobDefinition = { id: JobIds; job: () => Promise<void>; init?: () => Promise<void> }
+type TransactionJobDefinition = AbstractJobDefinition & {
+  job: (transactionId: string) => Promise<void>
+}
+type JobDefinition = AbstractJobDefinition & {
+  job: () => Promise<void>
+}
+type BudgetJobDefinition = AbstractJobDefinition & {
+  job: (budgetId: string) => Promise<void>
+}
 
 const startedAt = new Map<string, DateTime>()
 
@@ -30,6 +37,8 @@ const transactionJobDefinitions: TransactionJobDefinition[] = [
   UnbudgetedTransactions,
   UncategorizedTransactions,
 ]
+
+const budgetJobDefinitions: BudgetJobDefinition[] = []
 
 let queue: Queue<QueueArgs> | null = null
 let worker: Worker<QueueArgs> | null = null
@@ -69,12 +78,18 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
   await queue.pause()
   await queue.resume()
 
-  const jobs: Record<string, (transactionId?: string) => Promise<void>> = {}
+  const jobs: Record<string, (parameter?: string) => Promise<void>> = {}
 
   worker = new Worker<QueueArgs>(
     "manager",
-    async ({ data: { job, transactionId } }) => {
-      await jobs[job](transactionId)
+    async ({ data }) => {
+      if (isTransactionJobArgs(data)) {
+        await jobs[data.job](data.transactionId)
+      } else if (isBudgetJobArgs(data)) {
+        await jobs[data.job](data.budgetId)
+      } else {
+        await jobs[data.job]()
+      }
     },
     {
       connection: env.redisConnection,
@@ -100,13 +115,7 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
     logJobDuration(false, job.id, job.name)
   })
 
-  for (const { job, id, init } of jobDefinitions) {
-    jobs[id] = job
-    if (init) {
-      await init()
-    }
-  }
-  for (const { job, id, init } of transactionJobDefinitions) {
+  for (const { job, id, init } of [...jobDefinitions, ...budgetJobDefinitions, ...transactionJobDefinitions]) {
     jobs[id] = job
     if (init) {
       await init()
@@ -125,4 +134,4 @@ async function processExit() {
 process.on("SIGTERM", processExit)
 process.on("SIGINT", processExit)
 
-export { getQueue, initializeWorker, jobDefinitions, transactionJobDefinitions }
+export { getQueue, initializeWorker, jobDefinitions, transactionJobDefinitions, budgetJobDefinitions }
