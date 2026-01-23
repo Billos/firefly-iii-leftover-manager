@@ -9,8 +9,8 @@ import * as CheckBudgetLimit from "./jobs/checkBudgetLimit"
 import * as LinkPaypalTransactions from "./jobs/linkPaypalTransactions"
 import * as UnbudgetedTransactions from "./jobs/unbudgetedTransactions"
 import * as UncategorizedTransactions from "./jobs/uncategorizedTransactions"
-import * as UpdateAutomaticBudgets from "./jobs/updateAutomaticBudgets"
 import * as UpdateBillsBudgetLimit from "./jobs/updateBillsBudgetLimit"
+import * as UpdateLeftoversBudgetLimit from "./jobs/updateLeftoverBudgetLimit"
 import { isBudgetJobArgs, isTransactionJobArgs, QueueArgs } from "./queueArgs"
 
 const logger = pino()
@@ -31,7 +31,7 @@ type BudgetJobDefinition = AbstractJobDefinition & {
 const startedAt = new Map<string, DateTime>()
 
 const jobDefinitions: JobDefinition[] = [
-  UpdateAutomaticBudgets,
+  UpdateLeftoversBudgetLimit,
   UpdateBillsBudgetLimit,
   LinkPaypalTransactions,
 ]
