@@ -30,6 +30,10 @@ type BudgetJobDefinition = AbstractJobDefinition & {
 
 const startedAt = new Map<string, DateTime>()
 
+const REDIS_MAX_RETRIES = 10
+const REDIS_RETRY_DELAY_MS = 1000
+const REDIS_MAX_RETRY_DELAY_MS = 10000
+
 const jobDefinitions: JobDefinition[] = [
   UpdateLeftoversBudgetLimit,
   UpdateBillsBudgetLimit,
@@ -50,11 +54,11 @@ let worker: Worker<QueueArgs> | null = null
 
 function getRedisRetryStrategy() {
   return (times: number) => {
-    if (times > 10) {
-      logger.error("Redis connection failed after 10 retries, giving up")
+    if (times > REDIS_MAX_RETRIES) {
+      logger.error("Redis connection failed after %d retries, giving up", REDIS_MAX_RETRIES)
       return null
     }
-    const delay = Math.min(times * 1000, 10000)
+    const delay = Math.min(times * REDIS_RETRY_DELAY_MS, REDIS_MAX_RETRY_DELAY_MS)
     logger.warn("Redis connection attempt %d failed, retrying in %dms", times, delay)
     return delay
   }

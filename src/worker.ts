@@ -35,6 +35,7 @@ process.on("uncaughtException", (err) => {
 
 process.on("unhandledRejection", (reason, promise) => {
   logger.error({ reason, promise }, "Unhandled promise rejection")
+  process.exit(1)
 })
 
 startWorker()
