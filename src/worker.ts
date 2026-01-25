@@ -35,7 +35,7 @@ async function startWorker() {
       if (isRedisConnectionError(err)) {
         logger.error({ err: err }, "Failed to connect to Redis. Please check your Redis configuration and ensure Redis is running at the configured host and port.")
       } else {
-        logger.error({ err: err }, "Failed to start worker: %s", err.message)
+        logger.error({ err: err }, "Failed to start worker")
       }
     } else {
       logger.error({ err: err }, "Failed to start worker with unknown error")
@@ -47,9 +47,9 @@ async function startWorker() {
 // Handle uncaught errors
 process.on("uncaughtException", (err) => {
   if (isRedisConnectionError(err)) {
-    logger.error({ err }, "Uncaught Redis connection error: %s", err.message)
+    logger.error({ err }, "Uncaught Redis connection error")
   } else {
-    logger.error({ err }, "Uncaught exception: %s", err.message)
+    logger.error({ err }, "Uncaught exception")
   }
   process.exit(1)
 })
