@@ -52,6 +52,15 @@ const budgetJobDefinitions: BudgetJobDefinition[] = [
 let queue: Queue<QueueArgs> | null = null
 let worker: Worker<QueueArgs> | null = null
 
+/**
+ * Creates a retry strategy for Redis connections with exponential backoff.
+ * The strategy will retry up to REDIS_MAX_RETRIES times with increasing delays.
+ * 
+ * @returns A retry strategy function that:
+ *  - Returns null to stop retrying (after max retries exceeded)
+ *  - Returns a number (in milliseconds) to set the delay before next retry
+ *  - Uses exponential backoff: delay = min(attempts * REDIS_RETRY_DELAY_MS, REDIS_MAX_RETRY_DELAY_MS)
+ */
 function getRedisRetryStrategy() {
   return (times: number) => {
     if (times > REDIS_MAX_RETRIES) {
