@@ -26,22 +26,37 @@ function queueConfig(job: JobIds, transactionId?: string): JobsOptions {
 }
 
 export async function addTransactionJobToQueue(job: JobIds, transactionId: string): Promise<Job> {
-  const queue = await getQueue()
-  const delay = getJobDelay(job, false)
-  logger.info("Adding job to queue: %s for transactionId: %s with delay: %d seconds", job, transactionId, delay / 1000)
-  return queue.add(job, { job, transactionId }, queueConfig(job, transactionId))
+  try {
+    const queue = await getQueue()
+    const delay = getJobDelay(job, false)
+    logger.info("Adding job to queue: %s for transactionId: %s with delay: %d seconds", job, transactionId, delay / 1000)
+    return queue.add(job, { job, transactionId }, queueConfig(job, transactionId))
+  } catch (err) {
+    logger.error({ err }, "Failed to add transaction job to queue: %s for transactionId: %s", job, transactionId)
+    throw err
+  }
 }
 
 export async function addBudgetJobToQueue(job: JobIds, budgetId: string): Promise<Job> {
-  const queue = await getQueue()
-  const delay = getJobDelay(job, false)
-  logger.info("Adding job to queue: %s for budgetId: %s with delay: %d seconds", job, budgetId, delay / 1000)
-  return queue.add(job, { job, budgetId }, queueConfig(job, budgetId))
+  try {
+    const queue = await getQueue()
+    const delay = getJobDelay(job, false)
+    logger.info("Adding job to queue: %s for budgetId: %s with delay: %d seconds", job, budgetId, delay / 1000)
+    return queue.add(job, { job, budgetId }, queueConfig(job, budgetId))
+  } catch (err) {
+    logger.error({ err }, "Failed to add budget job to queue: %s for budgetId: %s", job, budgetId)
+    throw err
+  }
 }
 
 export async function addJobToQueue(job: JobIds, asap?: boolean): Promise<Job> {
-  const queue = await getQueue()
-  const delay = getJobDelay(job, false, asap)
-  logger.info("Adding job to queue: %s with delay: %d seconds", job, delay / 1000)
-  return queue.add(job, { job }, queueConfig(job))
+  try {
+    const queue = await getQueue()
+    const delay = getJobDelay(job, false, asap)
+    logger.info("Adding job to queue: %s with delay: %d seconds", job, delay / 1000)
+    return queue.add(job, { job }, queueConfig(job))
+  } catch (err) {
+    logger.error({ err }, "Failed to add job to queue: %s", job)
+    throw err
+  }
 }

@@ -53,7 +53,26 @@ async function getQueue(): Promise<Queue<QueueArgs>> {
     return queue
   }
 
-  queue = new Queue("manager", { connection: env.redisConnection })
+  queue = new Queue("manager", { 
+    connection: {
+      ...env.redisConnection,
+      maxRetriesPerRequest: 3,
+      retryStrategy: (times: number) => {
+        if (times > 10) {
+          logger.error("Redis connection failed after 10 retries, giving up")
+          return null
+        }
+        const delay = Math.min(times * 1000, 10000)
+        logger.warn("Redis connection attempt %d failed, retrying in %dms", times, delay)
+        return delay
+      },
+    }
+  })
+
+  queue.on("error", (error) => {
+    logger.error({ err: error }, "Redis Queue error: %s", error.message)
+  })
+
   return queue
 }
 
@@ -102,7 +121,19 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
       }
     },
     {
-      connection: env.redisConnection,
+      connection: {
+        ...env.redisConnection,
+        maxRetriesPerRequest: 3,
+        retryStrategy: (times: number) => {
+          if (times > 10) {
+            logger.error("Redis connection failed after 10 retries, giving up")
+            return null
+          }
+          const delay = Math.min(times * 1000, 10000)
+          logger.warn("Redis worker connection attempt %d failed, retrying in %dms", times, delay)
+          return delay
+        },
+      },
       concurrency: 1,
       removeOnComplete: { count: 5000 },
       removeOnFail: { count: 5000 },
@@ -122,6 +153,18 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
     transactionHandler.sendMessageImpl("Job Failed", `Job ${job.id} failed with error ${err.message} and data ${JSON.stringify(job.data)}`)
 
     logJobDuration(false, job.id, job.name)
+  })
+
+  worker.on("error", (error) => {
+    logger.error({ err: error }, "Redis Worker error: %s", error.message)
+  })
+
+  worker.on("ioredis:close", () => {
+    logger.warn("Redis connection closed")
+  })
+
+  worker.on("ioredis:reconnecting", () => {
+    logger.info("Reconnecting to Redis...")
   })
 
   for (const { job, id, init } of [...jobDefinitions, ...budgetJobDefinitions, ...transactionJobDefinitions]) {
