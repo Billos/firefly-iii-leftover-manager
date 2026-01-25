@@ -48,6 +48,18 @@ const budgetJobDefinitions: BudgetJobDefinition[] = [
 let queue: Queue<QueueArgs> | null = null
 let worker: Worker<QueueArgs> | null = null
 
+function getRedisRetryStrategy() {
+  return (times: number) => {
+    if (times > 10) {
+      logger.error("Redis connection failed after 10 retries, giving up")
+      return null
+    }
+    const delay = Math.min(times * 1000, 10000)
+    logger.warn("Redis connection attempt %d failed, retrying in %dms", times, delay)
+    return delay
+  }
+}
+
 async function getQueue(): Promise<Queue<QueueArgs>> {
   if (queue) {
     return queue
@@ -57,15 +69,7 @@ async function getQueue(): Promise<Queue<QueueArgs>> {
     connection: {
       ...env.redisConnection,
       maxRetriesPerRequest: 3,
-      retryStrategy: (times: number) => {
-        if (times > 10) {
-          logger.error("Redis connection failed after 10 retries, giving up")
-          return null
-        }
-        const delay = Math.min(times * 1000, 10000)
-        logger.warn("Redis connection attempt %d failed, retrying in %dms", times, delay)
-        return delay
-      },
+      retryStrategy: getRedisRetryStrategy(),
     }
   })
 
@@ -124,15 +128,7 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
       connection: {
         ...env.redisConnection,
         maxRetriesPerRequest: 3,
-        retryStrategy: (times: number) => {
-          if (times > 10) {
-            logger.error("Redis connection failed after 10 retries, giving up")
-            return null
-          }
-          const delay = Math.min(times * 1000, 10000)
-          logger.warn("Redis worker connection attempt %d failed, retrying in %dms", times, delay)
-          return delay
-        },
+        retryStrategy: getRedisRetryStrategy(),
       },
       concurrency: 1,
       removeOnComplete: { count: 5000 },

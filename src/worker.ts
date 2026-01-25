@@ -30,6 +30,7 @@ process.on("uncaughtException", (err) => {
   } else {
     logger.error({ err }, "Uncaught exception: %s", err.message)
   }
+  process.exit(1)
 })
 
 process.on("unhandledRejection", (reason, promise) => {
