@@ -4,19 +4,25 @@ import { initializeWorker } from "./queues"
 
 const logger = pino()
 
+const REDIS_CONNECTION_ERROR_CODES = ["EHOSTUNREACH", "ECONNREFUSED", "ETIMEDOUT", "ENOTFOUND"]
+
 /**
  * Checks if an error is related to Redis connection failures
  * @param err - The error to check
  * @returns true if the error is a Redis connection error
  */
 function isRedisConnectionError(err: Error): boolean {
-  return (
-    err.message.includes("EHOSTUNREACH") ||
-    err.message.includes("ECONNREFUSED") ||
-    err.message.includes("ETIMEDOUT") ||
-    err.message.includes("ENOTFOUND") ||
-    ("code" in err && (err.code === "EHOSTUNREACH" || err.code === "ECONNREFUSED" || err.code === "ETIMEDOUT" || err.code === "ENOTFOUND"))
-  )
+  // Check if error message contains known Redis connection error codes
+  if (REDIS_CONNECTION_ERROR_CODES.some((code) => err.message.includes(code))) {
+    return true
+  }
+  
+  // Check if error object has a code property with known connection error codes
+  if ("code" in err && typeof err.code === "string" && REDIS_CONNECTION_ERROR_CODES.includes(err.code)) {
+    return true
+  }
+  
+  return false
 }
 
 async function startWorker() {
