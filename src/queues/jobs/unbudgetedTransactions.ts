@@ -6,7 +6,8 @@ import { BudgetRead, BudgetsService, TransactionsService, TransactionTypePropert
 import { getBudgetName } from "../../utils/budgetName"
 import { getTransactionShowLink } from "../../utils/getTransactionShowLink"
 import { JobIds } from "../constants"
-import { addTransactionJobToQueue } from "../jobs"
+import { addBudgetJobToQueue, addTransactionJobToQueue } from "../jobs"
+import * as CheckBudgetLimit from "./checkBudgetLimit"
 
 const id = JobIds.UNBUDGETED_TRANSACTIONS
 
@@ -43,6 +44,8 @@ async function job(transactionId: string) {
   }
 
   if (transaction.budget_id) {
+    // We can assume that if a budget_id is set, the budget limit might need to be checked
+    await addBudgetJobToQueue(CheckBudgetLimit.id, transaction.budget_id)
     logger.info("Transaction %s already budgeted", transactionId)
     return
   }
