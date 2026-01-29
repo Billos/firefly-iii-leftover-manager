@@ -1,10 +1,12 @@
-import { Queue, Worker } from "bullmq"
+import { DelayedError, Queue, Worker } from "bullmq"
 import { DateTime } from "luxon"
 import pino from "pino"
 
 import { env } from "../config"
 import { transactionHandler } from "../modules/transactionHandler"
+import { AboutService } from "../types"
 import { JobIds } from "./constants"
+import { addJobToQueue } from "./jobs"
 import * as CheckBudgetLimit from "./jobs/checkBudgetLimit"
 import * as Init from "./jobs/init"
 import * as LinkPaypalTransactions from "./jobs/linkPaypalTransactions"
@@ -94,7 +96,20 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
 
   worker = new Worker<QueueArgs>(
     "manager",
-    async ({ data }) => {
+    async (job, token) => {
+      const { data } = job
+      try {
+        await AboutService.getAbout()
+      } catch (error) {
+        logger.error({ err: error }, "Error processing job %s with data %o", job.id, data)
+        const delayed = DateTime.now().plus({ minutes: 1 })
+        const timestamp = delayed.toMillis()
+
+        logger.info("Delaying job %s until %s", job.id, delayed.toISO())
+        job.moveToDelayed(timestamp, token)
+        throw new DelayedError("Job delayed due to error")
+      }
+
       if (isTransactionJobArgs(data)) {
         await jobs[data.job](data.transactionId)
       } else if (isBudgetJobArgs(data)) {
