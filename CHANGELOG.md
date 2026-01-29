@@ -1,3 +1,10 @@
+## [2.5.2](https://github.com/Billos/Sparkleft/compare/2.5.1...2.5.2) (2026-01-29)
+
+
+### Bug Fixes
+
+* Adds budget limit check job ([ceffb21](https://github.com/Billos/Sparkleft/commit/ceffb2152b6ee91b6c4a6e0cb88168e83a0fbb52))
+
 ## [2.5.1](https://github.com/Billos/Sparkleft/compare/2.5.0...2.5.1) (2026-01-23)
 
 
