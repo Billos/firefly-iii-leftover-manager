@@ -104,6 +104,10 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
         logger.error({ err: error }, "Error processing job %s with data %o", job.id, data)
         const delayed = DateTime.now().plus({ minutes: 1 })
         const timestamp = delayed.toMillis()
+        await transactionHandler.sendMessageImpl(
+          "Firefly is Unavailable - Job Delayed",
+          `Delaying job **${job.data.job}** (${job.id}) until ${delayed.toISOTime()}.`,
+        )
 
         logger.info("Delaying job %s until %s", job.id, delayed.toISO())
         job.moveToDelayed(timestamp, token)
@@ -136,7 +140,10 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
 
   worker.on("failed", (job, err) => {
     logger.error({ err }, "Job %s failed with error %s", job.id, err.message)
-    transactionHandler.sendMessageImpl("Job Failed", `Job ${job.id} failed with error ${err.message} and data ${JSON.stringify(job.data)}`)
+    transactionHandler.sendMessageImpl(
+      "Job Failed",
+      `Job **${job.data.job}** (${job.id}) failed with error ${err.message} and data ${JSON.stringify(job.data)}`,
+    )
 
     logJobDuration(false, job.id, job.name)
   })
