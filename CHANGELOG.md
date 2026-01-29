@@ -1,3 +1,16 @@
+# [2.6.0](https://github.com/Billos/Sparkleft/compare/2.5.2...2.6.0) (2026-01-29)
+
+
+### Bug Fixes
+
+* Improves job failure messages ([a25626c](https://github.com/Billos/Sparkleft/commit/a25626cd5903e7f9a892effb76d9694338fc1aa9))
+
+
+### Features
+
+* Delay failed jobs ([f208c1f](https://github.com/Billos/Sparkleft/commit/f208c1f0e52113c78a83d5f12035463d3af1f490))
+* Initializes job definitions on worker start ([ee9a4b0](https://github.com/Billos/Sparkleft/commit/ee9a4b024eac5426b93509055ef46205d707af7c))
+
 ## [2.5.2](https://github.com/Billos/Sparkleft/compare/2.5.1...2.5.2) (2026-01-29)
 
 
