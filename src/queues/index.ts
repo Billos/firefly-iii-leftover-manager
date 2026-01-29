@@ -6,6 +6,7 @@ import { env } from "../config"
 import { transactionHandler } from "../modules/transactionHandler"
 import { JobIds } from "./constants"
 import * as CheckBudgetLimit from "./jobs/checkBudgetLimit"
+import * as Init from "./jobs/init"
 import * as LinkPaypalTransactions from "./jobs/linkPaypalTransactions"
 import * as UnbudgetedTransactions from "./jobs/unbudgetedTransactions"
 import * as UncategorizedTransactions from "./jobs/uncategorizedTransactions"
@@ -43,6 +44,7 @@ const transactionJobDefinitions: TransactionJobDefinition[] = [
 
 const budgetJobDefinitions: BudgetJobDefinition[] = [
   CheckBudgetLimit,
+  Init,
 ]
 
 let queue: Queue<QueueArgs> | null = null
@@ -124,11 +126,13 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
     logJobDuration(false, job.id, job.name)
   })
 
-  for (const { job, id, init } of [...jobDefinitions, ...budgetJobDefinitions, ...transactionJobDefinitions]) {
+  worker.on("ready", async () => {
+    logger.info("Worker is ready and connected to Redis")
+    await addJobToQueue(Init.id, true)
+  })
+
+  for (const { job, id } of [...jobDefinitions, ...budgetJobDefinitions, ...transactionJobDefinitions]) {
     jobs[id] = job
-    if (init) {
-      await init()
-    }
   }
 
   return worker

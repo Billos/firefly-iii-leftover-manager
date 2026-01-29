@@ -5,6 +5,7 @@ export enum JobIds {
   UNBUDGETED_TRANSACTIONS = "unbudgeted-transactions",
   UNCATEGORIZED_TRANSACTIONS = "uncategorized-transactions",
   LINK_PAYPAL_TRANSACTIONS = "link-paypal-transactions",
+  INIT = "init",
 }
 
 export const JOB_DELAYS: Record<JobIds, number> = {
@@ -14,6 +15,7 @@ export const JOB_DELAYS: Record<JobIds, number> = {
   [JobIds.LINK_PAYPAL_TRANSACTIONS]: 35,
   [JobIds.UNBUDGETED_TRANSACTIONS]: 5,
   [JobIds.UNCATEGORIZED_TRANSACTIONS]: 10,
+  [JobIds.INIT]: 0,
 }
 
 export const ASAP_JOB_DELAY = 2000 // 2 seconds
