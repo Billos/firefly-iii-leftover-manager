@@ -1,4 +1,4 @@
-import { DelayedError, Queue, Worker } from "bullmq"
+import { DelayedError, Job, Queue, Worker } from "bullmq"
 import { DateTime } from "luxon"
 import pino from "pino"
 
@@ -80,6 +80,19 @@ function logJobDuration(success: boolean, jobId: string, name: string) {
   }
 }
 
+async function delayJob(job: Job<QueueArgs>, err: Error): Promise<void> {
+  const delayed = DateTime.now().plus({ minutes: 1 })
+  const timestamp = delayed.toMillis()
+  const title = err.message
+  const message = `Delaying job **${job.data.job}** (${job.id}) until ${delayed.toISOTime()} with data ${JSON.stringify(job.data)}.`
+  const delayedMessageId = await transactionHandler.sendMessageImpl(title, message)
+
+  logger.info("Delaying job %s (%s) until %s", job.id, job.name, delayed.toISO())
+  await job.updateData({ ...job.data, delayedMessageId })
+  await job.moveToDelayed(timestamp, job.token)
+  throw new DelayedError("Job delayed due to error")
+}
+
 async function initializeWorker(): Promise<Worker<QueueArgs>> {
   if (worker) {
     return worker
@@ -96,30 +109,19 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
 
   worker = new Worker<QueueArgs>(
     "manager",
-    async (job, token) => {
-      const { data } = job
+    async (job) => {
       try {
+        const { data } = job
         await AboutService.getAbout()
-      } catch (error) {
-        logger.error({ err: error }, "Error processing job %s with data %o", job.id, data)
-        const delayed = DateTime.now().plus({ minutes: 1 })
-        const timestamp = delayed.toMillis()
-        await transactionHandler.sendMessageImpl(
-          "Firefly is Unavailable - Job Delayed",
-          `Delaying job **${job.data.job}** (${job.id}) until ${delayed.toISOTime()}.`,
-        )
-
-        logger.info("Delaying job %s until %s", job.id, delayed.toISO())
-        job.moveToDelayed(timestamp, token)
-        throw new DelayedError("Job delayed due to error")
-      }
-
-      if (isTransactionJobArgs(data)) {
-        await jobs[data.job](data.transactionId)
-      } else if (isBudgetJobArgs(data)) {
-        await jobs[data.job](data.budgetId)
-      } else {
-        await jobs[data.job]()
+        if (isTransactionJobArgs(data)) {
+          await jobs[data.job](data.transactionId)
+        } else if (isBudgetJobArgs(data)) {
+          await jobs[data.job](data.budgetId)
+        } else {
+          await jobs[data.job]()
+        }
+      } catch (err) {
+        await delayJob(job, err as Error)
       }
     },
     {
@@ -130,11 +132,20 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
     },
   )
 
-  worker.on("active", ({ id, name }) => {
+  worker.on("active", async ({ id, name, data }) => {
     logger.info("******************************************************************************** Job(%s) %s started", id, name)
     startedAt.set(id, DateTime.now())
+    if (data.delayedMessageId) {
+      logger.info("Deleting delayed message %s for job %s (%s)", data.delayedMessageId, id, name)
+      await transactionHandler.deleteMessageImpl(data.delayedMessageId, null)
+    }
   })
-  worker.on("completed", ({ id, name }) => {
+
+  worker.on("completed", async ({ id, name, data }) => {
+    if (data.delayedMessageId) {
+      logger.info("Deleting delayed message %s for job %s (%s)", data.delayedMessageId, id, name)
+      await transactionHandler.deleteMessageImpl(data.delayedMessageId, null)
+    }
     logJobDuration(true, id, name)
   })
 
