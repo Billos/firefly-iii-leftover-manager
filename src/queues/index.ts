@@ -142,14 +142,20 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
     // If this job was previously delayed, delete the delay message
     const messageId = delayedJobMessages.get(id)
     if (messageId) {
-      transactionHandler.hasMessageId(messageId).then((exists) => {
-        if (exists) {
-          transactionHandler.deleteMessageImpl(messageId, id).catch((err) => {
-            logger.error({ err }, "Could not delete delayed job message %s for job %s", messageId, id)
-          })
-        }
-      })
-      delayedJobMessages.delete(id)
+      transactionHandler.hasMessageId(messageId)
+        .then((exists) => {
+          if (exists) {
+            return transactionHandler.deleteMessageImpl(messageId, id)
+          }
+          return Promise.resolve()
+        })
+        .then(() => {
+          delayedJobMessages.delete(id)
+        })
+        .catch((err) => {
+          logger.error({ err }, "Could not delete delayed job message %s for job %s", messageId, id)
+          delayedJobMessages.delete(id)
+        })
     }
   })
 
