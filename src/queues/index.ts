@@ -32,6 +32,7 @@ type BudgetJobDefinition = AbstractJobDefinition & {
 }
 
 const startedAt = new Map<string, DateTime>()
+const delayedJobMessages = new Map<string, string>()
 
 const jobDefinitions: JobDefinition[] = [
   UpdateLeftoversBudgetLimit,
@@ -104,10 +105,11 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
         logger.error({ err: error }, "Error processing job %s with data %o", job.id, data)
         const delayed = DateTime.now().plus({ minutes: 1 })
         const timestamp = delayed.toMillis()
-        await transactionHandler.sendMessageImpl(
+        const messageId = await transactionHandler.sendMessageImpl(
           "Firefly is Unavailable - Job Delayed",
           `Delaying job **${job.data.job}** (${job.id}) until ${delayed.toISOTime()}.`,
         )
+        delayedJobMessages.set(job.id, messageId)
 
         logger.info("Delaying job %s until %s", job.id, delayed.toISO())
         job.moveToDelayed(timestamp, token)
@@ -136,6 +138,19 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
   })
   worker.on("completed", ({ id, name }) => {
     logJobDuration(true, id, name)
+    
+    // If this job was previously delayed, delete the delay message
+    const messageId = delayedJobMessages.get(id)
+    if (messageId) {
+      transactionHandler.hasMessageId(messageId).then((exists) => {
+        if (exists) {
+          transactionHandler.deleteMessageImpl(messageId, id).catch((err) => {
+            logger.error({ err }, "Could not delete delayed job message %s for job %s", messageId, id)
+          })
+        }
+      })
+      delayedJobMessages.delete(id)
+    }
   })
 
   worker.on("failed", (job, err) => {
