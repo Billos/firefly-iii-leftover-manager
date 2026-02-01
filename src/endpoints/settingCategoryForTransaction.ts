@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import pino from "pino"
 
-import { transactionHandler } from "../modules/transactionHandler"
+import { notifier } from "../modules/notifiers"
 import { TransactionsService } from "../types"
 import { getTransactionShowLink } from "../utils/getTransactionShowLink"
 
@@ -10,8 +10,8 @@ export async function settingCategoryForTransaction(req: Request<{ transactionId
   logger.info("=================================== Setting category for transaction ===================================")
   const { transactionId, category_id } = req.params
   try {
-    const messageId = await transactionHandler.getMessageId("CategoryMessageId", transactionId)
-    await transactionHandler.deleteMessage("CategoryMessageId", messageId, transactionId)
+    const messageId = await notifier.getMessageId("CategoryMessageId", transactionId)
+    await notifier.deleteMessage("CategoryMessageId", messageId, transactionId)
   } catch (err) {
     // Could not delete message. Ignore
     logger.error({ err }, "Could not delete message")

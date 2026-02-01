@@ -1,7 +1,7 @@
 import pino from "pino"
 
 import { env } from "../../config"
-import { transactionHandler } from "../../modules/transactionHandler"
+import { notifier } from "../../modules/notifiers"
 import { BudgetLimitStore, BudgetSingle, BudgetsService } from "../../types"
 import { getDateNow } from "../../utils/date"
 import { JobIds } from "../constants"
@@ -55,7 +55,7 @@ async function job(budgetId: string) {
   \nSpent: \`${spent} ${currencySymbol}\` 
   \nLimit: \`${limit} ${currencySymbol}\` 
   \nNew limit set to \`${spent} ${currencySymbol}\``
-  await transactionHandler.notify(title, message)
+  await notifier.notify(title, message)
   return
 }
 

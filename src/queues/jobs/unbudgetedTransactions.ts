@@ -1,7 +1,7 @@
 import pino from "pino"
 
 import { env } from "../../config"
-import { transactionHandler } from "../../modules/transactionHandler"
+import { notifier } from "../../modules/notifiers"
 import { BudgetRead, BudgetsService, TransactionsService, TransactionTypeProperty } from "../../types"
 import { getBudgetName } from "../../utils/budgetName"
 import { getTransactionShowLink } from "../../utils/getTransactionShowLink"
@@ -57,20 +57,20 @@ async function job(transactionId: string) {
   const apis = generateMarkdownApiCalls(budgets, transactionId)
   const link = `[Link](<${getTransactionShowLink(transactionId)}>)`
   const msg = `\`${parseFloat(amount).toFixed(currency_decimal_places)} ${currency_symbol}\` ${description} \n${apis.join(" | ")} - ${link}`
-  const messageId = await transactionHandler.getMessageId("BudgetMessageId", transactionId)
+  const messageId = await notifier.getMessageId("BudgetMessageId", transactionId)
   if (messageId) {
-    const messageExists = await transactionHandler.hasMessageId(messageId)
+    const messageExists = await notifier.hasMessageId(messageId)
     if (messageExists) {
       logger.info("Budget message already exists for transaction %s", transactionId)
       return
     }
-    logger.info("Budget message defined but not found in transactionHandler for transaction %s", transactionId)
+    logger.info("Budget message defined but not found in notifier for transaction %s", transactionId)
   }
-  await transactionHandler.sendMessage("BudgetMessageId", msg, transactionId)
+  await notifier.sendMessage("BudgetMessageId", msg, transactionId)
 }
 
 async function init() {
-  if (transactionHandler) {
+  if (notifier) {
     const { data } = await BudgetsService.listTransactionWithoutBudget(null, 50, 1)
     for (const { id: transactionId } of data) {
       await addTransactionJobToQueue(id, transactionId)

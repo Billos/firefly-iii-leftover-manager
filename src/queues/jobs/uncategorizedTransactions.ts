@@ -1,7 +1,7 @@
 import pino from "pino"
 
 import { env } from "../../config"
-import { transactionHandler } from "../../modules/transactionHandler"
+import { notifier } from "../../modules/notifiers"
 import { CategoriesService, CategoryRead, TransactionRead, TransactionsService, TransactionTypeProperty } from "../../types"
 import { getBudgetName } from "../../utils/budgetName"
 import { getDateNow } from "../../utils/date"
@@ -76,20 +76,20 @@ async function job(transactionId: string) {
   const apis = generateMarkdownApiCalls(categories, transactionId)
   const link = `[Link](<${getTransactionShowLink(transactionId)}>)`
   const msg = `\`${parseFloat(amount).toFixed(currency_decimal_places)} ${currency_symbol}\` ${description} \n${apis.join(" | ")} - ${link}`
-  const messageId = await transactionHandler.getMessageId("CategoryMessageId", transactionId)
+  const messageId = await notifier.getMessageId("CategoryMessageId", transactionId)
   if (messageId) {
-    const messageExists = await transactionHandler.hasMessageId(messageId)
+    const messageExists = await notifier.hasMessageId(messageId)
     if (messageExists) {
       logger.info("Category message already exists for transaction %s", transactionId)
       return
     }
-    logger.info("Category message defined but not found in transactionHandler for transaction %s", transactionId)
+    logger.info("Category message defined but not found in notifier for transaction %s", transactionId)
   }
-  await transactionHandler.sendMessage("CategoryMessageId", msg, transactionId)
+  await notifier.sendMessage("CategoryMessageId", msg, transactionId)
 }
 
 async function init() {
-  if (transactionHandler) {
+  if (notifier) {
     const startDate = getDateNow().startOf("month").toISODate()
     const endDate = getDateNow().toISODate()
     const uncategorizedTransactionsList = await getUncategorizedTransactions(startDate, endDate)

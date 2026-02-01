@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from "axios"
 
 import { env } from "../../config"
-import { AbstractTransactionHandler } from "./transactionHandler"
+import { AbstractNotifier } from "./notifier"
 
 interface GetMessage {
   messages: {
@@ -9,7 +9,7 @@ interface GetMessage {
   }[]
 }
 
-export class GotifyTransactionHandler extends AbstractTransactionHandler {
+export class GotifyNotifier extends AbstractNotifier {
   private request: AxiosInstance = axios.create({ baseURL: env.gotifyUrl, headers: { "X-Gotify-Key": env.gotifyToken } })
 
   constructor() {

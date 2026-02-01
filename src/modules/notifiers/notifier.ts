@@ -5,7 +5,7 @@ import { TransactionSplit, TransactionsService } from "../../types"
 const logger = pino()
 export type MessageType = "BudgetMessageId" | "CategoryMessageId" | "AlertMessage"
 
-export interface TransactionHandler {
+export interface Notifier {
   // Function about transactions
   getMessageId: (type: MessageType, transactionId: string) => Promise<string>
   // Generic function about messages
@@ -22,7 +22,7 @@ export interface TransactionHandler {
   hasMessageIdImpl: (messageId: string) => Promise<boolean>
 }
 
-export abstract class AbstractTransactionHandler implements TransactionHandler {
+export abstract class AbstractNotifier implements Notifier {
   private getTitle(type: MessageType): string {
     switch (type) {
       case "CategoryMessageId":

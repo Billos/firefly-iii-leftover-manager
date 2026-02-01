@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import pino from "pino"
 
-import { transactionHandler } from "../modules/transactionHandler"
+import { notifier } from "../modules/notifiers"
 import { TransactionsService } from "../types"
 import { getTransactionShowLink } from "../utils/getTransactionShowLink"
 
@@ -11,8 +11,8 @@ export async function settingBudgetForTransaction(req: Request<{ transactionId: 
   logger.info("=================================== Setting budget for transaction ===================================")
   const { transactionId, budget_id } = req.params
   try {
-    const messageId = await transactionHandler.getMessageId("BudgetMessageId", transactionId)
-    await transactionHandler.deleteMessage("BudgetMessageId", messageId, transactionId)
+    const messageId = await notifier.getMessageId("BudgetMessageId", transactionId)
+    await notifier.deleteMessage("BudgetMessageId", messageId, transactionId)
   } catch (err) {
     // Could not delete message. Ignore
     logger.error({ err }, "Could not delete message")

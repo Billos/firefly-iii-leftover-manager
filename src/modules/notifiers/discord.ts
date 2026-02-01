@@ -1,9 +1,9 @@
 import axios, { AxiosInstance } from "axios"
 
 import { env } from "../../config"
-import { AbstractTransactionHandler } from "./transactionHandler"
+import { AbstractNotifier } from "./notifier"
 
-export class DiscordTransactionHandler extends AbstractTransactionHandler {
+export class DiscordNotifier extends AbstractNotifier {
   private request: AxiosInstance = axios.create({})
 
   constructor() {

@@ -3,7 +3,7 @@ import { DateTime } from "luxon"
 import pino from "pino"
 
 import { env } from "../config"
-import { transactionHandler } from "../modules/transactionHandler"
+import { notifier } from "../modules/notifiers"
 import { AboutService } from "../types"
 import { JobIds } from "./constants"
 import { addJobToQueue } from "./jobs"
@@ -85,7 +85,7 @@ async function delayJob(job: Job<QueueArgs>, err: Error): Promise<void> {
   const timestamp = delayed.toMillis()
   const title = err.message
   const message = `Delaying job **${job.data.job}** (${job.id}) until ${delayed.toISOTime()} with data ${JSON.stringify(job.data)}.`
-  const delayedMessageId = await transactionHandler.sendMessageImpl(title, message)
+  const delayedMessageId = await notifier.sendMessageImpl(title, message)
 
   logger.info("Delaying job %s (%s) until %s", job.id, job.name, delayed.toISO())
   await job.updateData({ ...job.data, delayedMessageId })
@@ -137,21 +137,21 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
     startedAt.set(id, DateTime.now())
     if (data.delayedMessageId) {
       logger.info("Deleting delayed message %s for job %s (%s)", data.delayedMessageId, id, name)
-      await transactionHandler.deleteMessageImpl(data.delayedMessageId, null)
+      await notifier.deleteMessageImpl(data.delayedMessageId, null)
     }
   })
 
   worker.on("completed", async ({ id, name, data }) => {
     if (data.delayedMessageId) {
       logger.info("Deleting delayed message %s for job %s (%s)", data.delayedMessageId, id, name)
-      await transactionHandler.deleteMessageImpl(data.delayedMessageId, null)
+      await notifier.deleteMessageImpl(data.delayedMessageId, null)
     }
     logJobDuration(true, id, name)
   })
 
   worker.on("failed", (job, err) => {
     logger.error({ err }, "Job %s failed with error %s", job.id, err.message)
-    transactionHandler.sendMessageImpl(
+    notifier.sendMessageImpl(
       "Job Failed",
       `Job **${job.data.job}** (${job.id}) failed with error ${err.message} and data ${JSON.stringify(job.data)}`,
     )
