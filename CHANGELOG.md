@@ -1,3 +1,10 @@
+# [2.7.0](https://github.com/Billos/Sparkleft/compare/2.6.0...2.7.0) (2026-02-01)
+
+
+### Features
+
+* Cleans up delayed job messages when completed ([b6a33b6](https://github.com/Billos/Sparkleft/commit/b6a33b60422413c6f501bb36babcabf4f67f2db8))
+
 # [2.6.0](https://github.com/Billos/Sparkleft/compare/2.5.2...2.6.0) (2026-01-29)
 
 
