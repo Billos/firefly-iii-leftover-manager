@@ -32,7 +32,6 @@ type BudgetJobDefinition = AbstractJobDefinition & {
 }
 
 const startedAt = new Map<string, DateTime>()
-const delayedJobMessages = new Map<string, string>()
 
 const jobDefinitions: JobDefinition[] = [
   UpdateLeftoversBudgetLimit,
@@ -109,7 +108,9 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
           "Firefly is Unavailable - Job Delayed",
           `Delaying job **${job.data.job}** (${job.id}) until ${delayed.toISOTime()}.`,
         )
-        delayedJobMessages.set(job.id, messageId)
+        
+        // Store messageId in job data for later cleanup
+        job.data.delayMessageId = messageId
 
         logger.info("Delaying job %s until %s", job.id, delayed.toISO())
         job.moveToDelayed(timestamp, token)
@@ -136,25 +137,21 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
     logger.info("******************************************************************************** Job(%s) %s started", id, name)
     startedAt.set(id, DateTime.now())
   })
-  worker.on("completed", ({ id, name }) => {
-    logJobDuration(true, id, name)
+  worker.on("completed", (job) => {
+    logJobDuration(true, job.id, job.name)
     
     // If this job was previously delayed, delete the delay message
-    const messageId = delayedJobMessages.get(id)
+    const messageId = job.data.delayMessageId
     if (messageId) {
       transactionHandler.hasMessageId(messageId)
         .then((exists) => {
           if (exists) {
-            return transactionHandler.deleteMessageImpl(messageId, id)
+            return transactionHandler.deleteMessageImpl(messageId, job.id)
           }
           return Promise.resolve()
         })
-        .then(() => {
-          delayedJobMessages.delete(id)
-        })
         .catch((err) => {
-          logger.error({ err }, "Could not delete delayed job message %s for job %s", messageId, id)
-          delayedJobMessages.delete(id)
+          logger.error({ err }, "Could not delete delayed job message %s for job %s", messageId, job.id)
         })
     }
   })

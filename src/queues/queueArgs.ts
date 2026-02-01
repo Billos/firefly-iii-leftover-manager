@@ -1,6 +1,6 @@
-type TransactionJobArgs = { job: string; transactionId: string }
-type BudgetJobArgs = { job: string; budgetId: string }
-type SimpleJobArgs = { job: string }
+type TransactionJobArgs = { job: string; transactionId: string; delayMessageId?: string }
+type BudgetJobArgs = { job: string; budgetId: string; delayMessageId?: string }
+type SimpleJobArgs = { job: string; delayMessageId?: string }
 
 export function isTransactionJobArgs(args: QueueArgs): args is TransactionJobArgs {
   return (args as TransactionJobArgs).transactionId !== undefined
