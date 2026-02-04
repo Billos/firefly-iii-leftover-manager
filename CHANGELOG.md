@@ -1,3 +1,12 @@
+# [2.8.0](https://github.com/Billos/Sparkleft/compare/2.7.0...2.8.0) (2026-02-04)
+
+
+### Features
+
+* Adds endpoint job queue ([d907a56](https://github.com/Billos/Sparkleft/commit/d907a562cae053fba8b017cca86a3a7d0a197ec8))
+* Adds transaction update jobs ([5338e3d](https://github.com/Billos/Sparkleft/commit/5338e3d3ba7157a431df548be860c16b6b9e3c5b))
+* Moves transaction update logic to background jobs. ([ce8b685](https://github.com/Billos/Sparkleft/commit/ce8b6858b526cfa5d24632a172c539be76f3e373))
+
 # [2.7.0](https://github.com/Billos/Sparkleft/compare/2.6.0...2.7.0) (2026-02-01)
 
 
