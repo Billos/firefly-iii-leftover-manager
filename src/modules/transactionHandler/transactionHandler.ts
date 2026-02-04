@@ -1,6 +1,7 @@
 import pino from "pino"
 
 import { TransactionSplit, TransactionsService } from "../../types"
+import { withLock } from "../../utils/redisLock"
 
 const logger = pino()
 export type MessageType = "BudgetMessageId" | "CategoryMessageId" | "AlertMessage"
@@ -60,7 +61,9 @@ export abstract class AbstractTransactionHandler implements TransactionHandler {
   }
 
   private async setNotes(transactionId: string, notes: string): Promise<void> {
-    await TransactionsService.updateTransaction(transactionId, { apply_rules: false, fire_webhooks: false, transactions: [{ notes }] })
+    await withLock(`transaction:${transactionId}`, async () => {
+      await TransactionsService.updateTransaction(transactionId, { apply_rules: false, fire_webhooks: false, transactions: [{ notes }] })
+    })
   }
 
   private async setMessageId(type: MessageType, transactionId: string, messageId: string): Promise<void> {
