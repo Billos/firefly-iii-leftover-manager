@@ -5,6 +5,7 @@ import { env } from "../../config"
 import { TransactionsService as PaypalTransactionsService, TransactionTypeProperty } from "../../paypalTypes"
 import { TransactionsService } from "../../types"
 import { getDateNow } from "../../utils/date"
+import { withLock } from "../../utils/redisLock"
 import { JobIds } from "../constants"
 import { addJobToQueue } from "../jobs"
 
@@ -73,15 +74,19 @@ async function job() {
       // Add Linked tag to both transactions
       // Add the destination_name of the Paypal transaction to the Firefly III transaction Notes
       logger.info("Linking paypal %s to Firefly III %s", transaction.destination_name, ffTransaction.description)
-      await PaypalTransactionsService.updateTransaction(paypalTransaction.id, {
-        apply_rules: false,
-        fire_webhooks: false,
-        transactions: [{ tags: [...transaction.tags, "Linked"] }],
+      await withLock(`transaction:${paypalTransaction.id}`, async () => {
+        await PaypalTransactionsService.updateTransaction(paypalTransaction.id, {
+          apply_rules: false,
+          fire_webhooks: false,
+          transactions: [{ tags: [...transaction.tags, "Linked"] }],
+        })
       })
-      await TransactionsService.updateTransaction(id, {
-        apply_rules: true,
-        fire_webhooks: false,
-        transactions: [{ tags: [...ffTransaction.tags, "Linked"], notes: transaction.destination_name }],
+      await withLock(`transaction:${id}`, async () => {
+        await TransactionsService.updateTransaction(id, {
+          apply_rules: true,
+          fire_webhooks: false,
+          transactions: [{ tags: [...ffTransaction.tags, "Linked"], notes: transaction.destination_name }],
+        })
       })
     }
   }
