@@ -5,6 +5,8 @@ export enum JobIds {
   UNBUDGETED_TRANSACTIONS = "unbudgeted-transactions",
   UNCATEGORIZED_TRANSACTIONS = "uncategorized-transactions",
   LINK_PAYPAL_TRANSACTIONS = "link-paypal-transactions",
+  SET_CATEGORY_FOR_TRANSACTION = "set-category-for-transaction",
+  SET_BUDGET_FOR_TRANSACTION = "set-budget-for-transaction",
   INIT = "init",
 }
 
@@ -15,6 +17,8 @@ export const JOB_DELAYS: Record<JobIds, number> = {
   [JobIds.LINK_PAYPAL_TRANSACTIONS]: 35,
   [JobIds.UNBUDGETED_TRANSACTIONS]: 5,
   [JobIds.UNCATEGORIZED_TRANSACTIONS]: 10,
+  [JobIds.SET_CATEGORY_FOR_TRANSACTION]: 0,
+  [JobIds.SET_BUDGET_FOR_TRANSACTION]: 0,
   [JobIds.INIT]: 0,
 }
 
