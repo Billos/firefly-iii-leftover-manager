@@ -14,7 +14,7 @@ import * as UnbudgetedTransactions from "./jobs/unbudgetedTransactions"
 import * as UncategorizedTransactions from "./jobs/uncategorizedTransactions"
 import * as UpdateBillsBudgetLimit from "./jobs/updateBillsBudgetLimit"
 import * as UpdateLeftoversBudgetLimit from "./jobs/updateLeftoverBudgetLimit"
-import { isBudgetJobArgs, isTransactionJobArgs, QueueArgs } from "./queueArgs"
+import { isBudgetJobArgs, isEndpointJobArgs, isTransactionJobArgs, QueueArgs } from "./queueArgs"
 
 const logger = pino()
 type AbstractJobDefinition = {
@@ -23,6 +23,9 @@ type AbstractJobDefinition = {
 }
 type TransactionJobDefinition = AbstractJobDefinition & {
   job: (transactionId: string) => Promise<void>
+}
+type EndpointJobDefinition = AbstractJobDefinition & {
+  job: (transactionId: string, data: unknown) => Promise<void>
 }
 type JobDefinition = AbstractJobDefinition & {
   job: () => Promise<void>
@@ -42,6 +45,9 @@ const jobDefinitions: JobDefinition[] = [
 const transactionJobDefinitions: TransactionJobDefinition[] = [
   UnbudgetedTransactions,
   UncategorizedTransactions,
+]
+
+const endpointJobDefinitions: EndpointJobDefinition[] = [
 ]
 
 const budgetJobDefinitions: BudgetJobDefinition[] = [
@@ -105,7 +111,7 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
   await queue.pause()
   await queue.resume()
 
-  const jobs: Record<string, (parameter?: string) => Promise<void>> = {}
+  const jobs: Record<string, (parameter?: string, data?: unknown) => Promise<void>> = {}
 
   worker = new Worker<QueueArgs>(
     "manager",
@@ -117,6 +123,8 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
           await jobs[data.job](data.transactionId)
         } else if (isBudgetJobArgs(data)) {
           await jobs[data.job](data.budgetId)
+        } else if (isEndpointJobArgs(data)) {
+          await jobs[data.job](data.transactionId, data.data)
         } else {
           await jobs[data.job]()
         }
@@ -164,7 +172,7 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
     await addJobToQueue(Init.id, true)
   })
 
-  for (const { job, id } of [...jobDefinitions, ...budgetJobDefinitions, ...transactionJobDefinitions]) {
+  for (const { job, id } of [...jobDefinitions, ...budgetJobDefinitions, ...transactionJobDefinitions, ...endpointJobDefinitions]) {
     jobs[id] = job
   }
 
