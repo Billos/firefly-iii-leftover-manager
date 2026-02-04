@@ -32,6 +32,8 @@ export async function settingBudgetForTransaction(req: Request<{ transactionId: 
     })
 
     // Redirect to the transaction link
+    // Note: Transaction is fetched outside the lock as this is just for display purposes.
+    // If the transaction was modified after the lock, we'll just show the latest version.
     const transaction = await TransactionsService.getTransaction(transactionId)
     if (transaction) {
       return res.redirect(getTransactionShowLink(transactionId))

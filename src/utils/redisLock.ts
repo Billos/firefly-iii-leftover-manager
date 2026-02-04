@@ -131,7 +131,8 @@ export async function withMultipleLocks<T>(keys: string[], fn: () => Promise<T>,
     return await fn()
   } finally {
     // Release all locks in reverse order
-    for (const key of sortedKeys.reverse()) {
+    for (let i = sortedKeys.length - 1; i >= 0; i--) {
+      const key = sortedKeys[i]
       const lockValue = lockValues.get(key)
       if (lockValue) {
         await releaseLock(key, lockValue)
