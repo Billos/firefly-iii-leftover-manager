@@ -5,20 +5,13 @@ import { env } from "../config"
 
 const logger = pino()
 
-// Create a Redis client for locking
-let redisClient: Redis | null = null
-
-function getRedisClient(): Redis {
-  if (!redisClient) {
-    redisClient = new Redis({
-      host: env.redisConnection.host,
-      port: env.redisConnection.port,
-      db: env.redisConnection.db,
-      password: env.redisConnection.password,
-    })
-  }
-  return redisClient
-}
+// Create a Redis client for locking (initialized once)
+const redisClient = new Redis({
+  host: env.redisConnection.host,
+  port: env.redisConnection.port,
+  db: env.redisConnection.db,
+  password: env.redisConnection.password,
+})
 
 /**
  * Acquire a lock for a given key
@@ -34,14 +27,13 @@ export async function acquireLock(
   retryDelay: number = 100,
   maxRetries: number = 100,
 ): Promise<string | null> {
-  const redis = getRedisClient()
   const lockKey = `lock:${key}`
   const lockValue = `${Date.now()}-${Math.random()}`
 
   for (let i = 0; i < maxRetries; i++) {
     try {
       // Use SET with NX (only set if not exists) and PX (expiry in milliseconds)
-      const result = await redis.set(lockKey, lockValue, "PX", ttl, "NX")
+      const result = await redisClient.set(lockKey, lockValue, "PX", ttl, "NX")
       if (result === "OK") {
         logger.debug(`Lock acquired for key: ${key}`)
         return lockValue
@@ -55,7 +47,8 @@ export async function acquireLock(
     await new Promise((resolve) => setTimeout(resolve, retryDelay))
   }
 
-  logger.warn(`Failed to acquire lock for key: ${key} after ${maxRetries} retries`)
+  const totalWaitTime = (maxRetries * retryDelay) / 1000
+  logger.warn(`Failed to acquire lock for key: ${key} after ${maxRetries} retries (${totalWaitTime}s total wait time)`)
   return null
 }
 
@@ -66,7 +59,6 @@ export async function acquireLock(
  * @returns true if successfully released, false otherwise
  */
 export async function releaseLock(key: string, lockValue: string): Promise<boolean> {
-  const redis = getRedisClient()
   const lockKey = `lock:${key}`
 
   try {
@@ -78,7 +70,7 @@ export async function releaseLock(key: string, lockValue: string): Promise<boole
         return 0
       end
     `
-    const result = await redis.eval(script, 1, lockKey, lockValue)
+    const result = await redisClient.eval(script, 1, lockKey, lockValue)
     const released = result === 1
     if (released) {
       logger.debug(`Lock released for key: ${key}`)
@@ -109,5 +101,41 @@ export async function withLock<T>(key: string, fn: () => Promise<T>, ttl: number
     return await fn()
   } finally {
     await releaseLock(key, lockValue)
+  }
+}
+
+/**
+ * Execute a function with multiple locks acquired in deterministic order
+ * This prevents deadlocks by ensuring locks are always acquired in the same order
+ * @param keys - Array of keys to lock
+ * @param fn - The function to execute while holding all locks
+ * @param ttl - Time to live in milliseconds (default 30 seconds)
+ * @returns The result of the function
+ */
+export async function withMultipleLocks<T>(keys: string[], fn: () => Promise<T>, ttl: number = 30000): Promise<T> {
+  // Sort keys to ensure deterministic lock ordering
+  const sortedKeys = [...keys].sort()
+  const lockValues: Map<string, string> = new Map()
+
+  try {
+    // Acquire all locks in order
+    for (const key of sortedKeys) {
+      const lockValue = await acquireLock(key, ttl)
+      if (!lockValue) {
+        throw new Error(`Failed to acquire lock for key: ${key}`)
+      }
+      lockValues.set(key, lockValue)
+    }
+
+    // Execute the function
+    return await fn()
+  } finally {
+    // Release all locks in reverse order
+    for (const key of sortedKeys.reverse()) {
+      const lockValue = lockValues.get(key)
+      if (lockValue) {
+        await releaseLock(key, lockValue)
+      }
+    }
   }
 }
