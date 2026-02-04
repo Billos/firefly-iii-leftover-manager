@@ -5,7 +5,7 @@ import { env } from "../../config"
 import { TransactionsService as PaypalTransactionsService, TransactionTypeProperty } from "../../paypalTypes"
 import { TransactionsService } from "../../types"
 import { getDateNow } from "../../utils/date"
-import { withMultipleLocks } from "../../utils/redisLock"
+import { withMultipleLocks } from "../../utils/lock"
 import { JobIds } from "../constants"
 import { addJobToQueue } from "../jobs"
 

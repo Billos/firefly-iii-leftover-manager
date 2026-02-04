@@ -1,7 +1,7 @@
 import pino from "pino"
 
 import { TransactionSplit, TransactionsService } from "../../types"
-import { withLock } from "../../utils/redisLock"
+import { withLock } from "../../utils/lock"
 
 const logger = pino()
 export type MessageType = "BudgetMessageId" | "CategoryMessageId" | "AlertMessage"

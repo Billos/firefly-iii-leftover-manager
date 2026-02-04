@@ -4,7 +4,7 @@ import pino from "pino"
 import { transactionHandler } from "../modules/transactionHandler"
 import { TransactionsService } from "../types"
 import { getTransactionShowLink } from "../utils/getTransactionShowLink"
-import { withLock } from "../utils/redisLock"
+import { withLock } from "../utils/lock"
 
 const logger = pino()
 export async function settingCategoryForTransaction(req: Request<{ transactionId: string; category_id: string }>, res: Response) {
@@ -31,8 +31,6 @@ export async function settingCategoryForTransaction(req: Request<{ transactionId
     })
 
     // Redirect to the transaction link
-    // Note: Transaction is fetched outside the lock as this is just for display purposes.
-    // If the transaction was modified after the lock, we'll just show the latest version.
     const transaction = await TransactionsService.getTransaction(transactionId)
     if (transaction) {
       logger.info("Transaction found, redirecting to show link")
