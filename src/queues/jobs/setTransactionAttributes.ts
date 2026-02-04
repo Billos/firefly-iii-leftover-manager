@@ -15,6 +15,12 @@ interface JobData {
 async function job(transactionId: string, data: JobData) {
   const { budget_id, category_id } = data
 
+  // Ensure at least one parameter is provided
+  if (!budget_id && !category_id) {
+    logger.warn("No budget_id or category_id provided for transaction %s, skipping update", transactionId)
+    return
+  }
+
   if (budget_id) {
     logger.info("Setting budget %s for transaction %s", budget_id, transactionId)
 
