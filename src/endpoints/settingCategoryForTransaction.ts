@@ -1,33 +1,25 @@
+import { QueueEvents } from "bullmq"
 import { NextFunction, Request, Response } from "express"
 import pino from "pino"
 
-import { notifier } from "../modules/notifiers"
-import { TransactionsService } from "../types"
+import { env } from "../config"
+import { getQueue } from "../queues"
+import { JobIds } from "../queues/constants"
+import { addEndpointJobToQueue } from "../queues/jobs"
 
 const logger = pino()
+
 export async function settingCategoryForTransaction(
   req: Request<{ transactionId: string; category_id: string }>,
-  res: Response,
+  _res: Response,
   next: NextFunction,
 ) {
   logger.info("=================================== Setting category for transaction ===================================")
+  const queue = await getQueue()
+  const queueEvents = new QueueEvents(queue.name, { connection: env.redisConnection })
   const { transactionId, category_id } = req.params
-  try {
-    const messageId = await notifier.getMessageId("CategoryMessageId", transactionId)
-    await notifier.deleteMessage("CategoryMessageId", messageId, transactionId)
-  } catch (err) {
-    // Could not delete message. Ignore
-    logger.error({ err }, "Could not delete message")
-    res.send("<script>window.close()</script>")
-    return
-  }
 
-  logger.info("Update transaction")
-  await TransactionsService.updateTransaction(transactionId, {
-    apply_rules: true,
-    fire_webhooks: false,
-    transactions: [{ category_id }],
-  })
-  logger.info("Transaction updated")
+  const job = await addEndpointJobToQueue(JobIds.SET_CATEGORY_FOR_TRANSACTION, transactionId, { category_id })
+  await job.waitUntilFinished(queueEvents)
   next()
 }
