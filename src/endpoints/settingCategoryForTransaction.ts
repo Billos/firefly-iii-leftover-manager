@@ -1,12 +1,15 @@
-import { Request, Response } from "express"
+import { NextFunction, Request, Response } from "express"
 import pino from "pino"
 
 import { notifier } from "../modules/notifiers"
 import { TransactionsService } from "../types"
-import { getTransactionShowLink } from "../utils/getTransactionShowLink"
 
 const logger = pino()
-export async function settingCategoryForTransaction(req: Request<{ transactionId: string; category_id: string }>, res: Response) {
+export async function settingCategoryForTransaction(
+  req: Request<{ transactionId: string; category_id: string }>,
+  res: Response,
+  next: NextFunction,
+) {
   logger.info("=================================== Setting category for transaction ===================================")
   const { transactionId, category_id } = req.params
   try {
@@ -26,12 +29,5 @@ export async function settingCategoryForTransaction(req: Request<{ transactionId
     transactions: [{ category_id }],
   })
   logger.info("Transaction updated")
-  // Redirect to the transaction link
-  const transaction = await TransactionsService.getTransaction(transactionId)
-  if (transaction) {
-    logger.info("Transaction found, redirecting to show link")
-    return res.redirect(getTransactionShowLink(transactionId))
-  } else {
-    res.send("<script>window.close()</script>")
-  }
+  next()
 }
