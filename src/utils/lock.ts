@@ -14,13 +14,14 @@ const locks: Record<string, Promise<void>> = {}
  */
 export async function withLock<T>(key: string, fn: () => Promise<T>): Promise<T> {
   // Wait for any existing lock on this key
-  while (locks[key]) {
+  const existingLock = locks[key]
+  if (existingLock) {
     logger.debug(`Waiting for lock on key: ${key}`)
-    await locks[key]
+    await existingLock
   }
 
   // Create a new lock promise
-  let releaseLock: () => void
+  let releaseLock: () => void = () => {}
   locks[key] = new Promise<void>((resolve) => {
     releaseLock = resolve
   })
@@ -31,7 +32,7 @@ export async function withLock<T>(key: string, fn: () => Promise<T>): Promise<T>
     return await fn()
   } finally {
     // Release the lock
-    releaseLock!()
+    releaseLock()
     delete locks[key]
     logger.debug(`Lock released for key: ${key}`)
   }
