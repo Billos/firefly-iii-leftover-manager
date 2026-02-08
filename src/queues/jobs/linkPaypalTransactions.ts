@@ -13,6 +13,10 @@ const id = JobIds.LINK_PAYPAL_TRANSACTIONS
 const logger = pino()
 
 async function job() {
+  if (!env.fireflyPaypalAccountToken) {
+    logger.info("No PayPal account token found, skipping job")
+    return
+  }
   // StartDate and EndDate are today - 20 days to today
   const startDate = getDateNow().minus({ days: 20 }).toISODate()
   const endDate = getDateNow().toISODate()
