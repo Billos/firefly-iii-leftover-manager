@@ -1,3 +1,10 @@
+## [2.8.1](https://github.com/Billos/Sparkleft/compare/2.8.0...2.8.1) (2026-02-08)
+
+
+### Bug Fixes
+
+* Prevents running Paypal job without token ([8ca6673](https://github.com/Billos/Sparkleft/commit/8ca6673ff309dccaf1f5f2d2a6966b61b0677a82))
+
 # [2.8.0](https://github.com/Billos/Sparkleft/compare/2.7.0...2.8.0) (2026-02-04)
 
 
