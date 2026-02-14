@@ -1,3 +1,15 @@
+# [2.9.0](https://github.com/Billos/Sparkleft/compare/2.8.1...2.9.0) (2026-02-14)
+
+
+### Bug Fixes
+
+* Increasing delay between 2 fails ([cd62e35](https://github.com/Billos/Sparkleft/commit/cd62e35d08dfd6783b98b42e98bd2b0cc699e436))
+
+
+### Features
+
+* Adds logging to init function in queue jobs ([d28bc2b](https://github.com/Billos/Sparkleft/commit/d28bc2b7759c2e852e25af6bc52c5af63793adbc))
+
 ## [2.8.1](https://github.com/Billos/Sparkleft/compare/2.8.0...2.8.1) (2026-02-08)
 
 
