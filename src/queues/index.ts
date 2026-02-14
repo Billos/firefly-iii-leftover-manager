@@ -91,14 +91,20 @@ function logJobDuration(success: boolean, jobId: string, name: string) {
 }
 
 async function delayJob(job: Job<QueueArgs>, err: Error): Promise<void> {
-  const delayed = DateTime.now().plus({ minutes: 1 })
+  const retryCount = (job.data.retryCount || 0) + 1
+  const minutes = retryCount * 1
+  const delayed = DateTime.now().plus({ minutes })
   const timestamp = delayed.toMillis()
   const title = err.message
-  const message = `Delaying job **${job.data.job}** (${job.id}) until ${delayed.toISOTime()} with data ${JSON.stringify(job.data)}.`
+  const message = [
+    `Job **${job.data.job}** (${job.id}) failed with error ${err.message}.`,
+    `Attempt: ${retryCount}`,
+    `Delaying until ${delayed.toISOTime()} with data ${JSON.stringify(job.data)}.`,
+  ].join("\n")
   const delayedMessageId = await notifier.sendMessageImpl(title, message)
 
-  logger.info("Delaying job %s (%s) until %s", job.id, job.name, delayed.toISO())
-  await job.updateData({ ...job.data, delayedMessageId })
+  logger.info("Delaying job %s (%s) until %s - Attempt: %d", job.id, job.name, delayed.toISO(), retryCount)
+  await job.updateData({ ...job.data, delayedMessageId, retryCount })
   await job.moveToDelayed(timestamp, job.token)
   throw new DelayedError("Job delayed due to error")
 }
