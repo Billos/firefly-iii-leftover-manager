@@ -83,7 +83,9 @@ async function job() {
 }
 
 async function init() {
+  logger.info("Initializing UpdateBillsBudgetLimit job")
   await addJobToQueue(id)
+  logger.info("UpdateBillsBudgetLimit job initialized")
 }
 
 export { id, init, job }

@@ -92,9 +92,11 @@ async function job() {
 }
 
 async function init() {
+  logger.info("Initializing LinkPaypalTransactions job")
   if (env.fireflyPaypalAccountToken) {
     await addJobToQueue(id)
   }
+  logger.info("LinkPaypalTransactions job initialized")
 }
 
 export { job, init, id }

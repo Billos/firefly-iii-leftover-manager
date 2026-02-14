@@ -70,12 +70,14 @@ async function job(transactionId: string) {
 }
 
 async function init() {
+  logger.info("Initializing UnbudgetedTransactions jobs for all unbudgeted transactions")
   if (notifier) {
     const { data } = await BudgetsService.listTransactionWithoutBudget(null, 50, 1)
     for (const { id: transactionId } of data) {
       await addTransactionJobToQueue(id, transactionId)
     }
   }
+  logger.info("Initialized UnbudgetedTransactions jobs for %d transactions", 0)
 }
 
 export { job, init, id }

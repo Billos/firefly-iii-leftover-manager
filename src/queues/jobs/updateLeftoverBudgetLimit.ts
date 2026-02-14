@@ -121,7 +121,9 @@ async function job() {
 }
 
 async function init() {
+  logger.info("Initializing UpdateLeftoverBudgetLimit job")
   await addJobToQueue(id)
+  logger.info("UpdateLeftoverBudgetLimit job initialized")
 }
 
 export { job, init, id }

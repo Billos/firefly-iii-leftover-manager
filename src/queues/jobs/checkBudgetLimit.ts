@@ -60,6 +60,7 @@ async function job(budgetId: string) {
 }
 
 async function init() {
+  logger.info("Initializing CheckBudgetLimit jobs for all budgets")
   const startDate = getDateNow().startOf("month").toISODate()
   const endDate = getDateNow().endOf("month").toISODate()
   const { data: budgets } = await BudgetsService.listBudget(null, 50, 1, startDate, endDate)
@@ -68,6 +69,7 @@ async function init() {
       await addBudgetJobToQueue(id, budget.id)
     }
   }
+  logger.info("Initialized CheckBudgetLimit jobs for %d budgets", budgets.length)
 }
 
 export { job, init, id }
