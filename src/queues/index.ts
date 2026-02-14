@@ -96,11 +96,12 @@ async function delayJob(job: Job<QueueArgs>, err: Error): Promise<void> {
   
   // Calculate progressive delay: 1 minute * (2 ^ (retryCount - 1))
   // Retry 1: 1 minute, Retry 2: 2 minutes, Retry 3: 4 minutes, etc.
-  const delayMinutes = Math.pow(2, retryCount - 1)
+  // Cap at 60 minutes to prevent extremely long delays
+  const delayMinutes = Math.min(Math.pow(2, retryCount - 1), 60)
   const delayed = DateTime.now().plus({ minutes: delayMinutes })
   const timestamp = delayed.toMillis()
   const title = err.message
-  const message = `Delaying job **${job.data.job}** (${job.id}) until ${delayed.toISOTime()} - **Retry #${retryCount}** with data ${JSON.stringify(job.data)}.`
+  const message = `Delaying job **${job.data.job}** (${job.id}) until ${delayed.toISOTime()} - **Retry #${retryCount}**`
   const delayedMessageId = await notifier.sendMessageImpl(title, message)
 
   logger.info("Delaying job %s (%s) until %s - Retry #%d", job.id, job.name, delayed.toISO(), retryCount)
