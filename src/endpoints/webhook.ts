@@ -52,7 +52,7 @@ export async function webhook(req: Request, res: Response) {
 
   if (isBudgetTrigger) {
     const budgetId = (body.content as BudgetLimitProperties).budget_id
-    logger.info("Processing budget trigger for budget id: %s", body.content)
+    logger.info("Processing budget trigger for budget id: %o", body.content)
     for (const { id } of budgetJobDefinitions) {
       await addBudgetJobToQueue(id, budgetId)
     }
