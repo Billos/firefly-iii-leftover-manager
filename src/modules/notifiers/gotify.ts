@@ -30,7 +30,9 @@ export class GotifyNotifier extends AbstractNotifier {
   }
 
   override async deleteMessageImpl(id: string): Promise<void> {
-    await this.request.delete(`/message/${id}?token=${env.gotifyUserToken}`)
+    if (this.hasMessageIdImpl(id)) {
+      await this.request.delete(`/message/${id}?token=${env.gotifyUserToken}`)
+    }
   }
 
   override async deleteAllMessagesImpl(): Promise<void> {
