@@ -1,3 +1,10 @@
+## [2.9.4](https://github.com/Billos/Sparkleft/compare/2.9.3...2.9.4) (2026-02-16)
+
+
+### Bug Fixes
+
+* Prevents deleting non-existent messages ([7af32dc](https://github.com/Billos/Sparkleft/commit/7af32dc4cf8745a0b87414ff12eedeffc7fc8aa9))
+
 ## [2.9.3](https://github.com/Billos/Sparkleft/compare/2.9.2...2.9.3) (2026-02-16)
 
 
