@@ -37,6 +37,7 @@ const logger = pino()
 export async function webhook(req: Request, res: Response) {
   logger.info("=================================== Transaction webhook ===================================")
   const body: WebhookTransactionBody = req.body as WebhookTransactionBody
+  logger.info("Received webhook with trigger: %s for content id: %d", body.trigger, body.content.id)
 
   const isTransactionTrigger = transactionTriggers.includes(body.trigger)
   const isBudgetTrigger = budgetTriggers.includes(body.trigger)
@@ -51,6 +52,7 @@ export async function webhook(req: Request, res: Response) {
 
   if (isBudgetTrigger) {
     const budgetId = (body.content as BudgetLimitProperties).budget_id
+    logger.info("Processing budget trigger for budget id: %s", body.content)
     for (const { id } of budgetJobDefinitions) {
       await addBudgetJobToQueue(id, budgetId)
     }
