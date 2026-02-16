@@ -1,3 +1,10 @@
+## [2.9.1](https://github.com/Billos/Sparkleft/compare/2.9.0...2.9.1) (2026-02-16)
+
+
+### Bug Fixes
+
+* Adds logging for webhook triggers ([60737f1](https://github.com/Billos/Sparkleft/commit/60737f1b1bd26cde26a1ec3a5e34078f11729566))
+
 # [2.9.0](https://github.com/Billos/Sparkleft/compare/2.8.1...2.9.0) (2026-02-14)
 
 
