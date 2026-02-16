@@ -11,6 +11,10 @@ const id = JobIds.CHECK_BUDGET_LIMIT
 
 const logger = pino()
 async function job(budgetId: string) {
+  if (!budgetId) {
+    logger.error("No budgetId provided for CheckBudgetLimit job")
+    return
+  }
   const { data: budget }: BudgetSingle = await BudgetsService.getBudget(budgetId)
   if (budget.id === env.billsBudgetId) {
     logger.debug("Budget is Bills budget, skipping review of budget limit")
