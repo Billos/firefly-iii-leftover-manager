@@ -34,7 +34,7 @@ export enum RuleTriggerKeyword {
     HAS_NO_TAG = 'has_no_tag',
     HAS_ANY_TAG = 'has_any_tag',
     NOTES_CONTAINS = 'notes_contains',
-    NOTES_START = 'notes_start',
+    NOTES_STARTS = 'notes_starts',
     NOTES_END = 'notes_end',
     NOTES_ARE = 'notes_are',
     NO_NOTES = 'no_notes',

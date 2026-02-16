@@ -60,6 +60,31 @@ export class AboutService {
         });
     }
     /**
+     * Finish a batch of unprocessed transactions.
+     * summary: Finish a batch of unprocessed transactions.
+     *
+     * @param xTraceId Unique identifier associated with this request.
+     * @returns void
+     * @throws ApiError
+     */
+    public static finishBatch(
+        xTraceId?: string,
+    ): CancelablePromise<void> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/v1/batch/finish',
+            headers: {
+                'X-Trace-Id': xTraceId,
+            },
+            errors: {
+                400: `Bad request`,
+                401: `Unauthenticated`,
+                404: `Page not found`,
+                500: `Internal exception`,
+            },
+        });
+    }
+    /**
      * Cron job endpoint
      * Firefly III has one endpoint for its various cron related tasks. Send a GET to this endpoint
      * to run the cron. The cron requires the CLI token to be present. The cron job will fire for all

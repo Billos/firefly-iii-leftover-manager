@@ -22,7 +22,7 @@ export type OpenAPIConfig = {
 
 export const OpenAPI: OpenAPIConfig = {
     BASE: `${env.fireflyUrl}/api`,
-    VERSION: '6.4.8',
+    VERSION: '6.4.17',
     WITH_CREDENTIALS: false,
     CREDENTIALS: 'include',
     TOKEN: undefined,
