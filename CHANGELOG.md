@@ -4,6 +4,15 @@
 ### Bug Fixes
 
 * Adapts budget ID handling in webhook ([1e008fb](https://github.com/Billos/Sparkleft/commit/1e008fbe8c3aa92b1bb1187c14e5998e8d70132b))
+* Handles missing budgetId in job ([6471358](https://github.com/Billos/Sparkleft/commit/6471358752a578d0865ca637f0447ee2929fce8a))
+* Updates Firefly III API definition ([8e01ef5](https://github.com/Billos/Sparkleft/commit/8e01ef5685768a6ecb35e1cb4767f8191d023564))
+
+## [2.9.3](https://github.com/Billos/Sparkleft/compare/2.9.2...2.9.3) (2026-02-16)
+
+
+### Bug Fixes
+
+* Adapts budget ID handling in webhook ([1e008fb](https://github.com/Billos/Sparkleft/commit/1e008fbe8c3aa92b1bb1187c14e5998e8d70132b))
 * Updates Firefly III API definition ([8e01ef5](https://github.com/Billos/Sparkleft/commit/8e01ef5685768a6ecb35e1cb4767f8191d023564))
 
 ## [2.9.2](https://github.com/Billos/Sparkleft/compare/2.9.1...2.9.2) (2026-02-16)
