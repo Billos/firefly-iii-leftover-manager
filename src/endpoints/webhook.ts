@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import pino from "pino"
 
+import { BudgetProperties } from "../paypalTypes"
 import { budgetJobDefinitions, jobDefinitions, transactionJobDefinitions } from "../queues"
 import { addBudgetJobToQueue, addJobToQueue, addTransactionJobToQueue } from "../queues/jobs"
 import { BudgetLimitProperties, Transaction, WebhookTrigger } from "../types"
@@ -15,7 +16,7 @@ type WebhookTransactionBody = {
   response: string
   url: string
   version: string
-  content: (Transaction | BudgetLimitProperties) & { id: number }
+  content: (Transaction | BudgetProperties) & { id: number }
 }
 
 const transactionTriggers = [
@@ -51,7 +52,7 @@ export async function webhook(req: Request, res: Response) {
   }
 
   if (isBudgetTrigger) {
-    const budgetId = (body.content as BudgetLimitProperties).budget_id
+    const budgetId = String(body.content.id)
     logger.info("Processing budget trigger for budget id: %o", body.content)
     for (const { id } of budgetJobDefinitions) {
       await addBudgetJobToQueue(id, budgetId)
