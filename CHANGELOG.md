@@ -1,3 +1,10 @@
+## [2.9.2](https://github.com/Billos/Sparkleft/compare/2.9.1...2.9.2) (2026-02-16)
+
+
+### Bug Fixes
+
+* Corrects budget trigger log format ([85909f2](https://github.com/Billos/Sparkleft/commit/85909f2d1a2076038cc9c9a96aa9772d87632608))
+
 ## [2.9.1](https://github.com/Billos/Sparkleft/compare/2.9.0...2.9.1) (2026-02-16)
 
 
