@@ -1,3 +1,10 @@
+# [2.10.0](https://github.com/Billos/Sparkleft/compare/2.9.4...2.10.0) (2026-02-28)
+
+
+### Features
+
+* Add HIDDEN_CATEGORIES environment variable to filter available categories ([2fe03de](https://github.com/Billos/Sparkleft/commit/2fe03de1b64242f0e68ed1a930cc507ce021a3d2))
+
 ## [2.9.4](https://github.com/Billos/Sparkleft/compare/2.9.3...2.9.4) (2026-02-16)
 
 
