@@ -1,3 +1,10 @@
+## [2.10.2](https://github.com/Billos/Sparkleft/compare/2.10.1...2.10.2) (2026-02-28)
+
+
+### Bug Fixes
+
+* Reorder link placement in transaction notification messages ([d5b17b8](https://github.com/Billos/Sparkleft/commit/d5b17b8ce8744254c881fe02b1e0bfa516710e91))
+
 ## [2.10.1](https://github.com/Billos/Sparkleft/compare/2.10.0...2.10.1) (2026-02-28)
 
 
