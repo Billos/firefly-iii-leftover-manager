@@ -71,7 +71,7 @@ async function job(transactionId: string) {
 
   const billsBudgetName = await getBudgetName(env.billsBudgetId)
   const { data: allCategories } = await CategoriesService.listCategory(null, 50, 1)
-  const categories = allCategories.filter(({ attributes: { name } }) => name !== billsBudgetName)
+  const categories = allCategories.filter(({ attributes: { name } }) => name !== billsBudgetName && !env.hiddenCategories.includes(name))
 
   const apis = generateMarkdownApiCalls(categories, transactionId)
   const link = `[Link](<${getTransactionShowLink(transactionId)}>)`

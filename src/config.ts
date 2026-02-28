@@ -14,6 +14,7 @@ const env = {
   gotifyUserToken: process.env.GOTIFY_USER_TOKEN,
   gotifyToken: process.env.GOTIFY_TOKEN,
   serviceUrl: process.env.SERVICE_URL,
+  hiddenCategories: process.env.HIDDEN_CATEGORIES ? process.env.HIDDEN_CATEGORIES.split(",").map((cat) => cat.trim()) : [],
   redisConnection: {
     host: process.env.REDIS_HOST || "localhost",
     port: parseInt(process.env.REDIS_PORT || "6379", 10),
