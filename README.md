@@ -58,6 +58,8 @@ REDIS_PORT=
 REDIS_DB=
 # The password to use to authenticate to the Redis instance, if any
 REDIS_PASSWORD=
+# Comma-separated list of category names to hide from uncategorized transaction listings (optional)
+HIDDEN_CATEGORIES=
 ```
 
 ### Running Services
