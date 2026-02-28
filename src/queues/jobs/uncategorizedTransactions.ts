@@ -76,7 +76,8 @@ async function job(transactionId: string) {
 
   const apis = generateMarkdownApiCalls(categories, transactionId)
   const link = `[Link](<${getTransactionShowLink(transactionId)}>)`
-  const msg = `\`${parseFloat(amount).toFixed(currency_decimal_places)} ${currency_symbol}\` ${description} \n- ${apis.join("\n- ")} - ${link}`
+  const apiLinks = apis.length > 0 ? `\n- ${apis.join("\n- ")}` : ""
+  const msg = `\`${parseFloat(amount).toFixed(currency_decimal_places)} ${currency_symbol}\` ${description}${apiLinks}\n${link}`
   const messageId = await notifier.getMessageId("CategoryMessageId", transactionId)
   if (messageId) {
     const messageExists = await notifier.hasMessageId(messageId)
