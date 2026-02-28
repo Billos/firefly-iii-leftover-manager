@@ -1,3 +1,10 @@
+## [2.10.1](https://github.com/Billos/Sparkleft/compare/2.10.0...2.10.1) (2026-02-28)
+
+
+### Bug Fixes
+
+* Format API call links as bulleted list instead of pipe-delimited inline ([00c6771](https://github.com/Billos/Sparkleft/commit/00c6771f6d4fc9dd1b07ddc4b7e7d847eb8d8f45))
+
 # [2.10.0](https://github.com/Billos/Sparkleft/compare/2.9.4...2.10.0) (2026-02-28)
 
 
