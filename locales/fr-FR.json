@@ -8,6 +8,8 @@
   "actions": "Actions",
   "action_budget_sumup": "Résumé du budget",
   "action_bank_operation_import": "Importation des opérations bancaires",
+  "action_current_month": "Mois courant",
+  "action_next_month": "Mois prochain",
   "title_show_hide_categories": "Afficher / Masquer les catégories",
   "desc_show_hide_categories": "Choisissez quelles catégories sont visibles dans l'interface utilisateur",
   "title_current_account": "Compte courant",

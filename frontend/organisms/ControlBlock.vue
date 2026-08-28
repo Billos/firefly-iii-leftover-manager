@@ -34,6 +34,20 @@ defineEmits<{
             :method="Method.POST"
             @action:done="$emit('update:config')"
           />
+          <ActionButton
+            :label="$t('action_current_month')"
+            :token="props.config.token"
+            action="current-month"
+            :method="Method.POST"
+            @action:done="$emit('update:config')"
+          />
+          <ActionButton
+            :label="$t('action_next_month')"
+            :token="props.config.token"
+            action="next-month"
+            :method="Method.POST"
+            @action:done="$emit('update:config')"
+          />
         </ButtonList>
       </template>
     </BlockContainer>

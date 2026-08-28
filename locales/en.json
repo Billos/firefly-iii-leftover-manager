@@ -8,6 +8,8 @@
   "actions": "Actions",
   "action_budget_sumup": "Budget Sumup",
   "action_bank_operation_import": "Bank operations import",
+  "action_current_month": "Current month",
+  "action_next_month": "Next month",
   "title_show_hide_categories": "Show / Hide Categories",
   "desc_show_hide_categories": "Choose which categories are visible in the UI",
   "title_current_account": "Current Account",
