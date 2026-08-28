@@ -57,8 +57,9 @@ app.get(
   TransactionResultMiddleware,
 )
 app.post("/webhook", verifyWebhookMiddleware, webhook)
-app.post("/current-month", currentMonth)
-app.post("/next-month", nextMonth)
+
+app.post("/api/current-month", currentMonth)
+app.post("/api/next-month", nextMonth)
 
 app.get(
   "/api/transaction/:transactionId/newCategory",
