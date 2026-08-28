@@ -4,8 +4,10 @@ import pino from "pino"
 import { env } from "./config"
 import { configEndpoint } from "./endpoints/config"
 import { createNewCategory } from "./endpoints/createNewCategory"
+import { currentMonth } from "./endpoints/currentMonth"
 import { hideBudget } from "./endpoints/hideBudget"
 import { hideCategory } from "./endpoints/hideCategory"
+import { nextMonth } from "./endpoints/nextMonth"
 import { setCurrentAccount } from "./endpoints/setAssetAccount"
 import { setBudgetRole } from "./endpoints/setBudgetRole"
 import { setCronConfig } from "./endpoints/setCronConfig"
@@ -55,6 +57,8 @@ app.get(
   TransactionResultMiddleware,
 )
 app.post("/webhook", verifyWebhookMiddleware, webhook)
+app.post("/current-month", currentMonth)
+app.post("/next-month", nextMonth)
 
 app.get(
   "/api/transaction/:transactionId/newCategory",

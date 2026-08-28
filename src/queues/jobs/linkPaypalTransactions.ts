@@ -110,7 +110,7 @@ export class LinkPaypalTransactionsJob extends SimpleJob {
   override async init(): Promise<void> {
     logger.info("Initializing LinkPaypalTransactions job")
     if (env.fireflyPaypalAccountToken) {
-      await addJobToQueue(this)
+      await addJobToQueue(this, {})
     }
     logger.info("LinkPaypalTransactions job initialized")
   }

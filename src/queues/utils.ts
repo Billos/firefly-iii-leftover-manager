@@ -35,9 +35,9 @@ export async function addBudgetJobToQueue(job: BudgetJob, budgetId: string): Pro
   return queue.add(job.id, { job: job.id, budgetId }, queueConfig(delay))
 }
 
-export async function addJobToQueue(job: BaseJob, asap?: boolean): Promise<Job> {
+export async function addJobToQueue(job: BaseJob, data: object, asap?: boolean): Promise<Job> {
   const queue = await getQueue()
   const delay = job.getStartDelay(asap)
   logger.info("Adding job to queue: %s with delay: %d seconds", job.id, delay / 1000)
-  return queue.add(job.id, { job: job.id }, queueConfig(delay))
+  return queue.add(job.id, { job: job.id, data }, queueConfig(delay))
 }

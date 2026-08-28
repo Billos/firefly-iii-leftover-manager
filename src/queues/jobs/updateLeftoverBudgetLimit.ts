@@ -11,8 +11,9 @@ import pino from "pino"
 
 import { client } from "../../client"
 import DynamicConfig, { VConfig } from "../../modules/config/dynamic"
-import { getEndOfCurrentMonth, getStartOfCurrentMonth } from "../../utils/date"
+import { getEndOfCurrentMonth, getEndOfNextMonth, getStartOfCurrentMonth, getStartOfNextMonth } from "../../utils/date"
 import { getQueue } from "../queue"
+import { NextMonthJobArgs } from "../queueArgs"
 import { addJobToQueue } from "../utils"
 import { SimpleJob } from "./BaseJob"
 import { BudgetSumUpJob } from "./budgetSumUp"
@@ -87,9 +88,14 @@ export class UpdateLeftoverBudgetLimitJob extends SimpleJob {
 
   override readonly startDelay = 25
 
-  async run(): Promise<void> {
-    const start = getStartOfCurrentMonth()
-    const end = getEndOfCurrentMonth()
+  async run({ data }: NextMonthJobArgs): Promise<void> {
+    let start = getStartOfCurrentMonth()
+    let end = getEndOfCurrentMonth()
+    if (data.nextMonth) {
+      logger.info("Next month flag is set")
+      start = getStartOfNextMonth()
+      end = getEndOfNextMonth()
+    }
 
     const [allBudgets, allLimits] = await Promise.all([
       BudgetsService.listBudget({ client, query: { page: 1, limit: 50, start, end } }),
@@ -154,12 +160,12 @@ export class UpdateLeftoverBudgetLimitJob extends SimpleJob {
       }
     }
 
-    await addJobToQueue(budgetSumUpJob)
+    await addJobToQueue(budgetSumUpJob, {})
   }
 
   override async init(): Promise<void> {
     logger.info("Initializing UpdateLeftoverBudgetLimit job")
-    await addJobToQueue(this)
+    await addJobToQueue(this, {})
     logger.info("UpdateLeftoverBudgetLimit job initialized")
   }
 }

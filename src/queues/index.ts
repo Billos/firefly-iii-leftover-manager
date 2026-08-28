@@ -8,7 +8,16 @@ import { redis as connection } from "../redis"
 import { BaseJob, SimpleJob } from "./jobs/BaseJob"
 import { budgetJobs, endpointJobs, simpleJobs, transactionJobs } from "./jobs/index"
 import { getQueue } from "./queue"
-import { BudgetJobArgs, EndpointJobArgs, isBudgetJob, isEndpointJob, isTransactionJob, QueueArgs, TransactionJobArgs } from "./queueArgs"
+import {
+  BudgetJobArgs,
+  EndpointJobArgs,
+  isBudgetJob,
+  isEndpointJob,
+  isTransactionJob,
+  NextMonthJobArgs,
+  QueueArgs,
+  TransactionJobArgs,
+} from "./queueArgs"
 
 const logger = pino()
 
@@ -104,6 +113,7 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
     async (job) => {
       try {
         const { data } = job
+
         await AboutService.getAbout({ client })
         const jobInstance = jobMap.get(data.job)
         if (!jobInstance) {
@@ -116,7 +126,8 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
         } else if (isEndpointJob(jobInstance)) {
           await jobInstance.run((data as EndpointJobArgs).transactionId, (data as EndpointJobArgs).data)
         } else {
-          await (jobInstance as SimpleJob).run()
+          const jobData = data as NextMonthJobArgs
+          await (jobInstance as SimpleJob).run(jobData)
         }
       } catch (err) {
         const jobInstance = jobMap.get(job.data.job)

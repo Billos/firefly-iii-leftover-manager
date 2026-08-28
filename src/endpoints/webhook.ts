@@ -61,8 +61,8 @@ export async function webhook(req: Request, res: Response) {
     }
   }
 
-  await addJobToQueue(new UpdateLeftoverBudgetLimitJob(), false)
-  await addJobToQueue(new UpdateBillsBudgetLimitJob(), false)
-  await addJobToQueue(new LinkPaypalTransactionsJob(), false)
+  await addJobToQueue(new UpdateLeftoverBudgetLimitJob(), {})
+  await addJobToQueue(new UpdateBillsBudgetLimitJob(), {})
+  await addJobToQueue(new LinkPaypalTransactionsJob(), {})
   res.send("<script>window.close()</script>")
 }
