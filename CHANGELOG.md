@@ -1,3 +1,12 @@
+# [3.4.0](https://github.com/Billos/Sparkleft/compare/3.3.0...3.4.0) (2026-08-28)
+
+
+### Features
+
+* Add endpoints for current and next month budget updates ([d33707d](https://github.com/Billos/Sparkleft/commit/d33707dcd534a411ea5258aadc9cfb81ebf9c0fe))
+* Add UI controls for current and next month actions ([aa742a6](https://github.com/Billos/Sparkleft/commit/aa742a6ba32562616a67e8f7747cc3f778ac4c4b))
+* Limit job retries to 10 attempts ([7345057](https://github.com/Billos/Sparkleft/commit/7345057c47e03b3d1243fc3480aa64d1c351ffad))
+
 # [3.3.0](https://github.com/Billos/Sparkleft/compare/3.2.2...3.3.0) (2026-07-15)
 
 
