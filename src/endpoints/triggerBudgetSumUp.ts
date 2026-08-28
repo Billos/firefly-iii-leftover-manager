@@ -21,7 +21,7 @@ export async function triggerBudgetSumUp(_req: Request, res: Response) {
   const queue = await getQueue()
   const queueEvents = new QueueEvents(queue.name, { connection })
   try {
-    const job = await addJobToQueue(new BudgetSumUpJob(), true)
+    const job = await addJobToQueue(new BudgetSumUpJob(), {}, true)
     await job.waitUntilFinished(queueEvents)
     res.status(200).json({ message: "Budget sum-up completed" })
   } catch (err) {

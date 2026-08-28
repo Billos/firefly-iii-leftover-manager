@@ -8,6 +8,8 @@ export type TransactionJobArgs = { transactionId: string } & JobArgs
 
 export type BudgetJobArgs = { budgetId: string } & JobArgs
 
+export type NextMonthJobArgs = { data: { nextMonth?: boolean } } & JobArgs
+
 export function isTransactionJob(job: BaseJob): job is TransactionJob {
   return job instanceof TransactionJob
 }
@@ -20,4 +22,4 @@ export function isEndpointJob(job: BaseJob): job is EndpointJob {
   return job instanceof EndpointJob
 }
 
-export type QueueArgs = TransactionJobArgs | BudgetJobArgs | EndpointJobArgs | JobArgs
+export type QueueArgs = TransactionJobArgs | BudgetJobArgs | EndpointJobArgs | JobArgs | NextMonthJobArgs

@@ -5,6 +5,7 @@ import { getNotifier } from "../../modules/notifiers"
 import { redis } from "../../redis"
 import { renderTemplate, TemplateContextMap, TemplateName } from "../../utils/renderTemplate"
 import { getQueue } from "../queue"
+import { NextMonthJobArgs } from "../queueArgs"
 
 const logger = pino()
 
@@ -114,7 +115,7 @@ export abstract class BaseJob {
 }
 
 export abstract class SimpleJob extends BaseJob {
-  abstract run(): Promise<void>
+  abstract run(data?: NextMonthJobArgs): Promise<void>
 }
 
 export abstract class TransactionJob extends BaseJob {

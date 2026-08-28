@@ -3,7 +3,8 @@ import pino from "pino"
 
 import { client } from "../../client"
 import DynamicConfig, { VConfig } from "../../modules/config/dynamic"
-import { getEndOfCurrentMonth, getStartOfCurrentMonth } from "../../utils/date"
+import { getEndOfCurrentMonth, getEndOfNextMonth, getStartOfCurrentMonth, getStartOfNextMonth } from "../../utils/date"
+import { NextMonthJobArgs } from "../queueArgs"
 import { addJobToQueue } from "../utils"
 import { SimpleJob } from "./BaseJob"
 
@@ -44,17 +45,20 @@ export class UpdateBillsBudgetLimitJob extends SimpleJob {
 
   override readonly startDelay = 15
 
-  async run(): Promise<void> {
+  async run({ data }: NextMonthJobArgs): Promise<void> {
     const billsBudgetId = await DynamicConfig.get(VConfig.RoleBudgetBillsId)
     if (!billsBudgetId) {
       logger.warn("Bills budget ID is not set, skipping updateBillsBudgetLimit job")
       return
     }
 
-    // Get all budgets
-    const start = getStartOfCurrentMonth()
-    const end = getEndOfCurrentMonth()
-
+    let start = getStartOfCurrentMonth()
+    let end = getEndOfCurrentMonth()
+    if (data.nextMonth) {
+      logger.info("Next month flag is set")
+      start = getStartOfNextMonth()
+      end = getEndOfNextMonth()
+    }
     const total = await getTotalAmountOfBills(start, end)
 
     const { data: existingLimits } = await BudgetsService.listBudgetLimitByBudget({
@@ -97,7 +101,7 @@ export class UpdateBillsBudgetLimitJob extends SimpleJob {
 
   override async init(): Promise<void> {
     logger.info("Initializing UpdateBillsBudgetLimit job")
-    await addJobToQueue(this)
+    await addJobToQueue(this, {})
     logger.info("UpdateBillsBudgetLimit job initialized")
   }
 }
