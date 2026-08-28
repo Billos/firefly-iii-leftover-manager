@@ -58,6 +58,10 @@ function logJobDuration(success: boolean, jobId: string, name: string) {
 
 async function delayJob(job: Job<QueueArgs>, err: Error): Promise<void> {
   const retryCount = (job.data.retryCount || 0) + 1
+  if (retryCount > 10) {
+    logger.error("Job %s (%s) failed after %d retries, not retrying", job.id, job.name, retryCount)
+    return
+  }
   const jobInstance = jobMap.get(job.data.job)
   const delayMs = jobInstance ? jobInstance.getRetryDelay(retryCount) : retryCount * 60 * 1000
   const delayed = new Date(Date.now() + delayMs)
