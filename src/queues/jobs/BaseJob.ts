@@ -5,11 +5,10 @@ import { getNotifier } from "../../modules/notifiers"
 import { redis } from "../../redis"
 import { renderTemplate, TemplateContextMap, TemplateName } from "../../utils/renderTemplate"
 import { getQueue } from "../queue"
-import { NextMonthJobArgs } from "../queueArgs"
 
 const logger = pino()
 
-export abstract class BaseJob {
+export abstract class BaseJob<TArgs = unknown> {
   abstract readonly id: string
 
   readonly retryable: boolean = true
@@ -114,18 +113,18 @@ export abstract class BaseJob {
   }
 }
 
-export abstract class SimpleJob extends BaseJob {
-  abstract run(args: { data?: { nextMonth?: boolean } }): Promise<void>
+export abstract class SimpleJob<TArgs = { data?: { nextMonth?: boolean } }> extends BaseJob<TArgs> {
+  abstract run(args: TArgs): Promise<void>
 }
 
-export abstract class TransactionJob extends BaseJob {
-  abstract run(args: { transactionId: string }): Promise<void>
+export abstract class TransactionJob<TArgs = { transactionId: string }> extends BaseJob<TArgs> {
+  abstract run(args: TArgs): Promise<void>
 }
 
-export abstract class BudgetJob extends BaseJob {
-  abstract run(args: { budgetId: string }): Promise<void>
+export abstract class BudgetJob<TArgs = { budgetId: string }> extends BaseJob<TArgs> {
+  abstract run(args: TArgs): Promise<void>
 }
 
-export abstract class EndpointJob extends BaseJob {
-  abstract run(args: { transactionId: string; data: unknown }): Promise<void>
+export abstract class EndpointJob<TArgs = { transactionId: string; data: unknown }> extends BaseJob<TArgs> {
+  abstract run(args: TArgs): Promise<void>
 }

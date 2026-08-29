@@ -23,7 +23,7 @@ const logger = pino()
 
 const startedAt = new Map<string, Date>()
 
-const iterable: [string, BaseJob][][] = [...simpleJobs, ...transactionJobs, ...endpointJobs, ...budgetJobs].map((j) => {
+const iterable: [string, BaseJob<unknown>][][] = [...simpleJobs, ...transactionJobs, ...endpointJobs, ...budgetJobs].map((j) => {
   if (j.cronPattern || j.cronConfigKey) {
     return [
       [`${j.id}-repeat`, j],
@@ -33,7 +33,7 @@ const iterable: [string, BaseJob][][] = [...simpleJobs, ...transactionJobs, ...e
   return [[j.id, j]]
 })
 
-const jobMap = new Map<string, BaseJob>(iterable.flat())
+const jobMap = new Map<string, BaseJob<unknown>>(iterable.flat())
 
 let worker: Worker<QueueArgs> | null = null
 

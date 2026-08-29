@@ -19,6 +19,10 @@ import { BudgetSumUpJob } from "./budgetSumUp"
 
 const logger = pino()
 
+interface UpdateLeftoverBudgetLimitJobArgs {
+  data?: { nextMonth?: boolean }
+}
+
 async function getSumWithoutLeftovers(
   allBudgets: BudgetRead[],
   leftoversBudget: BudgetRead,
@@ -82,7 +86,7 @@ async function getSumWithoutLeftovers(
   return leftoverAmount
 }
 
-export class UpdateLeftoverBudgetLimitJob extends SimpleJob {
+export class UpdateLeftoverBudgetLimitJob extends SimpleJob<UpdateLeftoverBudgetLimitJobArgs> {
   readonly id = "update-leftovers-budget-limit"
 
   override readonly startDelay = 25
@@ -90,7 +94,7 @@ export class UpdateLeftoverBudgetLimitJob extends SimpleJob {
   async run({ data }: { data?: { nextMonth?: boolean } }): Promise<void> {
     let start = getStartOfCurrentMonth()
     let end = getEndOfCurrentMonth()
-    if (data.nextMonth) {
+    if (data?.nextMonth) {
       logger.info("Next month flag is set")
       start = getStartOfNextMonth()
       end = getEndOfNextMonth()

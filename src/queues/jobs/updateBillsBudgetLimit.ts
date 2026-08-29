@@ -9,6 +9,10 @@ import { SimpleJob } from "./BaseJob"
 
 const logger = pino()
 
+interface UpdateBillsBudgetLimitJobArgs {
+  data?: { nextMonth?: boolean }
+}
+
 async function getTotalAmountOfBills(start: string, end: string): Promise<number> {
   const allBills = await BillsService.listBill({ client, query: { page: 1, limit: 50, start, end } })
   // Filtering inactive bills
@@ -39,7 +43,7 @@ async function getTotalAmountOfBills(start: string, end: string): Promise<number
   return total
 }
 
-export class UpdateBillsBudgetLimitJob extends SimpleJob {
+export class UpdateBillsBudgetLimitJob extends SimpleJob<UpdateBillsBudgetLimitJobArgs> {
   readonly id = "update-bills-budget-limit"
 
   override readonly startDelay = 15
@@ -53,7 +57,7 @@ export class UpdateBillsBudgetLimitJob extends SimpleJob {
 
     let start = getStartOfCurrentMonth()
     let end = getEndOfCurrentMonth()
-    if (data.nextMonth) {
+    if (data?.nextMonth) {
       logger.info("Next month flag is set")
       start = getStartOfNextMonth()
       end = getEndOfNextMonth()
