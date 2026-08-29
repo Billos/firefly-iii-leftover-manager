@@ -15,7 +15,7 @@ interface JobData {
 export class SetCategoryForTransactionJob extends EndpointJob {
   readonly id = "set-category-for-transaction"
 
-  async run(id: string, data: unknown): Promise<void> {
+  async run({ transactionId: id, data }: { transactionId: string; data: unknown }): Promise<void> {
     const { category_id } = data as JobData
     logger.info("Setting category %s for transaction %s", category_id, id)
 

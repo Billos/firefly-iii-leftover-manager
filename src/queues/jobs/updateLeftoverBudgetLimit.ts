@@ -13,7 +13,6 @@ import { client } from "../../client"
 import DynamicConfig, { VConfig } from "../../modules/config/dynamic"
 import { getEndOfCurrentMonth, getEndOfNextMonth, getStartOfCurrentMonth, getStartOfNextMonth } from "../../utils/date"
 import { getQueue } from "../queue"
-import { NextMonthJobArgs } from "../queueArgs"
 import { addJobToQueue } from "../utils"
 import { SimpleJob } from "./BaseJob"
 import { BudgetSumUpJob } from "./budgetSumUp"
@@ -88,7 +87,7 @@ export class UpdateLeftoverBudgetLimitJob extends SimpleJob {
 
   override readonly startDelay = 25
 
-  async run({ data }: NextMonthJobArgs): Promise<void> {
+  async run({ data }: { data?: { nextMonth?: boolean } }): Promise<void> {
     let start = getStartOfCurrentMonth()
     let end = getEndOfCurrentMonth()
     if (data.nextMonth) {

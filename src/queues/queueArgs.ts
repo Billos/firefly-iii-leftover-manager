@@ -10,6 +10,15 @@ export type BudgetJobArgs = { budgetId: string } & JobArgs
 
 export type NextMonthJobArgs = { data: { nextMonth?: boolean } } & JobArgs
 
+// Run method parameter types (single object for each job type)
+export type TransactionJobRunArgs = { transactionId: string }
+
+export type BudgetJobRunArgs = { budgetId: string }
+
+export type EndpointJobRunArgs = { transactionId: string; data: unknown }
+
+export type SimpleJobRunArgs = { data?: { nextMonth?: boolean } }
+
 export function isTransactionJob(job: BaseJob): job is TransactionJob {
   return job instanceof TransactionJob
 }

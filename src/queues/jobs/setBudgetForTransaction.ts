@@ -15,7 +15,7 @@ interface JobData {
 export class SetBudgetForTransactionJob extends EndpointJob {
   readonly id = "set-budget-for-transaction"
 
-  async run(id: string, data: unknown): Promise<void> {
+  async run({ transactionId: id, data }: { transactionId: string; data: unknown }): Promise<void> {
     const { budget_id } = data as JobData
     logger.info("Setting budget %s for transaction %s", budget_id, id)
 

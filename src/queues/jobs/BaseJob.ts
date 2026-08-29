@@ -115,17 +115,17 @@ export abstract class BaseJob {
 }
 
 export abstract class SimpleJob extends BaseJob {
-  abstract run(data?: NextMonthJobArgs): Promise<void>
+  abstract run(args: { data?: { nextMonth?: boolean } }): Promise<void>
 }
 
 export abstract class TransactionJob extends BaseJob {
-  abstract run(transactionId: string): Promise<void>
+  abstract run(args: { transactionId: string }): Promise<void>
 }
 
 export abstract class BudgetJob extends BaseJob {
-  abstract run(budgetId: string): Promise<void>
+  abstract run(args: { budgetId: string }): Promise<void>
 }
 
 export abstract class EndpointJob extends BaseJob {
-  abstract run(transactionId: string, data: unknown): Promise<void>
+  abstract run(args: { transactionId: string; data: unknown }): Promise<void>
 }

@@ -124,14 +124,14 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
           throw new Error(`Unknown job: ${data.job}`)
         }
         if (isTransactionJob(jobInstance)) {
-          await jobInstance.run((data as TransactionJobArgs).transactionId)
+          await jobInstance.run({ transactionId: (data as TransactionJobArgs).transactionId })
         } else if (isBudgetJob(jobInstance)) {
-          await jobInstance.run((data as BudgetJobArgs).budgetId)
+          await jobInstance.run({ budgetId: (data as BudgetJobArgs).budgetId })
         } else if (isEndpointJob(jobInstance)) {
-          await jobInstance.run((data as EndpointJobArgs).transactionId, (data as EndpointJobArgs).data)
+          await jobInstance.run({ transactionId: (data as EndpointJobArgs).transactionId, data: (data as EndpointJobArgs).data })
         } else {
           const jobData = data as NextMonthJobArgs
-          await (jobInstance as SimpleJob).run(jobData)
+          await (jobInstance as SimpleJob).run({ data: jobData.data })
         }
       } catch (err) {
         const jobInstance = jobMap.get(job.data.job)

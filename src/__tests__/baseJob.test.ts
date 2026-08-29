@@ -33,17 +33,17 @@ class TestNonRetryableJob extends SimpleJob {
 
 class TestTransactionJob extends TransactionJob {
   readonly id = "unbudgeted-transactions"
-  async run(_transactionId: string): Promise<void> {}
+  async run(_args: { transactionId: string }): Promise<void> {}
 }
 
 class TestBudgetJob extends BudgetJob {
   readonly id = "check-budget-limit"
-  async run(_budgetId: string): Promise<void> {}
+  async run(_args: { budgetId: string }): Promise<void> {}
 }
 
 class TestEndpointJob extends EndpointJob {
   readonly id = "set-category-for-transaction"
-  async run(_transactionId: string, _data: unknown): Promise<void> {}
+  async run(_args: { transactionId: string; data: unknown }): Promise<void> {}
 }
 
 describe("BaseJob", () => {

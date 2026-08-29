@@ -25,7 +25,7 @@ export class CheckBudgetLimitJob extends BudgetJob {
 
   override readonly startDelay = 5
 
-  async run(budgetId: string): Promise<void> {
+  async run({ budgetId }: { budgetId: string }): Promise<void> {
     if (!budgetId) {
       logger.error("No budgetId provided for CheckBudgetLimit job")
       return
