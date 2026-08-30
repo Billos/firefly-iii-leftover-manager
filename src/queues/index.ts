@@ -23,7 +23,7 @@ const logger = pino()
 
 const startedAt = new Map<string, Date>()
 
-const iterable: [string, BaseJob][][] = [...simpleJobs, ...transactionJobs, ...endpointJobs, ...budgetJobs].map((j) => {
+const iterable: [string, BaseJob<unknown>][][] = [...simpleJobs, ...transactionJobs, ...endpointJobs, ...budgetJobs].map((j) => {
   if (j.cronPattern || j.cronConfigKey) {
     return [
       [`${j.id}-repeat`, j],
@@ -33,7 +33,7 @@ const iterable: [string, BaseJob][][] = [...simpleJobs, ...transactionJobs, ...e
   return [[j.id, j]]
 })
 
-const jobMap = new Map<string, BaseJob>(iterable.flat())
+const jobMap = new Map<string, BaseJob<unknown>>(iterable.flat())
 
 let worker: Worker<QueueArgs> | null = null
 
@@ -124,14 +124,14 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
           throw new Error(`Unknown job: ${data.job}`)
         }
         if (isTransactionJob(jobInstance)) {
-          await jobInstance.run((data as TransactionJobArgs).transactionId)
+          await jobInstance.run({ transactionId: (data as TransactionJobArgs).transactionId })
         } else if (isBudgetJob(jobInstance)) {
-          await jobInstance.run((data as BudgetJobArgs).budgetId)
+          await jobInstance.run({ budgetId: (data as BudgetJobArgs).budgetId })
         } else if (isEndpointJob(jobInstance)) {
-          await jobInstance.run((data as EndpointJobArgs).transactionId, (data as EndpointJobArgs).data)
+          await jobInstance.run({ transactionId: (data as EndpointJobArgs).transactionId, data: (data as EndpointJobArgs).data })
         } else {
           const jobData = data as NextMonthJobArgs
-          await (jobInstance as SimpleJob).run(jobData)
+          await (jobInstance as SimpleJob).run({ data: jobData.data })
         }
       } catch (err) {
         const jobInstance = jobMap.get(job.data.job)

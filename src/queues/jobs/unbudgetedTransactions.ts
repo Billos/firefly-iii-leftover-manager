@@ -18,7 +18,7 @@ export class UnbudgetedTransactionsJob extends TransactionJob {
 
   override readonly startDelay = 5
 
-  async run(id: string): Promise<void> {
+  async run({ transactionId: id }: { transactionId: string }): Promise<void> {
     logger.info("Checking that transaction %s exists", id)
     try {
       await TransactionsService.getTransaction({ client, path: { id } })

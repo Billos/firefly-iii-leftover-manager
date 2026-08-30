@@ -30,7 +30,7 @@ describe("SetBudgetForTransactionJob", () => {
   })
   it("updates the transaction with the provided budget_id", async () => {
     const job = new SetBudgetForTransactionJob()
-    await job.run("42", { budget_id: "7" })
+    await job.run({ transactionId: "42", data: { budget_id: "7" } })
     expect(TransactionsService.updateTransaction).toHaveBeenCalledOnce()
     expect(TransactionsService.updateTransaction).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -46,7 +46,7 @@ describe("SetBudgetForTransactionJob", () => {
   it("deletes the existing budget notifier message before updating", async () => {
     const { unbindTransactionToNotification } = await import("../../utils/notification")
     const job = new SetBudgetForTransactionJob()
-    await job.run("42", { budget_id: "7" })
+    await job.run({ transactionId: "42", data: { budget_id: "7" } })
     expect(mockNotifier.getMessageId).toHaveBeenCalledWith("BudgetMessageId", "42")
     expect(unbindTransactionToNotification).toHaveBeenCalledWith("42", "BudgetMessageId", "message-id-123")
     expect(mockNotifier.deleteMessage).toHaveBeenCalledWith("message-id-123")
@@ -55,7 +55,7 @@ describe("SetBudgetForTransactionJob", () => {
   it("still updates the transaction when there is no notifier message to delete", async () => {
     vi.mocked(mockNotifier.getMessageId).mockRejectedValueOnce(new Error("not found"))
     const job = new SetBudgetForTransactionJob()
-    await job.run("42", { budget_id: "7" })
+    await job.run({ transactionId: "42", data: { budget_id: "7" } })
     expect(mockNotifier.deleteMessage).not.toHaveBeenCalled()
     expect(TransactionsService.updateTransaction).toHaveBeenCalledOnce()
   })

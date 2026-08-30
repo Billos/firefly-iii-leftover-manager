@@ -4,11 +4,14 @@ import pino from "pino"
 import { client } from "../../client"
 import DynamicConfig, { VConfig } from "../../modules/config/dynamic"
 import { getEndOfCurrentMonth, getEndOfNextMonth, getStartOfCurrentMonth, getStartOfNextMonth } from "../../utils/date"
-import { NextMonthJobArgs } from "../queueArgs"
 import { addJobToQueue } from "../utils"
 import { SimpleJob } from "./BaseJob"
 
 const logger = pino()
+
+interface UpdateBillsBudgetLimitJobArgs {
+  data?: { nextMonth?: boolean }
+}
 
 async function getTotalAmountOfBills(start: string, end: string): Promise<number> {
   const allBills = await BillsService.listBill({ client, query: { page: 1, limit: 50, start, end } })
@@ -40,12 +43,12 @@ async function getTotalAmountOfBills(start: string, end: string): Promise<number
   return total
 }
 
-export class UpdateBillsBudgetLimitJob extends SimpleJob {
+export class UpdateBillsBudgetLimitJob extends SimpleJob<UpdateBillsBudgetLimitJobArgs> {
   readonly id = "update-bills-budget-limit"
 
   override readonly startDelay = 15
 
-  async run({ data }: NextMonthJobArgs): Promise<void> {
+  async run({ data }: { data?: { nextMonth?: boolean } }): Promise<void> {
     const billsBudgetId = await DynamicConfig.get(VConfig.RoleBudgetBillsId)
     if (!billsBudgetId) {
       logger.warn("Bills budget ID is not set, skipping updateBillsBudgetLimit job")
@@ -54,7 +57,7 @@ export class UpdateBillsBudgetLimitJob extends SimpleJob {
 
     let start = getStartOfCurrentMonth()
     let end = getEndOfCurrentMonth()
-    if (data.nextMonth) {
+    if (data?.nextMonth) {
       logger.info("Next month flag is set")
       start = getStartOfNextMonth()
       end = getEndOfNextMonth()

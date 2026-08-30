@@ -8,15 +8,20 @@ import { EndpointJob } from "./BaseJob"
 
 const logger = pino()
 
-interface JobData {
+interface SetCategoryJobData {
   category_id: string
 }
 
-export class SetCategoryForTransactionJob extends EndpointJob {
+interface SetCategoryForTransactionJobArgs {
+  transactionId: string
+  data: SetCategoryJobData
+}
+
+export class SetCategoryForTransactionJob extends EndpointJob<SetCategoryForTransactionJobArgs> {
   readonly id = "set-category-for-transaction"
 
-  async run(id: string, data: unknown): Promise<void> {
-    const { category_id } = data as JobData
+  async run({ transactionId: id, data }: SetCategoryForTransactionJobArgs): Promise<void> {
+    const { category_id } = data
     logger.info("Setting category %s for transaction %s", category_id, id)
 
     const notifier = await getNotifier()

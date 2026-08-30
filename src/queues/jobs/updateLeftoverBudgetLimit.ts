@@ -13,12 +13,15 @@ import { client } from "../../client"
 import DynamicConfig, { VConfig } from "../../modules/config/dynamic"
 import { getEndOfCurrentMonth, getEndOfNextMonth, getStartOfCurrentMonth, getStartOfNextMonth } from "../../utils/date"
 import { getQueue } from "../queue"
-import { NextMonthJobArgs } from "../queueArgs"
 import { addJobToQueue } from "../utils"
 import { SimpleJob } from "./BaseJob"
 import { BudgetSumUpJob } from "./budgetSumUp"
 
 const logger = pino()
+
+interface UpdateLeftoverBudgetLimitJobArgs {
+  data?: { nextMonth?: boolean }
+}
 
 async function getSumWithoutLeftovers(
   allBudgets: BudgetRead[],
@@ -83,15 +86,15 @@ async function getSumWithoutLeftovers(
   return leftoverAmount
 }
 
-export class UpdateLeftoverBudgetLimitJob extends SimpleJob {
+export class UpdateLeftoverBudgetLimitJob extends SimpleJob<UpdateLeftoverBudgetLimitJobArgs> {
   readonly id = "update-leftovers-budget-limit"
 
   override readonly startDelay = 25
 
-  async run({ data }: NextMonthJobArgs): Promise<void> {
+  async run({ data }: { data?: { nextMonth?: boolean } }): Promise<void> {
     let start = getStartOfCurrentMonth()
     let end = getEndOfCurrentMonth()
-    if (data.nextMonth) {
+    if (data?.nextMonth) {
       logger.info("Next month flag is set")
       start = getStartOfNextMonth()
       end = getEndOfNextMonth()

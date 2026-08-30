@@ -8,15 +8,20 @@ import { EndpointJob } from "./BaseJob"
 
 const logger = pino()
 
-interface JobData {
+interface SetBudgetJobData {
   budget_id: string
 }
 
-export class SetBudgetForTransactionJob extends EndpointJob {
+interface SetBudgetForTransactionJobArgs {
+  transactionId: string
+  data: SetBudgetJobData
+}
+
+export class SetBudgetForTransactionJob extends EndpointJob<SetBudgetForTransactionJobArgs> {
   readonly id = "set-budget-for-transaction"
 
-  async run(id: string, data: unknown): Promise<void> {
-    const { budget_id } = data as JobData
+  async run({ transactionId: id, data }: SetBudgetForTransactionJobArgs): Promise<void> {
+    const { budget_id } = data
     logger.info("Setting budget %s for transaction %s", budget_id, id)
 
     const notifier = await getNotifier()
